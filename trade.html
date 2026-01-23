@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trade - CryptoVerse</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/theme.js"></script>
+    <script src="js/api.js"></script>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">⚡ CRYPTOVERSE</div>
+        <nav class="nav">
+            <a href="home.html">Home</a>
+            <a href="trade.html">Trade</a>
+            <a href="wallet.html">Wallet</a>
+            <a href="market.html">Market</a>
+            <div class="dropdown">
+                <a href="#" class="dropdown-toggle">More ▼</a>
+                <div class="dropdown-menu">
+                    <a href="home.html">Home</a>
+                    <a href="notifications.html">Notifications</a>
+                    <a href="profile.html">Profile</a>
+                    <a href="trending.html">Trending Articles</a>
+                    <a href="news.html">News</a>
+                    <a href="bookmarks.html">Bookmarks</a>
+                    <a href="history.html">History</a>
+                    <a href="creator.html">Creator Center</a>
+                    <a href="settings.html">Settings</a>
+                    <a href="support.html">Help & Support</a>
+                </div>
+            </div>
+        </nav>
+        <div class="header-profile">
+            <span style="color: #66B2FF; font-weight: 600;">👤</span>
+            <a href="profile.html" style="color: #ffffff; text-decoration: none; font-weight: 600;">Profile</a>
+        </div>
+    </header>
+
+    <!-- Profile Section (Legacy) -->
+            <div class="dropdown">
+                <button class="profile-btn">👤 <span id="user-name">User</span></button>
+                <div class="dropdown-menu">
+                    <a href="profile.html">Profile</a>
+                    <a href="settings.html">Settings</a>
+                    <a href="index.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <h1 class="page-title">Trade with Others</h1>
+            <div class="trade-grid" id="trade-grid">
+                <!-- Coins will be loaded by JS -->
+            </div>
+        </div>
+    </main>
+
+    <!-- P2P Trade Modal -->
+    <div id="p2p-modal" class="modal">
+        <div class="modal-content wallet-modal-content">
+            <button onclick="closeP2PModal()" class="modal-close">×</button>
+            <div class="modal-header-center">
+                <h2 style="color: #00d4ff; margin-bottom: 0.5rem;" id="p2p-coin-title">Trade BTC</h2>
+                <p style="color: rgba(255,255,255,0.6);">Available Peers</p>
+            </div>
+
+            <div id="p2p-list-container" class="action-content"
+                style="max-height: 100vh; overflow: visible; width: 100%; max-width: 100%; border: none; background: transparent;">
+                <!-- Peers List -->
+            </div>
+        </div>
+    </div>
+
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>

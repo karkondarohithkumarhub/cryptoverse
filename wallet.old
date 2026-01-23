@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet - CryptoVerse</title>
+    <link rel="stylesheet" href="css/style.css?v=2.0">
+    <script src="http://localhost:3001/socket.io/socket.io.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/wallet_handlers.js"></script>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">⚡ CRYPTOVERSE</div>
+        <nav class="nav">
+            <a href="home.html">Home</a>
+            <a href="trade.html">Trade</a>
+            
+            <a href="market.html">Market</a>
+            <div class="dropdown">
+                <a href="#" class="dropdown-toggle">More ▼</a>
+                <div class="dropdown-menu">
+                    <a href="home.html">Home</a>
+                    <a href="notifications.html">Notifications</a>
+                    <a href="profile.html">Profile</a>
+                    <a href="trending.html">Trending Articles</a>
+                    <a href="news.html">News</a>
+                    <a href="bookmarks.html">Bookmarks</a>
+                    <a href="history.html">History</a>
+                    <a href="creator.html">Creator Center</a>
+                    <a href="settings.html">Settings</a>
+                    <a href="support.html">Help & Support</a>
+                </div>
+            </div>
+        </nav>
+        <div class="profile-section">
+            <div class="dropdown">
+                <button class="profile-btn">👤 <span id="user-name">User</span></button>
+                <div class="dropdown-menu">
+                    <div class="dropdown-item">Username</div>
+                    <a href="settings.html">Settings</a>
+                    <a href="index.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <h1 class="page-title">My Wallet</h1>
+
+            <div class="wallet-balance">
+                <h2>Balance</h2>
+                <p class="balance-amount" id="balance-amount">₹0.00</p>
+                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    <button class="btn-primary" onclick="openAddMoney('deposit')"
+                        style="flex: 1; background: linear-gradient(135deg, #00d4ff, #0099cc);">
+                        📥 Add Money
+                    </button>
+                    <button class="btn-primary" onclick="openAddMoney('withdraw')"
+                        style="flex: 1; background: linear-gradient(135deg, #7c3aed, #6d28d9);">
+                        📤 Withdraw
+                    </button>
+                </div>
+            </div>
+
+            <!-- Your Crypto Wallet Section -->
+            <div class="wallet-section">
+                <h2 class="section-title">💼 Your Crypto Wallet</h2>
+                <div class="coins-list" id="wallet-coins">
+                    <p class="empty-message">No coins yet. Start trading!</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Unified Wallet Modal (Premium Accordion Style) -->
+    <div id="add-money-modal" class="modal">
+        <div class="modal-content wallet-modal-content">
+            <button onclick="closeAddMoney()" class="modal-close">×</button>
+
+            <div class="modal-header-center">
+                <h2 style="color: #00d4ff; margin-bottom: 0.5rem;">My Wallet</h2>
+                <h1 id="modal-balance" class="big-balance">₹0.00</h1>
+            </div>
+
+            <!-- Action Buttons Container -->
+            <div class="wallet-actions-container">
+
+                <!-- DEPOSIT SECTION -->
+                <div class="action-section" id="deposit-section">
+                    <button class="action-btn" onclick="toggleAction('deposit')">
+                        <div class="btn-content">
+                            <span class="btn-icon">📥</span>
+                            <div class="text-group">
+                                <span class="title">Deposit</span>
+                                <span class="subtitle">Add money to your wallet</span>
+                            </div>
+                        </div>
+                        <span class="arrow-icon" id="arrow-deposit">▼</span>
+                    </button>
+
+                    <div id="action-content-deposit" class="action-content">
+                        <div class="inner-padding">
+                            <div class="input-group-fancy">
+                                <span class="currency-symbol">₹</span>
+                                <input type="number" id="deposit-amount" placeholder="Enter Amount" min="100">
+                            </div>
+                            <div class="method-grid">
+                                <div class="grid-option" onclick="openPaymentMethod('upi', 'deposit')">
+                                    <span class="opt-icon">📱</span>
+                                    <span>UPI</span>
+                                </div>
+                                <div class="grid-option" onclick="openPaymentMethod('card', 'deposit')">
+                                    <span class="opt-icon">💳</span>
+                                    <span>Card</span>
+                                </div>
+                                <div class="grid-option" onclick="openPaymentMethod('qr', 'deposit')">
+                                    <span class="opt-icon">📷</span>
+                                    <span>QR</span>
+                                </div>
+                                <div class="grid-option" onclick="openPaymentMethod('bank', 'deposit')">
+                                    <span class="opt-icon">🏦</span>
+                                    <span>Bank</span>
+                                </div>
+                                <div class="grid-option" onclick="openPaymentMethod('p2p', 'deposit')">
+                                    <span class="opt-icon">🤝</span>
+                                    <span>P2P</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WITHDRAW SECTION -->
+                <div class="action-section" id="withdraw-section">
+                    <button class="action-btn" onclick="toggleAction('withdraw')">
+                        <div class="btn-content">
+                            <span class="btn-icon">📤</span>
+                            <div class="text-group">
+                                <span class="title">Withdraw</span>
+                                <span class="subtitle">Transfer to bank</span>
+                            </div>
+                        </div>
+                        <span class="arrow-icon" id="arrow-withdraw">▼</span>
+                    </button>
+
+                    <div id="action-content-withdraw" class="action-content">
+                        <div class="inner-padding">
+                            <div class="input-group-fancy">
+                                <span class="currency-symbol">₹</span>
+                                <input type="number" id="withdraw-amount" placeholder="Enter Amount" min="100">
+                            </div>
+                            <div class="method-grid">
+                                <div class="grid-option" onclick="openPaymentMethod('bank', 'withdraw')">
+                                    <span class="opt-icon">🏦</span>
+                                    <span>Bank</span>
+                                </div>
+                                <div class="grid-option" onclick="openPaymentMethod('upi', 'withdraw')">
+                                    <span class="opt-icon">📱</span>
+                                    <span>UPI</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Dynamic Method Details (Slides in) -->
+            <div id="view-method-details" class="details-overlay">
+                <div class="details-header">
+                    <button class="back-btn-round" onclick="closeMethodDetails()">←</button>
+                    <h3 id="method-title">Payment</h3>
+                </div>
+
+                <div id="method-content" class="details-body"></div>
+
+                <div class="details-footer">
+                    <button id="action-btn" class="btn-primary btn-block">
+                        Proceed
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('Wallet page loaded');
+            if (window.updateWallet) updateWallet();
+        });
+
+        setInterval(() => {
+            if (window.updateWallet) updateWallet();
+        }, 2000);
+    </script>
+</body>
+
+</html>

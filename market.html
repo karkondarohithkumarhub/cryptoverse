@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market - CryptoVerse</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/theme.js"></script>
+    <script src="js/api.js"></script>
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">⚡ CRYPTOVERSE</div>
+        <nav class="nav">
+            <a href="home.html">Home</a>
+            <a href="trade.html">Trade</a>
+            <a href="wallet.html">Wallet</a>
+            <a href="market.html">Market</a>
+            <div class="dropdown">
+                <a href="#" class="dropdown-toggle">More ▼</a>
+                <div class="dropdown-menu">
+                    <a href="home.html">Home</a>
+                    <a href="notifications.html">Notifications</a>
+                    <a href="profile.html">Profile</a>
+                    <a href="trending.html">Trending Articles</a>
+                    <a href="news.html">News</a>
+                    <a href="bookmarks.html">Bookmarks</a>
+                    <a href="history.html">History</a>
+                    <a href="creator.html">Creator Center</a>
+                    <a href="settings.html">Settings</a>
+                    <a href="support.html">Help & Support</a>
+                </div>
+            </div>
+        </nav>
+        <div class="header-profile">
+            <span style="color: #66B2FF; font-weight: 600;">👤</span>
+            <a href="profile.html" style="color: #ffffff; text-decoration: none; font-weight: 600;">Profile</a>
+        </div>
+    </header>
+
+    <!-- Profile Section (Legacy) -->
+            <div class="dropdown">
+                <button class="profile-btn">👤 <span id="user-name">User</span></button>
+                <div class="dropdown-menu">
+                    <div class="dropdown-item">Username</div>
+                    <a href="#">Settings</a>
+                    <a href="index.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div id="tv-ticker-tape" style="margin-bottom: 2rem;"></div>
+
+        <div class="container market-insights-layout">
+            <div class="market-main-content">
+                <h1 class="page-title">📊 Global Market Insights</h1>
+
+                <div class="tv-market-overview-container"
+                    style="margin-bottom: 3rem; background: rgba(10, 14, 39, 0.6); border-radius: 20px; padding: 1.5rem; border: 1px solid rgba(0, 212, 255, 0.2); position: relative;">
+                    <h2 style="color: #00d4ff; margin-bottom: 1.5rem; text-align: center;">📈 Live Market Health</h2>
+                    <button class="fullscreen-btn" onclick="toggleFullScreen('tv-market-overview')">⛶</button>
+                    <div id="tv-market-overview" style="height: 700px;"></div>
+                </div>
+
+                <h2 style="color: #00d4ff; margin-bottom: 2rem;">🔥 Assets & Fast Trading</h2>
+                <div class="market-grid" id="market-grid">
+                    <!-- Coins will be loaded by JS -->
+                </div>
+
+                <!-- TradingView Crypto Screener -->
+                <div class="tv-screener-container"
+                    style="margin-top: 4rem; background: rgba(10, 14, 39, 0.6); border-radius: 20px; padding: 1.5rem; border: 1px solid rgba(0, 212, 255, 0.2);">
+                    <h2 style="color: #00d4ff; margin-bottom: 1.5rem;">🔍 Market Screener</h2>
+                    <div id="tv-crypto-screener" style="height: 800px;"></div>
+                </div>
+            </div>
+
+            <aside class="market-sidebar">
+                <div class="tv-news-container"
+                    style="background: rgba(10, 14, 39, 0.6); border-radius: 20px; padding: 1.5rem; border: 1px solid rgba(0, 212, 255, 0.2); height: 100%;">
+                    <h2 style="color: #00d4ff; margin-bottom: 1.5rem;">🌍 Global News</h2>
+                    <div id="tv-financial-news" style="height: 1200px;"></div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <!-- Coin Detail Modal -->
+    <div id="coin-detail-modal" class="modal">
+        <div class="modal-content coin-modal-content">
+            <button onclick="closeCoinDetail()" class="modal-close">×</button>
+
+            <div class="coin-detail-header">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <span class="coin-detail-icon" id="detail-icon"></span>
+                    <div>
+                        <h2 id="detail-name" style="margin: 0; color: #00d4ff;"></h2>
+                        <p id="detail-symbol" style="margin: 0.3rem 0 0 0; color: rgba(224, 242, 254, 0.6);"></p>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <h1 id="detail-price" style="margin: 0; color: #00d4ff; font-size: 2.5rem;"></h1>
+                    <p id="detail-change" style="margin: 0.5rem 0 0 0; font-size: 1.2rem;"></p>
+                </div>
+            </div>
+
+            <div class="chart-container"
+                style="height: 850px; margin: 2rem 0; display: flex; flex-direction: column; gap: 1rem; position: relative;">
+                <button class="fullscreen-btn" onclick="toggleFullScreen('tv_chart_container')">⛶ Full Screen
+                    Chart</button>
+                <div id="tv_chart_container" style="flex: 2; width: 100%;"></div>
+                <div id="tv_technical_analysis" style="flex: 1; width: 100%;"></div>
+            </div>
+
+
+            <div class="buy-section">
+                <div class="wallet-info-box">
+                    <p>💰 Your Wallet Balance: <strong id="current-balance">$0.00</strong></p>
+                </div>
+
+                <h3 style="color: #00d4ff; margin-bottom: 1rem;">Buy <span id="buy-symbol"></span></h3>
+
+                <div class="buy-controls">
+                    <label>Amount:</label>
+                    <input type="number" id="buy-amount" value="1" min="0.01" step="0.01">
+                </div>
+
+                <p class="total-cost" id="total-cost">Total: $0.00</p>
+
+                <div class="payment-method-selector">
+                    <label>Payment Method:</label>
+                    <select id="payment-method" class="payment-select">
+                        <option value="wallet">Use Wallet Balance</option>
+                        <option value="upi">UPI Payment</option>
+                        <option value="card">Credit/Debit Card</option>
+                    </select>
+                </div>
+
+                <button class="btn-primary btn-full" id="buy-btn-modal">💳 Buy Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/market.js"></script>
+</body>
+
+</html>

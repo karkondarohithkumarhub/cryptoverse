@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet - CryptoVerse</title>
+    <link rel="stylesheet" href="css/style.css?v=3.0">
+    <script src="js/theme.js"></script>
+    <script>
+        window.onerror = function (msg, url, line) {
+            alert("JS Error: " + msg + "\nFile: " + url + "\nLine: " + line);
+        };
+    </script>
+    <script src="http://localhost:3001/socket.io/socket.io.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/wallet_handlers.js?v=3.0"></script>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">⚡ CRYPTOVERSE</div>
+        <nav class="nav">
+            <a href="home.html">Home</a>
+            <a href="trade.html">Trade</a>
+            <a href="wallet.html">Wallet</a>
+            <a href="market.html">Market</a>
+            <div class="dropdown">
+                <a href="#" class="dropdown-toggle">More ▼</a>
+                <div class="dropdown-menu">
+                    <a href="home.html">Home</a>
+                    <a href="notifications.html">Notifications</a>
+                    <a href="profile.html">Profile</a>
+                    <a href="trending.html">Trending Articles</a>
+                    <a href="news.html">News</a>
+                    <a href="bookmarks.html">Bookmarks</a>
+                    <a href="history.html">History</a>
+                    <a href="creator.html">Creator Center</a>
+                    <a href="settings.html">Settings</a>
+                    <a href="support.html">Help & Support</a>
+                </div>
+            </div>
+        </nav>
+        <div class="header-profile">
+            <span style="color: #66B2FF; font-weight: 600;">👤</span>
+            <a href="profile.html" style="color: #ffffff; text-decoration: none; font-weight: 600;">Profile</a>
+        </div>
+    </header>
+        <div class="profile-section">
+            <div class="dropdown">
+                <button class="profile-btn">👤 <span id="user-name">User</span></button>
+                <div class="dropdown-menu">
+                    <div class="dropdown-item">Username</div>
+                    <a href="settings.html">Settings</a>
+                    <a href="index.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <h1 class="page-title">My Wallet</h1>
+
+            <div class="wallet-balance">
+                <h2>Balance</h2>
+                <p class="balance-amount" id="balance-amount">₹0.00</p>
+                <button class="btn-primary btn-large" onclick="openAddMoney()"
+                    style="margin-top: 1rem; width: 100%; background: linear-gradient(135deg, #00d4ff, #0099cc);">
+                    💳 Manage Wallet
+                </button>
+            </div>
+
+            <!-- Your Crypto Wallet Section -->
+            <div class="wallet-section">
+                <h2 class="section-title">💼 Your Crypto Wallet</h2>
+                <div class="coins-list" id="wallet-coins">
+                    <p class="empty-message">No coins yet. Start trading!</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Unified Wallet Modal -->
+    <div id="add-money-modal" class="modal">
+        <div class="modal-content wallet-modal-content">
+            <button onclick="closeAddMoney()" class="modal-close">×</button>
+            
+            <!-- Main Screen with Buttons -->
+            <div id="wallet-main" class="wallet-screen">
+                <h2>My Wallet</h2>
+                <h1 id="modal-balance" class="big-balance">₹0.00</h1>
+                <div class="modal-buttons">
+                    <button class="btn-primary" onclick="showPaymentSection('deposit')">📥 Add Money</button>
+                    <button class="btn-primary" onclick="showPaymentSection('withdraw')">📤 Withdraw</button>
+                </div>
+            </div>
+
+            <!-- DEPOSIT SCREEN -->
+            <div id="deposit-section" class="wallet-screen" style="display: none;">
+                <button onclick="backToMain()" class="back-button">← Back</button>
+                <h3>Add Money to Wallet</h3>
+                <div class="input-group-fancy">
+                    <span class="currency-symbol">₹</span>
+                    <input type="number" id="deposit-amount" placeholder="Enter Amount" min="100">
+                </div>
+                <p class="amount-hint">Minimum: ₹100</p>
+                <div class="payment-options-list">
+                    <div class="payment-option" onclick="showPaymentDetails('upi', 'deposit')">📱 UPI</div>
+                    <div class="payment-option" onclick="showPaymentDetails('card', 'deposit')">💳 Credit/Debit Card</div>
+                    <div class="payment-option" onclick="showPaymentDetails('bank', 'deposit')">🏦 Bank Transfer</div>
+                    <div class="payment-option" onclick="showPaymentDetails('qr', 'deposit')">📷 QR Code</div>
+                </div>
+            </div>
+
+            <!-- WITHDRAW SCREEN -->
+            <div id="withdraw-section" class="wallet-screen" style="display: none;">
+                <button onclick="backToMain()" class="back-button">← Back</button>
+                <h3>Withdraw Money from Wallet</h3>
+                <div class="input-group-fancy">
+                    <span class="currency-symbol">₹</span>
+                    <input type="number" id="withdraw-amount" placeholder="Enter Amount" min="100">
+                </div>
+                <p class="amount-hint">Minimum: ₹100</p>
+                <div class="payment-options-list">
+                    <div class="payment-option" onclick="showPaymentDetails('upi', 'withdraw')">📱 UPI</div>
+                    <div class="payment-option" onclick="showPaymentDetails('card', 'withdraw')">💳 Credit/Debit Card</div>
+                    <div class="payment-option" onclick="showPaymentDetails('bank', 'withdraw')">🏦 Bank Transfer</div>
+                    <div class="payment-option" onclick="showPaymentDetails('qr', 'withdraw')">📷 QR Code</div>
+                </div>
+            </div>
+
+            <!-- PAYMENT DETAILS SCREEN -->
+            <div id="payment-details" class="wallet-screen" style="display: none;">
+                <button onclick="backToPaymentSection()" class="back-button">← Back</button>
+                <div id="payment-method-form"></div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('Wallet page loaded');
+            if (window.updateWallet) updateWallet();
+        });
+
+        setInterval(() => {
+            if (window.updateWallet) updateWallet();
+        }, 2000);
+    </script>
+</body>
+
+</html>

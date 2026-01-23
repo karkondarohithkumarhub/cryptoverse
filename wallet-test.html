@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet Payment Test</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="http://localhost:3001/socket.io/socket.io.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/wallet_handlers.js"></script>
+</head>
+
+<body>
+    <div style="padding: 2rem; max-width: 600px; margin: 0 auto;">
+        <h1>Wallet Payment Methods Test</h1>
+        <p>Current Balance: <span id="test-balance">Loading...</span></p>
+
+        <button onclick="testOpenModal()"
+            style="padding: 1rem 2rem; background: #00d4ff; border: none; border-radius: 8px; color: white; font-size: 1rem; cursor: pointer; margin: 1rem 0;">
+            Open Wallet Modal
+        </button>
+
+        <button onclick="testWalletHandlers()"
+            style="padding: 1rem 2rem; background: #10b981; border: none; border-radius: 8px; color: white; font-size: 1rem; cursor: pointer; margin: 1rem 0;">
+            Test Wallet Handlers
+        </button>
+
+        <div id="test-results"
+            style="margin-top: 2rem; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 8px; color: white;">
+            <h3>Test Results:</h3>
+            <pre id="results-content" style="white-space: pre-wrap; color: #00d4ff;"></pre>
+        </div>
+    </div>
+
+    <script>
+        // Initialize wallet for testing
+        if (typeof wallet === 'undefined') {
+            window.wallet = { balance: 100000, coins: {} };
+        }
+
+        async function init() {
+            console.log('Initializing test page...');
+            const balanceEl = document.getElementById('test-balance');
+
+            try {
+                await updateWallet();
+                balanceEl.textContent = `₹${wallet.balance.toFixed(2)}`;
+                logResult('✅ Wallet loaded successfully');
+                logResult(`Balance: ₹${wallet.balance.toFixed(2)}`);
+            } catch (err) {
+                balanceEl.textContent = 'Error loading wallet';
+                logResult('❌ Error loading wallet: ' + err.message);
+            }
+        }
+
+        function testOpenModal() {
+            logResult('Testing openAddMoney()...');
+            try {
+                if (typeof openAddMoney === 'function') {
+                    openAddMoney();
+                    logResult('✅ openAddMoney() function exists and executed');
+                } else {
+                    logResult('❌ openAddMoney() function not found!');
+                }
+            } catch (err) {
+                logResult('❌ Error calling openAddMoney(): ' + err.message);
+            }
+        }
+
+        function testWalletHandlers() {
+            logResult('\\n=== Testing Wallet Handlers ===');
+
+            const tests = [
+                { name: 'openAddMoney', func: 'openAddMoney' },
+                { name: 'closeAddMoney', func: 'closeAddMoney' },
+                { name: 'toggleAction', func: 'toggleAction' },
+                { name: 'openPaymentMethod', func: 'openPaymentMethod' },
+                { name: 'getWallet', func: 'getWallet' },
+                { name: 'updateModalBalance', func: 'updateModalBalance' }
+            ];
+
+            tests.forEach(test => {
+                if (typeof window[test.func] === 'function') {
+                    logResult(`✅ ${test.name} - FOUND`);
+                } else {
+                    logResult(`❌ ${test.name} - NOT FOUND`);
+                }
+            });
+
+            logResult('\\nWallet object:');
+            logResult(JSON.stringify(wallet, null, 2));
+        }
+
+        function logResult(message) {
+            const resultsEl = document.getElementById('results-content');
+            resultsEl.textContent += message + '\\n';
+            console.log(message);
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

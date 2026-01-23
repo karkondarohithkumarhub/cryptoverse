@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cryptoverse - Secure Admin</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="http://localhost:3001/socket.io/socket.io.js"></script>
+    <script src="js/api.js"></script>
+    <style>
+        .admin-container {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(10, 14, 39, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #00d4ff;
+            margin: 1rem 0;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(10, 14, 39, 0.6);
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 3rem;
+        }
+
+        .admin-table th,
+        .admin-table td {
+            text-align: left;
+            padding: 1.2rem;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .admin-table th {
+            background: rgba(0, 212, 255, 0.1);
+            color: #00d4ff;
+        }
+
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #050816;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-box {
+            background: rgba(10, 14, 39, 0.8);
+            border: 1px solid #00d4ff;
+            padding: 3rem;
+            border-radius: 20px;
+            width: 400px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="login-overlay" class="login-overlay">
+        <div class="login-box">
+            <h2 style="color: #00d4ff; text-align: center; margin-bottom: 2rem;">🎛️ Admin Login</h2>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="admin-user" placeholder="admin">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="admin-pass" placeholder="password">
+            </div>
+            <button class="btn-primary" onclick="adminLogin()">Login</button>
+            <p id="login-error" style="color: #ef4444; margin-top: 1rem; display: none;"></p>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="logo">⚡ CRYPTOVERSE</div>
+        <nav class="nav">
+            <a href="home.html">Home</a>
+            <a href="trade.html">Trade</a>
+            <a href="wallet.html">Wallet</a>
+            <a href="market.html">Market</a>
+            <div class="dropdown">
+                <a href="#" class="dropdown-toggle">More ▼</a>
+                <div class="dropdown-menu">
+                    <a href="home.html">Home</a>
+                    <a href="notifications.html">Notifications</a>
+                    <a href="profile.html">Profile</a>
+                    <a href="trending.html">Trending Articles</a>
+                    <a href="news.html">News</a>
+                    <a href="bookmarks.html">Bookmarks</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="admin-container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>👥 Total Users</h3>
+                    <div class="stat-value" id="stat-users">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>💰 Total Volume</h3>
+                    <div class="stat-value" id="stat-volume">₹0.00</div>
+                </div>
+            </div>
+
+            <h2 class="section-title">👤 Registered Users</h2>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>User ID</th>
+                        <th>Created At</th>
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+                <tbody id="user-rows"></tbody>
+            </table>
+
+            <h2 class="section-title">📝 Recent Transactions</h2>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Type</th>
+                        <th>Coin</th>
+                        <th>Amount</th>
+                        <th>Total Cost</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody id="tx-rows"></tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+
+</html>

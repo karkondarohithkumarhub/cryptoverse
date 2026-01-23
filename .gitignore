@@ -1,0 +1,77 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Database files
+database/
+*.db
+*.sqlite
+*.sqlite3
+
+# XAMPP/MySQL
+MYSQL/
+mysql-backup/
+*.sql
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS files
+Thumbs.db
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Build outputs
+dist/
+build/
+out/
+
+# Testing
+.nyc_output/
+coverage/
+
+# Temporary files
+temp/
+tmp/
+*.tmp
+
+# IDE
+*.iml
+.classpath
+.project
+.settings/
+
+# macOS
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+ehthumbs.db
+Desktop.ini
+
+# Misc
+.cache/
+.parcel-cache/
+.next/
+out/
