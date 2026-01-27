@@ -5,6 +5,8 @@
     <title>CryptoVerse News</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <link rel="stylesheet" href="css/style.css?v=2.0">
+     <script src="js/theme.js"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/theme.js"></script>
 
@@ -215,6 +217,7 @@
     <div class="loading">Loading latest crypto news...</div>
 </div>
 
+
 <script>
 const API_URL = "https://api.rss2json.com/v1/api.json?rss_url=https://cointelegraph.com/rss";
 
@@ -227,23 +230,41 @@ async function loadNews() {
         const articles = data.items;
 
         container.innerHTML = articles.map(article => `
-            <div class="news-card" onclick="window.open('${article.link}','_blank')">
-                <img src="${article.thumbnail || 'https://via.placeholder.com/400x200'}" alt="News Image">
-                <div class="news-content">
-                    <div class="news-title">${article.title}</div>
-                    <div class="news-desc">
-                        ${article.description ? article.description.replace(/(<([^>]+)>)/gi, "").slice(0, 120) + "..." : ""}
-                    </div>
-                    <div class="news-date">
-                        ${new Date(article.pubDate).toLocaleString()}
-                    </div>
-                </div>
+    <div class="news-card">
+        <img src="${article.thumbnail || 'https://via.placeholder.com/400x200'}" alt="News Image">
+        <div class="news-content">
+            <div class="news-title">${article.title}</div>
+            <div class="news-desc">
+                ${article.description ? article.description.replace(/(<([^>]+)>)/gi, "").slice(0, 120) + "..." : ""}
             </div>
-        `).join("");
+            <div class="news-date">
+                ${new Date(article.pubDate).toLocaleString()}
+            </div>
+            <!-- SAVE BUTTON -->
+            <div style="margin-top:10px; text-align:right;">
+                <button onclick="saveArticle('${article.title}'); event.stopPropagation();" 
+                        style="padding:5px 10px; border:none; border-radius:5px; background:#00d4ff; color:#000; cursor:pointer; font-weight:600;">
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+`).join("");
+
 
     } catch (error) {
         container.innerHTML = "<div class='loading'>Failed to load news. Try again later.</div>";
         console.error(error);
+    }
+}
+function saveArticle(title) {
+    let savedArticles = JSON.parse(localStorage.getItem("savedArticles")) || [];
+    if (!savedArticles.find(a => a.title === title)) {
+        savedArticles.push({ title: title, added: new Date().toLocaleDateString() });
+        localStorage.setItem("savedArticles", JSON.stringify(savedArticles));
+        alert("Article saved to bookmarks!");
+    } else {
+        alert("Article already in bookmarks!");
     }
 }
 
@@ -252,6 +273,8 @@ loadNews();
 /* Auto refresh every 10 minutes */
 setInterval(loadNews, 600000);
 </script>
+
+
 
 </body>
 </html>

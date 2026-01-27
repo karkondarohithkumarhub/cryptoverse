@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bookmarks - CryptoVerse</title>
     <link rel="stylesheet" href="css/style.css?v=2.0">
-    <script src="js/theme.js"></script>
-
+  <script src="js/theme.js"></script>
 
 </head>
 
 <body>
+    <!-- Header -->
     <header class="header">
         <div class="logo">⚡ CRYPTOVERSE</div>
         <nav class="nav">
@@ -41,62 +41,105 @@
         </div>
     </header>
 
+    <!-- Main Content -->
     <main class="main-content">
         <div class="container" style="max-width: 800px; padding-top: 2rem;">
-            <h1 class="page-title">🔖 Bookmarked Items</h1>
+            <h1 class="page-title">🔖 Bookmarked Items & Watchlist</h1>
 
-            <div style="margin-bottom: 2rem;">
-                <h2
-                    style="font-size: 1.2rem; color: #00d4ff; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">
-                    Watchlist Coins</h2>
+            <!-- Watchlist Coins -->
+            <section style="margin-bottom: 2rem;">
+                <h2 style="font-size: 1.2rem; color: #00d4ff; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">
+                    Watchlist Coins
+                </h2>
                 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem;">
-                    <div
-                        style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; text-align: center;">
+                    <div class="watchlist-coin">
                         <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">₿</span>
                         <strong>Bitcoin</strong>
-                        <div style="color: #10b981; font-size: 0.9rem;">+2.5%</div>
+                        <div class="coin-price">$0</div>
                     </div>
-                    <div
-                        style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; text-align: center;">
+                    <div class="watchlist-coin">
                         <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">Ξ</span>
                         <strong>Ethereum</strong>
-                        <div style="color: #ff4757; font-size: 0.9rem;">-1.2%</div>
+                        <div class="coin-price">$0</div>
                     </div>
-                    <div
-                        style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; text-align: center;">
+                    <div class="watchlist-coin">
                         <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">◎</span>
                         <strong>Solana</strong>
-                        <div style="color: #10b981; font-size: 0.9rem;">+5.8%</div>
+                        <div class="coin-price">$0</div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div>
-                <h2
-                    style="font-size: 1.2rem; color: #00d4ff; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">
-                    Saved Articles</h2>
-                <div class="card"
-                    style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <h3 style="margin: 0; color: #fff;">Understanding Blockchain Consensus</h3>
-                        <small style="color: #aaa;">Added 2 days ago</small>
-                    </div>
-                    <button
-                        style="background: none; border: 1px solid #ff4757; color: #ff4757; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">Remove</button>
-                </div>
-                <div class="card"
-                    style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <h3 style="margin: 0; color: #fff;">Top 10 Trading Strategies</h3>
-                        <small style="color: #aaa;">Added 1 week ago</small>
-                    </div>
-                    <button
-                        style="background: none; border: 1px solid #ff4757; color: #ff4757; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">Remove</button>
-                </div>
-            </div>
-
+            <!-- Saved Articles -->
+            <section>
+                <h2 style="font-size: 1.2rem; color: #00d4ff; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">
+                    Saved Articles
+                </h2>
+                <div id="savedArticles"></div>
+            </section>
         </div>
     </main>
+
+    <!-- Scripts -->
+    <script>
+        // ===== Watchlist Coins =====
+        const coins = [
+            { id: "bitcoin", symbol: "₿", name: "Bitcoin" },
+            { id: "ethereum", symbol: "Ξ", name: "Ethereum" },
+            { id: "solana", symbol: "◎", name: "Solana" }
+        ];
+
+        async function updatePrices() {
+            try {
+                const ids = coins.map(c => c.id).join(',');
+                const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`);
+                const data = await res.json();
+
+                coins.forEach((coin, index) => {
+                    const card = document.querySelectorAll(".watchlist-coin")[index];
+                    const priceChange = data[coin.id].usd_24h_change;
+
+                    card.querySelector(".coin-price").textContent = `$${data[coin.id].usd.toFixed(2)} (${priceChange.toFixed(2)}%)`;
+                    card.querySelector(".coin-price").style.color = priceChange >= 0 ? "#10b981" : "#ff4757";
+                });
+
+            } catch (err) {
+                console.error("Failed to fetch coin prices", err);
+            }
+        }
+
+        updatePrices();
+        setInterval(updatePrices, 30000); // refresh every 30 seconds
+
+        // ===== Saved Articles =====
+        let savedArticles = JSON.parse(localStorage.getItem("savedArticles")) || [];
+
+        function renderArticles() {
+            const container = document.getElementById("savedArticles");
+            if (savedArticles.length === 0) {
+                container.innerHTML = "<p>No articles saved yet. Go to News and save some!</p>";
+                return;
+            }
+
+            container.innerHTML = savedArticles.map(a => `
+                <div class="card">
+                    <div>
+                        <h3 style="margin: 0;">${a.title}</h3>
+                        <small >Added ${a.added}</small>
+                    </div>
+                    <button class="btn-remove" onclick="removeArticle('${a.title}')">Remove</button>
+                </div>
+            `).join("");
+        }
+
+        function removeArticle(title) {
+            savedArticles = savedArticles.filter(a => a.title !== title);
+            localStorage.setItem("savedArticles", JSON.stringify(savedArticles));
+            renderArticles();
+        }
+
+        renderArticles();
+    </script>
 </body>
 
 </html>
