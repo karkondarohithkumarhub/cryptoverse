@@ -41,61 +41,62 @@
 
     <main class="main-content">
         <div class="container" style="max-width: 900px; padding-top: 2rem;">
-            <h1 class="page-title">📰 Latest Market News</h1>
+            <Center><h1  style="color: white;">📰 Latest Market News</h1></Center>
 
-            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+    
+        <!-- 🔴 LIVE NEWS SECTION (New Feature Added) -->
+<div style="margin-top: 3rem;">
+    <h2 style="color:#00d4ff; margin-bottom:1rem;">🛰️ Live Crypto News</h2>
+    <div id="liveNewsContainer" style="display:flex; flex-direction:column; gap:1.5rem;"></div>
+</div>
 
-                <div class="card"
-                    style="background: rgba(255, 255, 255, 0.05); padding: 2rem; border-radius: 12px; display: flex; gap: 2rem; align-items: center; transition: background 0.3s;"
-                    onmouseover="this.style.background='rgba(255, 255, 255, 0.08)'"
-                    onmouseout="this.style.background='rgba(255, 255, 255, 0.05)'">
-                    <div
-                        style="font-size: 3rem; background: rgba(0, 0, 0, 0.3); width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; border-radius: 12px;">
-                        🏦</div>
-                    <div>
-                        <small style="color: #00d4ff; font-weight: bold;">REGULATION</small>
-                        <h3 style="margin: 0.5rem 0; color: #fff;">Major Bank Announces Crypto Custody Services</h3>
-                        <p style="color: #aaa; margin-bottom: 1rem;">Global banking giant enters the digital asset
-                            space, offering institutional-grade custody for Bitcoin and Ethereum.</p>
-                        <small style="color: #666;">2 mins ago</small>
-                    </div>
-                </div>
-
-                <div class="card"
-                    style="background: rgba(255, 255, 255, 0.05); padding: 2rem; border-radius: 12px; display: flex; gap: 2rem; align-items: center; transition: background 0.3s;"
-                    onmouseover="this.style.background='rgba(255, 255, 255, 0.08)'"
-                    onmouseout="this.style.background='rgba(255, 255, 255, 0.05)'">
-                    <div
-                        style="font-size: 3rem; background: rgba(0, 0, 0, 0.3); width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; border-radius: 12px;">
-                        📈</div>
-                    <div>
-                        <small style="color: #10b981; font-weight: bold;">MARKET ANALYSIS</small>
-                        <h3 style="margin: 0.5rem 0; color: #fff;">Ethereum Gas Fees Hit 6-Month Low</h3>
-                        <p style="color: #aaa; margin-bottom: 1rem;">Network upgrades have successfully lowered
-                            transaction costs, boosting DeFi activity across the ecosystem.</p>
-                        <small style="color: #666;">1 hour ago</small>
-                    </div>
-                </div>
-
-                <div class="card"
-                    style="background: rgba(255, 255, 255, 0.05); padding: 2rem; border-radius: 12px; display: flex; gap: 2rem; align-items: center; transition: background 0.3s;"
-                    onmouseover="this.style.background='rgba(255, 255, 255, 0.08)'"
-                    onmouseout="this.style.background='rgba(255, 255, 255, 0.05)'">
-                    <div
-                        style="font-size: 3rem; background: rgba(0, 0, 0, 0.3); width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; border-radius: 12px;">
-                        💻</div>
-                    <div>
-                        <small style="color: #7c3aed; font-weight: bold;">TECHNOLOGY</small>
-                        <h3 style="margin: 0.5rem 0; color: #fff;">New Layer 2 Solution Launches Mainnet</h3>
-                        <p style="color: #aaa; margin-bottom: 1rem;">Promising near-zero fees and instant confirmation
-                            times, the new protocol aims to scale blockchain adoption.</p>
-                        <small style="color: #666;">3 hours ago</small>
-                    </div>
-                </div>
-
-            </div>
-        </div>
     </main>
+    <script>
+const NEWS_API = "https://api.rss2json.com/v1/api.json?rss_url=https://cointelegraph.com/rss";
+
+async function loadLiveNews() {
+    const container = document.getElementById("liveNewsContainer");
+
+    try {
+        const res = await fetch(NEWS_API);
+        const data = await res.json();
+
+        const articles = data.items.slice(0, 5); // show latest 5
+
+        container.innerHTML = articles.map(article => `
+            <div class="card"
+                style="background: rgba(255, 255, 255, 0.05); padding: 2rem; border-radius: 12px; display: flex; gap: 2rem; align-items: center; transition: background 0.3s;"
+                onmouseover="this.style.background='rgba(255, 255, 255, 0.08)'"
+                onmouseout="this.style.background='rgba(255, 255, 255, 0.05)'"
+                onclick="window.open('${article.link}', '_blank')">
+
+                <div style="font-size: 2.5rem; background: rgba(0, 0, 0, 0.3); width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; border-radius: 12px;">
+                    📰
+                </div>
+
+                <div>
+                    <small style="color: #00d4ff; font-weight: bold;">LIVE UPDATE</small>
+                    <h3 style="margin: 0.5rem 0; color: #fff;">${article.title}</h3>
+                    <p style="color: #aaa; margin-bottom: 1rem;">
+                        ${article.description.replace(/(<([^>]+)>)/gi, "").slice(0, 120)}...
+                    </p>
+                    <small style="color: #666;">
+                        ${new Date(article.pubDate).toLocaleString()}
+                    </small>
+                </div>
+            </div>
+        `).join("");
+
+    } catch (err) {
+        container.innerHTML = "<p style='color:#888;'>Unable to load live news right now.</p>";
+        console.error(err);
+    }
+}
+
+loadLiveNews();
+setInterval(loadLiveNews, 600000); // refresh every 10 mins
+</script>
+
 </body>
 
 </html>
