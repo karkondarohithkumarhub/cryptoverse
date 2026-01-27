@@ -1,13 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Article Details - CryptoVerse</title>
-  <link rel="stylesheet" href="css/style.css?v=2.0">
+    <meta charset="UTF-8">
+    <title>CryptoVerse News</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link rel="stylesheet" href="css/style.css?v=2.0">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    /* Root colors */
+
+    <style>
+      /* Root colors */
+      .header-profile {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.header-profile span {
+    font-size: 16px; /* control emoji size */
+}
+
+.header-profile a {
+    font-size: 14px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: 500;
+}
+
+.header-profile:hover {
+    background: rgba(0,212,255,0.15);
+    cursor: pointer;
+}
+
     :root {
       --primary-color: #1a1a2e;
       --secondary-color: #16213e;
@@ -72,10 +99,85 @@
       .btn-share,.btn-bookmark,.btn-trade{flex:1;text-align:center;}
       .chart-container{height:250px;}
     }
-  </style>
-</head>
-<body>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #ffffff;
+        }
 
+        header {
+            text-align: center;
+            padding: 25px 15px;
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(6px);
+        }
+
+        .news-container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 30px 20px 60px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .news-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: 0.3s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .news-card:hover {
+            transform: translateY(-6px);
+            border-color: #00d4ff;
+            box-shadow: 0 10px 25px rgba(0, 212, 255, 0.2);
+        }
+
+        .news-card img {
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+        }
+
+        .news-content {
+            padding: 15px;
+        }
+
+        .news-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .news-desc {
+            font-size: 14px;
+            color: #cfcfcf;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .news-date {
+            font-size: 12px;
+            color: #9aa4af;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px;
+            font-size: 18px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+
+<body>
 <header class="header">
   <div class="logo">⚡ CRYPTOVERSE</div>
   <nav class="nav">
@@ -105,183 +207,48 @@
   </div>
 </header>
 
-<main class="article-detail-container">
-  <div class="article-back">
-    <a href="trending.html" class="back-btn">← Back to Trending</a>
-  </div>
+<header>⚡ CryptoVerse Latest News</header>
 
-  <article class="article-detail-content">
-    <div class="article-detail-header">
-      <span class="article-detail-emoji" id="emoji">📰</span>
-      <span class="article-detail-category" id="category">bitcoin</span>
-      <h1 id="title">Loading...</h1>
-      <p class="article-meta">
-        <span id="time">--:-- ago</span> •
-        <span id="views">-- views</span>
-      </p>
-    </div>
-
-    <div class="article-detail-body">
-      <div class="price-chart-section" id="priceChartSection" style="display:none;">
-        <h2>Live Price Chart</h2>
-        <div class="chart-container">
-          <canvas id="priceChart"></canvas>
-        </div>
-        <div class="price-stats">
-          <div class="stat"><span class="stat-label">Current Price</span><span class="stat-value" id="currentPrice">$--</span></div>
-          <div class="stat"><span class="stat-label">24h Change</span><span class="stat-value" id="priceChange">--</span></div>
-          <div class="stat"><span class="stat-label">24h High</span><span class="stat-value" id="highPrice">$--</span></div>
-          <div class="stat"><span class="stat-label">24h Low</span><span class="stat-value" id="lowPrice">$--</span></div>
-        </div>
-      </div>
-
-      <div class="article-text-content">
-        <p id="description">Loading article content...</p>
-      </div>
-
-      <div class="realtime-updates">
-        <h2>📊 Real-time Market Updates</h2>
-        <div class="updates-feed" id="updatesFeed"><div class="update-item">Initializing real-time data...</div></div>
-      </div>
-    </div>
-
-    <div class="article-footer-detail">
-      <button class="btn-share">📤 Share</button>
-      <button class="btn-bookmark">🔖 Bookmark</button>
-      <button class="btn-trade">💹 Trade Now</button>
-    </div>
-  </article>
-</main>
+<div class="news-container" id="newsContainer">
+    <div class="loading">Loading latest crypto news...</div>
+</div>
 
 <script>
-let selectedArticle = {
-  id: 1,
-  emoji:'₿',
-  category:'Bitcoin',
-  symbol:'BTC',
-  title:'Bitcoin Halving 2024',
-  time:'5h ago',
-  views:1250,
-  content:'The next Bitcoin halving is expected to occur in 2024. This event typically impacts the BTC supply and price significantly.',
-  price: 34500
-};
+const API_URL = "https://api.rss2json.com/v1/api.json?rss_url=https://cointelegraph.com/rss";
 
-let priceChart=null, priceHistory=[], updateLog=[], chartUpdateInterval=null;
+async function loadNews() {
+    const container = document.getElementById("newsContainer");
 
-function displayArticle(){
-  document.getElementById('emoji').textContent=selectedArticle.emoji;
-  document.getElementById('category').textContent=selectedArticle.category;
-  document.getElementById('title').textContent=selectedArticle.title;
-  document.getElementById('time').textContent=selectedArticle.time;
-  document.getElementById('views').textContent=selectedArticle.views.toLocaleString()+' views';
-  document.getElementById('description').textContent=selectedArticle.content;
-  if(selectedArticle.price) {
-    document.getElementById('priceChartSection').style.display='block';
-    initializePriceChart();
-  }
-  document.title=selectedArticle.title+' - CryptoVerse';
-}
+    try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+        const articles = data.items;
 
-function initializePriceChart(){
-  priceHistory=[];
-  for(let i=23;i>=0;i--){
-    const randChange=(Math.random()-0.5)*selectedArticle.price*0.02;
-    priceHistory.push({time:`${i}h ago`, price:selectedArticle.price+randChange});
-  }
-  priceHistory.push({time:'now', price:selectedArticle.price});
+        container.innerHTML = articles.map(article => `
+            <div class="news-card" onclick="window.open('${article.link}','_blank')">
+                <img src="${article.thumbnail || 'https://via.placeholder.com/400x200'}" alt="News Image">
+                <div class="news-content">
+                    <div class="news-title">${article.title}</div>
+                    <div class="news-desc">
+                        ${article.description ? article.description.replace(/(<([^>]+)>)/gi, "").slice(0, 120) + "..." : ""}
+                    </div>
+                    <div class="news-date">
+                        ${new Date(article.pubDate).toLocaleString()}
+                    </div>
+                </div>
+            </div>
+        `).join("");
 
-  const ctx=document.getElementById('priceChart').getContext('2d');
-  priceChart=new Chart(ctx,{
-    type:'line',
-    data:{
-      labels: priceHistory.map(h=>h.time),
-      datasets:[{
-        label:`${selectedArticle.symbol} Price (USD)`,
-        data: priceHistory.map(h=>h.price),
-        borderColor:'#00d4ff',
-        backgroundColor:'rgba(0,212,255,0.1)',
-        borderWidth:2,
-        fill:true,
-        tension:0.4,
-        pointBackgroundColor:'#00d4ff',
-        pointBorderColor:'#00d4ff',
-        pointRadius:3,
-        pointHoverRadius:5
-      }]
-    },
-    options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:'#eaeaea'}}},
-      scales:{
-        y:{beginAtZero:false, grid:{color:'rgba(42,42,78,0.3)'}, ticks:{color:'#999'}},
-        x:{grid:{color:'rgba(42,42,78,0.3)'}, ticks:{color:'#999'}}
-      }
+    } catch (error) {
+        container.innerHTML = "<div class='loading'>Failed to load news. Try again later.</div>";
+        console.error(error);
     }
-  });
-  updatePriceStats();
-  initializeRealTimeUpdates();
 }
 
-function updatePriceStats(){
-  const prices=priceHistory.map(h=>h.price);
-  const currentPrice=prices[prices.length-1];
-  const previousPrice=prices[0];
-  const change=((currentPrice-previousPrice)/previousPrice*100).toFixed(2);
-  const high=Math.max(...prices).toFixed(2);
-  const low=Math.min(...prices).toFixed(2);
-  document.getElementById('currentPrice').textContent=`$${currentPrice.toFixed(2)}`;
-  document.getElementById('priceChange').textContent=`${change>0?'+':''}${change}%`;
-  document.getElementById('highPrice').textContent=`$${high}`;
-  document.getElementById('lowPrice').textContent=`$${low}`;
-  document.getElementById('priceChange').style.color=parseFloat(change)>=0?'#00d4ff':'#e94560';
-}
+loadNews();
 
-function addUpdate(message,isPositive=null){
-  const feed=document.getElementById('updatesFeed');
-  const div=document.createElement('div');
-  div.className='update-item';
-  if(isPositive!==null) div.classList.add(isPositive?'positive':'negative');
-  const ts=new Date().toLocaleTimeString();
-  div.textContent=`[${ts}] ${message}`;
-  feed.insertBefore(div, feed.firstChild);
-  while(feed.children.length>10) feed.removeChild(feed.lastChild);
-}
-
-function updateChart(){
-  const rand=(Math.random()-0.5)*0.5;
-  selectedArticle.price=selectedArticle.price*(1+rand/100);
-  priceHistory.shift();
-  priceHistory.push({time:'now', price:selectedArticle.price});
-  priceChart.data.labels=priceHistory.map(h=>h.time);
-  priceChart.data.datasets[0].data=priceHistory.map(h=>h.price);
-  priceChart.update('none');
-  updatePriceStats();
-}
-
-function initializeRealTimeUpdates(){
-  const updates=[
-    `Volume spike: ${(Math.random()*50+10).toFixed(1)}%`,
-    `Large buy order: $${(Math.random()*500000+100000).toFixed(0)}`,
-    `Moving avg ${selectedArticle.symbol} crossed 50-day MA`,
-    `Institutional interest detected`,
-    `Resistance broken at key level`,
-    `Market sentiment: ${['Bullish','Neutral','Bearish'][Math.floor(Math.random()*3)]}`
-  ];
-  addUpdate(`📊 Tracking ${selectedArticle.symbol} started`);
-  setInterval(()=>{
-    const msg=updates[Math.floor(Math.random()*updates.length)];
-    const pos=Math.random()>0.5;
-    addUpdate(msg,pos);
-  },5000);
-  chartUpdateInterval=setInterval(updateChart,3000);
-}
-
-document.addEventListener('DOMContentLoaded', displayArticle);
-
-document.querySelector('.btn-trade').addEventListener('click',()=>{alert(`🚀 Redirecting to Trade ${selectedArticle.symbol}...`);});
-document.querySelector('.btn-bookmark').addEventListener('click',()=>{alert(`✅ Article bookmarked!`);});
-document.querySelector('.btn-share').addEventListener('click',()=>{alert(`📤 Share link copied!`);});
+/* Auto refresh every 10 minutes */
+setInterval(loadNews, 600000);
 </script>
 
 </body>
