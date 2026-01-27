@@ -1,944 +1,288 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trending - CryptoVerse</title>
-    <link rel="stylesheet" href="css/style.css?v=2.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Article Details - CryptoVerse</title>
+  <link rel="stylesheet" href="css/style.css?v=2.0">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Root colors */
+    :root {
+      --primary-color: #1a1a2e;
+      --secondary-color: #16213e;
+      --accent-color: #0f3460;
+      --highlight-color: #e94560;
+      --success-color: #00d4ff;
+      --text-light: #eaeaea;
+      --border-color: #2a2a4e;
+    }
+
+    /* General resets */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #1a1a2e,#16213e); color: var(--text-light); line-height:1.6; }
+
+    .article-detail-container { max-width:1000px; margin:80px auto 0; padding:40px 20px; }
+    .article-back { margin-bottom:30px; }
+    .back-btn { color: var(--success-color); text-decoration:none; font-weight:600; transition:0.3s; display:inline-block; }
+    .back-btn:hover { color: var(--highlight-color); transform:translateX(-5px); }
+
+    .article-detail-content { background: rgba(22,33,62,0.6); border:1px solid var(--border-color); border-radius:12px; padding:40px; backdrop-filter:blur(10px); }
+
+    .article-detail-header { margin-bottom:40px; padding-bottom:30px; border-bottom:2px solid var(--border-color); }
+    .article-detail-emoji { font-size:4rem; display:block; margin-bottom:15px; }
+    .article-detail-category { display:inline-block; padding:6px 14px; background: rgba(233,69,96,0.2); color: var(--highlight-color); border-radius:20px; font-size:0.8rem; text-transform:uppercase; margin-bottom:15px; }
+    .article-detail-header h1 { font-size:2.2rem; line-height:1.3; margin-bottom:15px; background: linear-gradient(135deg, var(--success-color), var(--highlight-color)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .article-meta { color:#999; font-size:0.95rem; }
+
+    .article-detail-body { margin-bottom:30px; }
+
+    .price-chart-section { background: rgba(15,52,96,0.3); border:1px solid var(--border-color); border-radius:10px; padding:25px; margin-bottom:30px; }
+    .price-chart-section h2 { margin-bottom:20px; color: var(--success-color); }
+    .chart-container { background: rgba(15,52,96,0.5); padding:20px; border-radius:8px; margin-bottom:20px; position:relative; height:300px; }
+    .price-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:15px; }
+    .stat { background: rgba(15,52,96,0.6); padding:15px; border-radius:8px; display:flex; flex-direction:column; gap:8px; }
+    .stat-label { font-size:0.85rem; color:#999; text-transform:uppercase; }
+    .stat-value { font-size:1.3rem; font-weight:bold; color: var(--success-color); }
+
+    .article-text-content { background: rgba(15,52,96,0.2); padding:25px; border-radius:10px; margin-bottom:30px; line-height:1.8; }
+    .article-text-content p { font-size:1.05rem; margin-bottom:15px; }
+
+    .realtime-updates { background: rgba(15,52,96,0.3); border:1px solid var(--border-color); border-radius:10px; padding:25px; }
+    .realtime-updates h2 { margin-bottom:20px; color: var(--success-color); }
+    .updates-feed { max-height:400px; overflow-y:auto; display:flex; flex-direction:column; gap:12px; }
+    .update-item { background: rgba(15,52,96,0.6); padding:15px; border-left:3px solid var(--highlight-color); border-radius:5px; font-size:0.95rem; animation:slideIn 0.3s ease; }
+    .update-item.positive { border-left-color: var(--success-color); }
+    .update-item.negative { border-left-color: var(--highlight-color); }
+
+    @keyframes slideIn { from {opacity:0; transform:translateX(-20px);} to {opacity:1; transform:translateX(0);} }
+
+    .article-footer-detail { display:flex; gap:12px; justify-content:flex-end; padding-top:20px; border-top:1px solid var(--border-color); }
+    .btn-share,.btn-bookmark,.btn-trade { padding:10px 20px; background: rgba(15,52,96,0.6); border:1px solid var(--border-color); color: var(--text-light); border-radius:6px; cursor:pointer; font-weight:600; transition:0.3s; }
+    .btn-share:hover,.btn-bookmark:hover { background: var(--accent-color); border-color: var(--success-color); color: var(--success-color); }
+    .btn-trade { background: linear-gradient(135deg, var(--highlight-color), #ff1744); border-color: var(--highlight-color); color:#fff; }
+    .btn-trade:hover { transform:scale(1.05); box-shadow:0 5px 20px rgba(233,69,96,0.4); }
+
+    @media(max-width:768px){
+      .article-detail-container{padding:20px 15px;margin-top:70px;}
+      .article-detail-content{padding:20px;}
+      .article-detail-header h1{font-size:1.6rem;}
+      .article-detail-emoji{font-size:2.5rem;}
+      .article-footer-detail{flex-direction:column;justify-content:stretch;}
+      .btn-share,.btn-bookmark,.btn-trade{flex:1;text-align:center;}
+      .chart-container{height:250px;}
+    }
+  </style>
 </head>
-
 <body>
-    <header class="header">
-        <div class="logo">⚡ CRYPTOVERSE</div>
-        <nav class="nav">
-            <a href="home.html">Home</a>
-            <a href="trade.html">Trade</a>
-            <a href="wallet.html">Wallet</a>
-            <a href="market.html">Market</a>
-            <div class="dropdown">
-                <a href="#" class="dropdown-toggle">More ▼</a>
-                <div class="dropdown-menu">
-                    <a href="home.html">Home</a>
-                    <a href="notifications.html">Notifications</a>
-                    <a href="profile.html">Profile</a>
-                    <a href="trending.html">Trending Articles</a>
-                    <a href="news.html">News</a>
-                    <a href="bookmarks.html">Bookmarks</a>
-                    <a href="history.html">History</a>
-                    <a href="creator.html">Creator Center</a>
-                    <a href="settings.html">Settings</a>
-                    <a href="support.html">Help & Support</a>
-                </div>
-            </div>
-        </nav>
-        <div class="header-profile">
-            <span style="color: #66B2FF; font-weight: 600;">👤</span>
-            <a href="profile.html" style="color: #ffffff; text-decoration: none; font-weight: 600;">Profile</a>
+
+<header class="header">
+  <div class="logo">⚡ CRYPTOVERSE</div>
+  <nav class="nav">
+    <a href="home.html">Home</a>
+    <a href="trade.html">Trade</a>
+    <a href="wallet.html">Wallet</a>
+    <a href="market.html">Market</a>
+    <div class="dropdown">
+      <a href="#" class="dropdown-toggle">More ▼</a>
+      <div class="dropdown-menu">
+        <a href="home.html">Home</a>
+        <a href="notifications.html">Notifications</a>
+        <a href="profile.html">Profile</a>
+        <a href="trending.html">Trending Articles</a>
+        <a href="news.html">News</a>
+        <a href="bookmarks.html">Bookmarks</a>
+        <a href="history.html">History</a>
+        <a href="creator.html">Creator Center</a>
+        <a href="settings.html">Settings</a>
+        <a href="support.html">Help & Support</a>
+      </div>
+    </div>
+  </nav>
+  <div class="header-profile">
+    <span style="color:#66B2FF;font-weight:600;">👤</span>
+    <a href="profile.html" style="color:#fff;text-decoration:none;font-weight:600;">Profile</a>
+  </div>
+</header>
+
+<main class="article-detail-container">
+  <div class="article-back">
+    <a href="trending.html" class="back-btn">← Back to Trending</a>
+  </div>
+
+  <article class="article-detail-content">
+    <div class="article-detail-header">
+      <span class="article-detail-emoji" id="emoji">📰</span>
+      <span class="article-detail-category" id="category">bitcoin</span>
+      <h1 id="title">Loading...</h1>
+      <p class="article-meta">
+        <span id="time">--:-- ago</span> •
+        <span id="views">-- views</span>
+      </p>
+    </div>
+
+    <div class="article-detail-body">
+      <div class="price-chart-section" id="priceChartSection" style="display:none;">
+        <h2>Live Price Chart</h2>
+        <div class="chart-container">
+          <canvas id="priceChart"></canvas>
         </div>
-    </header>
-
-    <main class="main-container">
-        <!-- Top Market Overview -->
-        <div class="market-overview">
-            <h2>🌍 Market Overview</h2>
-            <div class="market-tickers" id="marketTickers">
-                <!-- Real-time market data will be loaded here -->
-            </div>
+        <div class="price-stats">
+          <div class="stat"><span class="stat-label">Current Price</span><span class="stat-value" id="currentPrice">$--</span></div>
+          <div class="stat"><span class="stat-label">24h Change</span><span class="stat-value" id="priceChange">--</span></div>
+          <div class="stat"><span class="stat-label">24h High</span><span class="stat-value" id="highPrice">$--</span></div>
+          <div class="stat"><span class="stat-label">24h Low</span><span class="stat-value" id="lowPrice">$--</span></div>
         </div>
+      </div>
+
+      <div class="article-text-content">
+        <p id="description">Loading article content...</p>
+      </div>
+
+      <div class="realtime-updates">
+        <h2>📊 Real-time Market Updates</h2>
+        <div class="updates-feed" id="updatesFeed"><div class="update-item">Initializing real-time data...</div></div>
+      </div>
+    </div>
+
+    <div class="article-footer-detail">
+      <button class="btn-share">📤 Share</button>
+      <button class="btn-bookmark">🔖 Bookmark</button>
+      <button class="btn-trade">💹 Trade Now</button>
+    </div>
+  </article>
+</main>
+
+<script>
+let selectedArticle = {
+  id: 1,
+  emoji:'₿',
+  category:'Bitcoin',
+  symbol:'BTC',
+  title:'Bitcoin Halving 2024',
+  time:'5h ago',
+  views:1250,
+  content:'The next Bitcoin halving is expected to occur in 2024. This event typically impacts the BTC supply and price significantly.',
+  price: 34500
+};
+
+let priceChart=null, priceHistory=[], updateLog=[], chartUpdateInterval=null;
+
+function displayArticle(){
+  document.getElementById('emoji').textContent=selectedArticle.emoji;
+  document.getElementById('category').textContent=selectedArticle.category;
+  document.getElementById('title').textContent=selectedArticle.title;
+  document.getElementById('time').textContent=selectedArticle.time;
+  document.getElementById('views').textContent=selectedArticle.views.toLocaleString()+' views';
+  document.getElementById('description').textContent=selectedArticle.content;
+  if(selectedArticle.price) {
+    document.getElementById('priceChartSection').style.display='block';
+    initializePriceChart();
+  }
+  document.title=selectedArticle.title+' - CryptoVerse';
+}
+
+function initializePriceChart(){
+  priceHistory=[];
+  for(let i=23;i>=0;i--){
+    const randChange=(Math.random()-0.5)*selectedArticle.price*0.02;
+    priceHistory.push({time:`${i}h ago`, price:selectedArticle.price+randChange});
+  }
+  priceHistory.push({time:'now', price:selectedArticle.price});
+
+  const ctx=document.getElementById('priceChart').getContext('2d');
+  priceChart=new Chart(ctx,{
+    type:'line',
+    data:{
+      labels: priceHistory.map(h=>h.time),
+      datasets:[{
+        label:`${selectedArticle.symbol} Price (USD)`,
+        data: priceHistory.map(h=>h.price),
+        borderColor:'#00d4ff',
+        backgroundColor:'rgba(0,212,255,0.1)',
+        borderWidth:2,
+        fill:true,
+        tension:0.4,
+        pointBackgroundColor:'#00d4ff',
+        pointBorderColor:'#00d4ff',
+        pointRadius:3,
+        pointHoverRadius:5
+      }]
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:'#eaeaea'}}},
+      scales:{
+        y:{beginAtZero:false, grid:{color:'rgba(42,42,78,0.3)'}, ticks:{color:'#999'}},
+        x:{grid:{color:'rgba(42,42,78,0.3)'}, ticks:{color:'#999'}}
+      }
+    }
+  });
+  updatePriceStats();
+  initializeRealTimeUpdates();
+}
+
+function updatePriceStats(){
+  const prices=priceHistory.map(h=>h.price);
+  const currentPrice=prices[prices.length-1];
+  const previousPrice=prices[0];
+  const change=((currentPrice-previousPrice)/previousPrice*100).toFixed(2);
+  const high=Math.max(...prices).toFixed(2);
+  const low=Math.min(...prices).toFixed(2);
+  document.getElementById('currentPrice').textContent=`$${currentPrice.toFixed(2)}`;
+  document.getElementById('priceChange').textContent=`${change>0?'+':''}${change}%`;
+  document.getElementById('highPrice').textContent=`$${high}`;
+  document.getElementById('lowPrice').textContent=`$${low}`;
+  document.getElementById('priceChange').style.color=parseFloat(change)>=0?'#00d4ff':'#e94560';
+}
+
+function addUpdate(message,isPositive=null){
+  const feed=document.getElementById('updatesFeed');
+  const div=document.createElement('div');
+  div.className='update-item';
+  if(isPositive!==null) div.classList.add(isPositive?'positive':'negative');
+  const ts=new Date().toLocaleTimeString();
+  div.textContent=`[${ts}] ${message}`;
+  feed.insertBefore(div, feed.firstChild);
+  while(feed.children.length>10) feed.removeChild(feed.lastChild);
+}
+
+function updateChart(){
+  const rand=(Math.random()-0.5)*0.5;
+  selectedArticle.price=selectedArticle.price*(1+rand/100);
+  priceHistory.shift();
+  priceHistory.push({time:'now', price:selectedArticle.price});
+  priceChart.data.labels=priceHistory.map(h=>h.time);
+  priceChart.data.datasets[0].data=priceHistory.map(h=>h.price);
+  priceChart.update('none');
+  updatePriceStats();
+}
+
+function initializeRealTimeUpdates(){
+  const updates=[
+    `Volume spike: ${(Math.random()*50+10).toFixed(1)}%`,
+    `Large buy order: $${(Math.random()*500000+100000).toFixed(0)}`,
+    `Moving avg ${selectedArticle.symbol} crossed 50-day MA`,
+    `Institutional interest detected`,
+    `Resistance broken at key level`,
+    `Market sentiment: ${['Bullish','Neutral','Bearish'][Math.floor(Math.random()*3)]}`
+  ];
+  addUpdate(`📊 Tracking ${selectedArticle.symbol} started`);
+  setInterval(()=>{
+    const msg=updates[Math.floor(Math.random()*updates.length)];
+    const pos=Math.random()>0.5;
+    addUpdate(msg,pos);
+  },5000);
+  chartUpdateInterval=setInterval(updateChart,3000);
+}
+
+document.addEventListener('DOMContentLoaded', displayArticle);
+
+document.querySelector('.btn-trade').addEventListener('click',()=>{alert(`🚀 Redirecting to Trade ${selectedArticle.symbol}...`);});
+document.querySelector('.btn-bookmark').addEventListener('click',()=>{alert(`✅ Article bookmarked!`);});
+document.querySelector('.btn-share').addEventListener('click',()=>{alert(`📤 Share link copied!`);});
+</script>
 
-        <section class="trending-container">
-            <div class="trending-header">
-                <h1>📈 Trending News & Articles</h1>
-                <div class="view-controls">
-                    <button class="view-btn active" data-view="list">📋 List</button>
-                    <button class="view-btn" data-view="table">📊 Table</button>
-                </div>
-            </div>
-
-            <div class="filter-sort-bar">
-                <div class="filter-buttons">
-                    <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="bitcoin">₿ Bitcoin</button>
-                    <button class="filter-btn" data-filter="ethereum">Ξ Ethereum</button>
-                    <button class="filter-btn" data-filter="defi">🔓 DeFi</button>
-                    <button class="filter-btn" data-filter="nft">🖼️ NFT</button>
-                </div>
-                <div class="sort-controls">
-                    <select id="sortSelect">
-                        <option value="trending">Most Trending</option>
-                        <option value="views">Most Views</option>
-                        <option value="recent">Most Recent</option>
-                        <option value="impact">High Impact</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="trending-stats">
-                <div class="stat-card">
-                    <span class="stat-label">🔥 Top Trending</span>
-                    <span class="stat-value" id="top-trending">Bitcoin</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">📰 Active Articles</span>
-                    <span class="stat-value" id="total-articles">--</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">👁️ Today's Views</span>
-                    <span class="stat-value" id="today-views">--</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">📊 Market Sentiment</span>
-                    <span class="stat-value" id="sentiment">Bullish</span>
-                </div>
-            </div>
-
-            <div class="articles-list-view" id="articles-container">
-                <!-- Articles will be loaded here -->
-            </div>
-        </section>
-    </main>
-
-    <style>
-        :root {
-            --primary-color: #1a1a2e;
-            --secondary-color: #16213e;
-            --accent-color: #0f3460;
-            --highlight-color: #e94560;
-            --success-color: #00d4ff;
-            --text-light: #eaeaea;
-            --text-dark: #1a1a2e;
-            --border-color: #2a2a4e;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: var(--text-light);
-            line-height: 1.6;
-        }
-
-        .main-container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 30px 20px;
-            margin-top: 80px;
-        }
-
-        /* Market Overview Ticker */
-        .market-overview {
-            margin-bottom: 40px;
-        }
-
-        .market-overview h2 {
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-            color: var(--success-color);
-        }
-
-        .market-tickers {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-            scroll-behavior: smooth;
-        }
-
-        .market-tickers::-webkit-scrollbar {
-            height: 6px;
-        }
-
-        .market-tickers::-webkit-scrollbar-track {
-            background: rgba(15, 52, 96, 0.3);
-            border-radius: 10px;
-        }
-
-        .market-tickers::-webkit-scrollbar-thumb {
-            background: var(--accent-color);
-            border-radius: 10px;
-        }
-
-        .ticker {
-            min-width: 200px;
-            background: rgba(22, 33, 62, 0.8);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .ticker:hover {
-            background: rgba(15, 52, 96, 0.9);
-            border-color: var(--success-color);
-            transform: translateY(-2px);
-        }
-
-        .ticker-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 600;
-        }
-
-        .ticker-symbol {
-            color: var(--success-color);
-        }
-
-        .ticker-change {
-            font-size: 0.9rem;
-        }
-
-        .ticker-change.up {
-            color: #00d4ff;
-        }
-
-        .ticker-change.down {
-            color: #ff4757;
-        }
-
-        .ticker-price {
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: var(--text-light);
-        }
-
-        .ticker-volume {
-            font-size: 0.8rem;
-            color: #999;
-        }
-
-        /* Trending Container */
-        .trending-container {
-            background: rgba(22, 33, 62, 0.6);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 30px;
-            backdrop-filter: blur(10px);
-        }
-
-        .trending-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .trending-header h1 {
-            font-size: 2rem;
-            background: linear-gradient(135deg, var(--success-color), var(--highlight-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .view-controls {
-            display: flex;
-            gap: 8px;
-        }
-
-        .view-btn {
-            padding: 8px 16px;
-            background: rgba(15, 52, 96, 0.5);
-            border: 1px solid var(--border-color);
-            color: var(--text-light);
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .view-btn:hover,
-        .view-btn.active {
-            background: var(--accent-color);
-            border-color: var(--success-color);
-            color: var(--success-color);
-        }
-
-        .filter-sort-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .filter-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            padding: 8px 16px;
-            background: rgba(15, 52, 96, 0.5);
-            border: 1px solid var(--border-color);
-            color: var(--text-light);
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .filter-btn:hover {
-            background: var(--accent-color);
-            border-color: var(--success-color);
-        }
-
-        .filter-btn.active {
-            background: var(--accent-color);
-            border-color: var(--highlight-color);
-            color: var(--highlight-color);
-        }
-
-        .sort-controls {
-            display: flex;
-            gap: 10px;
-        }
-
-        #sortSelect {
-            padding: 8px 12px;
-            background: rgba(15, 52, 96, 0.6);
-            border: 1px solid var(--border-color);
-            color: var(--text-light);
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        #sortSelect:hover {
-            border-color: var(--success-color);
-        }
-
-        .trending-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, rgba(15, 52, 96, 0.8), rgba(233, 69, 96, 0.1));
-            border: 1px solid var(--border-color);
-            padding: 18px;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-            border-color: var(--success-color);
-            background: linear-gradient(135deg, rgba(15, 52, 96, 0.9), rgba(0, 212, 255, 0.1));
-        }
-
-        .stat-label {
-            font-size: 0.85rem;
-            color: #999;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .stat-value {
-            font-size: 1.6rem;
-            font-weight: bold;
-            color: var(--success-color);
-        }
-
-        /* Articles List View */
-        .articles-list-view {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .article-row {
-            background: rgba(15, 52, 96, 0.3);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 16px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            display: grid;
-            grid-template-columns: 50px 1fr auto;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .article-row:hover {
-            background: rgba(15, 52, 96, 0.5);
-            border-color: var(--highlight-color);
-            transform: translateX(5px);
-            box-shadow: 0 5px 20px rgba(233, 69, 96, 0.2);
-        }
-
-        .article-emoji {
-            font-size: 2.5rem;
-            text-align: center;
-        }
-
-        .article-info {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .article-title {
-            font-size: 1.05rem;
-            font-weight: 600;
-            color: var(--text-light);
-            line-height: 1.3;
-        }
-
-        .article-meta {
-            display: flex;
-            gap: 15px;
-            font-size: 0.85rem;
-            flex-wrap: wrap;
-        }
-
-        .article-category {
-            display: inline-block;
-            padding: 3px 10px;
-            background: rgba(233, 69, 96, 0.2);
-            color: var(--highlight-color);
-            border-radius: 15px;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            font-weight: 500;
-        }
-
-        .article-time {
-            color: #666;
-        }
-
-        .article-stats {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            font-size: 0.9rem;
-        }
-
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            color: #999;
-        }
-
-        .views-count {
-            color: var(--success-color);
-            font-weight: 600;
-        }
-
-        .impact-badge {
-            padding: 4px 12px;
-            background: linear-gradient(135deg, var(--highlight-color), #ff1744);
-            color: white;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .impact-badge.high {
-            background: linear-gradient(135deg, #ff6b6b, #ff1744);
-        }
-
-        .impact-badge.medium {
-            background: linear-gradient(135deg, #ffa502, #ff6b6b);
-        }
-
-        .impact-badge.low {
-            background: linear-gradient(135deg, #00d4ff, #0096ff);
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #999;
-            font-size: 1.1rem;
-        }
-
-        .loading::after {
-            content: '';
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--accent-color);
-            border-top-color: var(--success-color);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-left: 10px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .pulse {
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        /* Table View */
-        .articles-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.95rem;
-        }
-
-        .articles-table thead {
-            background: rgba(15, 52, 96, 0.6);
-            border-bottom: 2px solid var(--border-color);
-        }
-
-        .articles-table th {
-            padding: 15px;
-            text-align: left;
-            color: var(--success-color);
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-        }
-
-        .articles-table td {
-            padding: 15px;
-            border-bottom: 1px solid var(--border-color);
-            color: var(--text-light);
-        }
-
-        .articles-table tbody tr {
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .articles-table tbody tr:hover {
-            background: rgba(15, 52, 96, 0.5);
-            border-left: 3px solid var(--highlight-color);
-        }
-
-        @media (max-width: 768px) {
-            .main-container {
-                padding: 20px 15px;
-                margin-top: 70px;
-            }
-
-            .trending-container {
-                padding: 20px;
-            }
-
-            .trending-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .trending-header h1 {
-                font-size: 1.6rem;
-            }
-
-            .article-row {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-
-            .article-emoji {
-                font-size: 1.8rem;
-            }
-
-            .article-stats {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .filter-sort-bar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .filter-buttons {
-                flex-direction: column;
-            }
-
-            .filter-btn {
-                width: 100%;
-            }
-        }
-    </style>
-
-    <script src="js/api.js"></script>
-    <script>
-        // Real-time Trending Articles Data
-        const articlesDatabase = [
-            {
-                id: 1,
-                title: "Bitcoin Breaks Above $45K: Institutional Buying Pressure Intensifies",
-                category: "bitcoin",
-                emoji: "₿",
-                symbol: "BTC",
-                price: 45230,
-                change: 5.2,
-                volume: 28.5,
-                impact: "high",
-                views: 12500,
-                time: "2 mins ago",
-                sentiment: "bullish"
-            },
-            {
-                id: 2,
-                title: "Ethereum ETF Approval Signals Major Adoption Milestone",
-                category: "ethereum",
-                emoji: "Ξ",
-                symbol: "ETH",
-                price: 2456,
-                change: 3.8,
-                volume: 15.2,
-                impact: "high",
-                views: 8900,
-                time: "5 mins ago",
-                sentiment: "bullish"
-            },
-            {
-                id: 3,
-                title: "DeFi TVL Reaches $150B: Compound and Aave Lead Growth",
-                category: "defi",
-                emoji: "🔓",
-                symbol: "DEFI",
-                price: null,
-                change: 8.5,
-                volume: 32.1,
-                impact: "medium",
-                views: 7200,
-                time: "12 mins ago",
-                sentiment: "very bullish"
-            },
-            {
-                id: 4,
-                title: "NFT Market Rebounds: Blur Trading Volume Surges 180%",
-                category: "nft",
-                emoji: "🖼️",
-                symbol: "NFT",
-                price: null,
-                change: 2.1,
-                volume: 8.4,
-                impact: "low",
-                views: 5400,
-                time: "18 mins ago",
-                sentiment: "bullish"
-            },
-            {
-                id: 5,
-                title: "US SEC Finalizes Crypto Framework: Clarity on Token Classification",
-                category: "bitcoin",
-                emoji: "⚖️",
-                symbol: "REG",
-                price: null,
-                change: 0,
-                volume: 12.3,
-                impact: "high",
-                views: 9800,
-                time: "25 mins ago",
-                sentiment: "neutral"
-            },
-            {
-                id: 6,
-                title: "Polygon Mainnet Update: Transaction Speeds Up 300%",
-                category: "ethereum",
-                emoji: "⚡",
-                symbol: "MATIC",
-                price: 0.89,
-                change: 6.3,
-                volume: 18.7,
-                impact: "medium",
-                views: 6700,
-                time: "32 mins ago",
-                sentiment: "bullish"
-            },
-            {
-                id: 7,
-                title: "Liquid Staking Dominance: 45% of ETH Now Staked",
-                category: "defi",
-                emoji: "💰",
-                symbol: "STAKE",
-                price: null,
-                change: 4.7,
-                volume: 22.1,
-                impact: "medium",
-                views: 5300,
-                time: "38 mins ago",
-                sentiment: "bullish"
-            },
-            {
-                id: 8,
-                title: "AI Trading Bots Generate $2.3B in Quarterly Revenue",
-                category: "bitcoin",
-                emoji: "🤖",
-                symbol: "AI",
-                price: null,
-                change: 7.2,
-                volume: 41.5,
-                impact: "low",
-                views: 11200,
-                time: "45 mins ago",
-                sentiment: "bullish"
-            },
-            {
-                id: 9,
-                title: "Bitcoin Whale Accumulation Signals: $850M in 24H Buys",
-                category: "bitcoin",
-                emoji: "🐋",
-                symbol: "BTC",
-                price: 45230,
-                change: 2.3,
-                volume: 52.1,
-                impact: "high",
-                views: 15600,
-                time: "1 hour ago",
-                sentiment: "very bullish"
-            },
-            {
-                id: 10,
-                title: "Solana Network Achieves 400K TPS: New Speed Record",
-                category: "ethereum",
-                emoji: "⚙️",
-                symbol: "SOL",
-                price: 189.45,
-                change: 9.1,
-                volume: 24.3,
-                impact: "medium",
-                views: 6800,
-                time: "1.5 hours ago",
-                sentiment: "very bullish"
-            }
-        ];
-
-        let currentFilter = 'all';
-        let currentSort = 'trending';
-        let currentView = 'list';
-        let updateInterval = null;
-
-        // Market ticker data
-        const marketData = [
-            { symbol: 'BTC', name: 'Bitcoin', price: 45230, change: 5.2, volume: '28.5B' },
-            { symbol: 'ETH', name: 'Ethereum', price: 2456, change: 3.8, volume: '15.2B' },
-            { symbol: 'SOL', name: 'Solana', price: 189.45, change: 9.1, volume: '5.1B' },
-            { symbol: 'XRP', name: 'Ripple', price: 2.35, change: 4.5, volume: '3.2B' },
-            { symbol: 'ADA', name: 'Cardano', price: 0.98, change: 6.2, volume: '2.8B' },
-            { symbol: 'DOGE', name: 'Dogecoin', price: 0.38, change: 8.3, volume: '1.9B' },
-        ];
-
-        // Initialize market tickers
-        function initializeMarketTickers() {
-            const tickersContainer = document.getElementById('marketTickers');
-            tickersContainer.innerHTML = marketData.map(ticker => `
-                <div class="ticker">
-                    <div class="ticker-header">
-                        <span class="ticker-symbol">${ticker.symbol}</span>
-                        <span class="ticker-change ${ticker.change >= 0 ? 'up' : 'down'}">
-                            ${ticker.change >= 0 ? '📈' : '📉'} ${Math.abs(ticker.change).toFixed(2)}%
-                        </span>
-                    </div>
-                    <div class="ticker-price">$${ticker.price.toFixed(ticker.price < 10 ? 2 : 0)}</div>
-                    <div class="ticker-volume">Vol: ${ticker.volume}</div>
-                </div>
-            `).join('');
-        }
-
-        // Load and display articles
-        function loadArticles(filter = 'all', sort = 'trending') {
-            currentFilter = filter;
-            currentSort = sort;
-            
-            let filtered = filter === 'all' 
-                ? [...articlesDatabase] 
-                : articlesDatabase.filter(article => article.category === filter);
-
-            // Sort articles
-            switch(sort) {
-                case 'views':
-                    filtered.sort((a, b) => b.views - a.views);
-                    break;
-                case 'recent':
-                    filtered.sort((a, b) => {
-                        const timeA = parseInt(a.time);
-                        const timeB = parseInt(b.time);
-                        return timeB - timeA;
-                    });
-                    break;
-                case 'impact':
-                    const impactOrder = { 'high': 3, 'medium': 2, 'low': 1 };
-                    filtered.sort((a, b) => impactOrder[b.impact] - impactOrder[a.impact]);
-                    break;
-                default: // trending
-                    filtered.sort((a, b) => b.views - a.views);
-            }
-
-            const container = document.getElementById('articles-container');
-
-            if (currentView === 'list') {
-                container.innerHTML = filtered.map(article => `
-                    <div class="article-row" onclick="viewArticleDetail(${article.id})">
-                        <div class="article-emoji">${article.emoji}</div>
-                        <div class="article-info">
-                            <div class="article-title">${article.title}</div>
-                            <div class="article-meta">
-                                <span class="article-category">${article.category.toUpperCase()}</span>
-                                <span class="article-time">🕐 ${article.time}</span>
-                                <span style="color: #999;">Sentiment: <strong style="color: ${article.sentiment === 'bullish' ? '#00d4ff' : article.sentiment === 'very bullish' ? '#00ff00' : '#ffa502'}">${article.sentiment.toUpperCase()}</strong></span>
-                            </div>
-                        </div>
-                        <div class="article-stats">
-                            <div class="stat-item">
-                                <span class="views-count">${article.views.toLocaleString()}</span>
-                                <span>views</span>
-                            </div>
-                            <div class="stat-item" style="color: ${article.change >= 0 ? '#00d4ff' : '#ff4757'};">
-                                ${article.change >= 0 ? '📈' : '📉'} ${Math.abs(article.change).toFixed(2)}%
-                            </div>
-                            <span class="impact-badge ${article.impact}">${article.impact}</span>
-                        </div>
-                    </div>
-                `).join('');
-            } else {
-                container.innerHTML = `
-                    <table class="articles-table">
-                        <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Category</th>
-                                <th>Sentiment</th>
-                                <th>Views</th>
-                                <th>Change</th>
-                                <th>Impact</th>
-                                <th>Time</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${filtered.map(article => `
-                                <tr onclick="viewArticleDetail(${article.id})">
-                                    <td><strong>${article.emoji} ${article.title}</strong></td>
-                                    <td><span class="article-category">${article.category}</span></td>
-                                    <td><strong style="color: ${article.sentiment === 'bullish' ? '#00d4ff' : article.sentiment === 'very bullish' ? '#00ff00' : '#ffa502'}">${article.sentiment}</strong></td>
-                                    <td>${article.views.toLocaleString()}</td>
-                                    <td style="color: ${article.change >= 0 ? '#00d4ff' : '#ff4757'};">${article.change >= 0 ? '+' : ''}${article.change.toFixed(2)}%</td>
-                                    <td><span class="impact-badge ${article.impact}">${article.impact}</span></td>
-                                    <td>${article.time}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                `;
-            }
-
-            // Update stats
-            updateStats(filtered);
-        }
-
-        // Update statistics
-        function updateStats(articles) {
-            const totalViews = articles.reduce((sum, article) => sum + article.views, 0);
-            const topArticle = articles.length > 0 ? articles[0] : null;
-            
-            document.getElementById('total-articles').textContent = articlesDatabase.length;
-            document.getElementById('today-views').textContent = totalViews.toLocaleString();
-            document.getElementById('top-trending').textContent = topArticle ? topArticle.symbol || topArticle.category : 'N/A';
-            
-            const bullishCount = articlesDatabase.filter(a => a.sentiment.includes('bullish')).length;
-            const sentiment = (bullishCount / articlesDatabase.length) > 0.7 ? 'Very Bullish' : 
-                             (bullishCount / articlesDatabase.length) > 0.5 ? 'Bullish' : 'Neutral';
-            document.getElementById('sentiment').textContent = sentiment;
-        }
-
-        // Real-time price updates
-        function updatePricesRealtime() {
-            articlesDatabase.forEach(article => {
-                if (article.price) {
-                    const change = (Math.random() - 0.5) * 0.3;
-                    article.change += change;
-                    article.price = article.price * (1 + change / 100);
-                }
-                article.views += Math.floor(Math.random() * 30);
-            });
-            loadArticles(currentFilter, currentSort);
-        }
-
-        // View article detail
-        function viewArticleDetail(id) {
-            const article = articlesDatabase.find(a => a.id === id);
-            if (article) {
-                sessionStorage.setItem('selectedArticle', JSON.stringify(article));
-                window.location.href = `article-detail.html?id=${id}`;
-            }
-        }
-
-        // Event listeners
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeMarketTickers();
-            loadArticles('all', 'trending');
-
-            // Real-time updates every 3 seconds
-            updateInterval = setInterval(updatePricesRealtime, 3000);
-
-            // Filter buttons
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    loadArticles(btn.dataset.filter, currentSort);
-                });
-            });
-
-            // View buttons
-            document.querySelectorAll('.view-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    currentView = btn.dataset.view;
-                    loadArticles(currentFilter, currentSort);
-                });
-            });
-
-            // Sort dropdown
-            document.getElementById('sortSelect').addEventListener('change', (e) => {
-                loadArticles(currentFilter, e.target.value);
-            });
-
-            // Update market tickers in real-time
-            setInterval(() => {
-                marketData.forEach(ticker => {
-                    const change = (Math.random() - 0.5) * 0.2;
-                    ticker.change += change;
-                    ticker.price = ticker.price * (1 + change / 100);
-                });
-                initializeMarketTickers();
-            }, 2000);
-        });
-
-        // Cleanup
-        window.addEventListener('beforeunload', () => {
-            if (updateInterval) clearInterval(updateInterval);
-        });
-    </script>
-    
 </body>
-
 </html>
