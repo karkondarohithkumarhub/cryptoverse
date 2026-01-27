@@ -1,4 +1,4 @@
-#!/bin/bash
+y#!/bin/bash
 # MySQL Installation Guide for Windows
 
 echo "======================================"
