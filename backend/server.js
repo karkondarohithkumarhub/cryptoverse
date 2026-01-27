@@ -4,6 +4,8 @@ const path = require('path');
 const mysql = require('mysql2/promise');
 const http = require('http');
 const { Server } = require('socket.io');
+const axios = require('axios');
+
 
 const app = express();
 const server = http.createServer(app);
@@ -312,6 +314,29 @@ async function initializeSchema() {
       ];
       res.json(market);
     });
+
+// ===== CRYPTO NEWS API (CryptoPanic) =====
+app.get('/api/news', async (req, res) => {
+  try {
+    const response = await axios.get(
+      "https://cryptopanic.com/api/developer/v2/posts/",
+      {
+        params: {
+          auth_token: "55fe02fc0a7d7df468055ae96c11801c2b69c069",
+          public: "true",
+          currencies: "BTC,ETH,SOL,XRP",
+          kind: "news"
+        }
+      }
+    );
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("CryptoPanic API error:", error.message);
+    res.status(500).json({ error: "Failed to fetch crypto news" });
+  }
+});
+
 
     // WebSocket
     io.on('connection', (socket) => {

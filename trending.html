@@ -36,62 +36,57 @@
             <span style="color: #66B2FF; font-weight: 600;">👤</span>
             <a href="profile.html" style="color: #ffffff; text-decoration: none; font-weight: 600;">Profile</a>
         </div>
-    </header>
+    <div class="news-grid" id="newsContainer">
+    
+  </div>
 
-    <main class="main-content">
-        <div class="container" style="max-width: 1000px; padding-top: 2rem;">
-            <h1 class="page-title">🔥 Trending Now</h1>
+  <script>
+    const apiKey = "55fe02fc0a7d7df468055ae96c11801c2b69c069";
+const newsContainer = document.getElementById("newsContainer");
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+async function fetchCryptoNews() {
+  try {
+  const response = await fetch("http://localhost:3001/api/news");
 
-                <div style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; overflow: hidden; transition: transform 0.3s;"
-                    onmouseover="this.style.transform='translateY(-5px)'"
-                    onmouseout="this.style.transform='translateY(0)'">
-                    <div
-                        style="height: 200px; background: linear-gradient(45deg, #1a237e, #0d47a1); display: flex; align-items: center; justify-content: center;">
-                        <span style="font-size: 4rem;">₿</span>
-                    </div>
-                    <div style="padding: 1.5rem;">
-                        <h3 style="margin-bottom: 0.5rem; color: #fff;">Bitcoin Halving 2024</h3>
-                        <p style="color: #aaa; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">What you need
-                            to know about the upcoming halving event and its potential impact on price.</p>
-                        <a href="#" style="color: #00d4ff; text-decoration: none;">Read More →</a>
-                    </div>
-                </div>
 
-                <div style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; overflow: hidden; transition: transform 0.3s;"
-                    onmouseover="this.style.transform='translateY(-5px)'"
-                    onmouseout="this.style.transform='translateY(0)'">
-                    <div
-                        style="height: 200px; background: linear-gradient(45deg, #311b92, #4527a0); display: flex; align-items: center; justify-content: center;">
-                        <span style="font-size: 4rem;">⛓️</span>
-                    </div>
-                    <div style="padding: 1.5rem;">
-                        <h3 style="margin-bottom: 0.5rem; color: #fff;">The Rise of DeFi</h3>
-                        <p style="color: #aaa; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">How
-                            decentralized finance is reshaping traditional banking systems globally.</p>
-                        <a href="#" style="color: #00d4ff; text-decoration: none;">Read More →</a>
-                    </div>
-                </div>
 
-                <div style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; overflow: hidden; transition: transform 0.3s;"
-                    onmouseover="this.style.transform='translateY(-5px)'"
-                    onmouseout="this.style.transform='translateY(0)'">
-                    <div
-                        style="height: 200px; background: linear-gradient(45deg, #b71c1c, #c62828); display: flex; align-items: center; justify-content: center;">
-                        <span style="font-size: 4rem;">📈</span>
-                    </div>
-                    <div style="padding: 1.5rem;">
-                        <h3 style="margin-bottom: 0.5rem; color: #fff;">Top 5 Altcoins</h3>
-                        <p style="color: #aaa; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">Expert
-                            analysis on the most promising altcoins to watch this quarter.</p>
-                        <a href="#" style="color: #00d4ff; text-decoration: none;">Read More →</a>
-                    </div>
-                </div>
+    const data = await response.json();
+    newsContainer.innerHTML = "";
 
-            </div>
+    data.results.slice(0, 9).forEach(article => {
+      const image = article.image || "https://via.placeholder.com/400x200?text=Crypto+News";
+
+      const card = document.createElement("div");
+      card.className = "news-card";
+
+      card.innerHTML = `
+        <img src="${image}" alt="news image">
+        <div class="news-content">
+          <h3>${article.title}</h3>
+          <p>Source: ${article.source.title}</p>
+          <a href="${article.original_url}" target="_blank" class="read-more">
+            Read More →
+          </a>
         </div>
-    </main>
+      `;
+
+      newsContainer.appendChild(card);
+    });
+
+  } catch (error) {
+    newsContainer.innerHTML = "<p style='color:white;'>Failed to load news.</p>";
+    console.error("Error fetching news:", error);
+  }
+}
+
+fetchCryptoNews();
+
+
+setInterval(fetchCryptoNews, 300000);
+
+  </script>
+
+    
 </body>
 
 </html>
