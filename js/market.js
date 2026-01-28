@@ -349,8 +349,8 @@ function initTickerTape() {
     script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js';
     script.async = true;
     script.innerHTML = JSON.stringify({
-        "symbols": cryptoCoins.slice(0, 15).map(c => ({
-            "proName": c.tvSymbol,
+        "symbols": cryptoCoins.slice(0, 11).map(c => ({
+            "proName": `BINANCE:${c.binanceSymbol}`,
             "title": c.name
         })),
         "showSymbolLogo": true,
@@ -394,31 +394,18 @@ function initMarketOverview() {
         "symbolActiveColor": "rgba(41, 98, 255, 0.12)",
         "tabs": [
             {
-                "title": "Crypto",
+                "title": "Cryptocurrencies",
                 "symbols": [
                     { "s": "BINANCE:BTCUSDT" },
                     { "s": "BINANCE:ETHUSDT" },
                     { "s": "BINANCE:SOLUSDT" },
                     { "s": "BINANCE:ADAUSDT" },
-                    { "s": "BINANCE:DOGEUSDT" }
-                ]
-            },
-            {
-                "title": "Forex",
-                "symbols": [
-                    { "s": "FX:EURUSD" },
-                    { "s": "FX:GBPUSD" },
-                    { "s": "FX:USDJPY" },
-                    { "s": "FX:AUDUSD" },
-                    { "s": "FX:USDCAD" }
-                ]
-            },
-            {
-                "title": "Commodities",
-                "symbols": [
-                    { "s": "OANDA:XAUUSD", "d": "Gold" },
-                    { "s": "OANDA:XAGUSD", "d": "Silver" },
-                    { "s": "TVC:USOIL", "d": "Crude Oil" }
+                    { "s": "BINANCE:DOGEUSDT" },
+                    { "s": "BINANCE:XRPUSDT" },
+                    { "s": "BINANCE:DOTUSDT" },
+                    { "s": "BINANCE:AVAXUSDT" },
+                    { "s": "BINANCE:LINKUSDT" },
+                    { "s": "BINANCE:MATICUSDT" }
                 ]
             }
         ]
