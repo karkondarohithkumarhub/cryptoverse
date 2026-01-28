@@ -155,6 +155,29 @@ async function initializeSchema() {
       updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       FOREIGN KEY(userId) REFERENCES users(id) ON DELETE CASCADE,
       UNIQUE idx_user_symbol (userId, symbol)
+    )`,
+
+    `CREATE TABLE IF NOT EXISTS custom_coins (
+      id VARCHAR(255) PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      symbol VARCHAR(10) UNIQUE NOT NULL,
+      decimals INT DEFAULT 8,
+      initialPrice DECIMAL(20, 8) NOT NULL,
+      marketCap DECIMAL(20, 2),
+      description TEXT,
+      website VARCHAR(255),
+      launchDate DATE,
+      totalSupply DECIMAL(30, 8),
+      circulatingSupply DECIMAL(30, 8),
+      dayChange DECIMAL(10, 2) DEFAULT 0,
+      volume24h DECIMAL(20, 2) DEFAULT 0,
+      contractAddress VARCHAR(255),
+      blockchain VARCHAR(50),
+      color VARCHAR(7) DEFAULT '#FF6B00',
+      createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      INDEX idx_symbol (symbol),
+      INDEX idx_createdAt (createdAt)
     )`
   ];
 
@@ -311,6 +334,137 @@ async function initializeSchema() {
         { id: 'usdt-1', symbol: 'USDT', name: 'Tether', price: 0.9999, change24h: 0.01 }
       ];
       res.json(market);
+    });
+
+    // =============================================
+    // COIN MANAGEMENT ENDPOINTS
+    // =============================================
+
+    // Create new custom coin
+    app.post('/api/coins/create', async (req, res) => {
+      try {
+        const {
+          name, symbol, decimals, initialPrice, marketCap,
+          description, website, launchDate, totalSupply,
+          circulatingSupply, dayChange, volume24h,
+          contractAddress, blockchain, color
+        } = req.body;
+
+        // Validation
+        if (!name || !symbol || !initialPrice) {
+          return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        const coinId = `coin-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+        const insertSql = `
+          INSERT INTO custom_coins 
+          (id, name, symbol, decimals, initialPrice, marketCap, description, 
+           website, launchDate, totalSupply, circulatingSupply, dayChange, 
+           volume24h, contractAddress, blockchain, color)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+
+        const values = [
+          coinId, name, symbol.toUpperCase(), decimals || 8,
+          initialPrice, marketCap || 0, description || null,
+          website || null, launchDate || null, totalSupply || 0,
+          circulatingSupply || 0, dayChange || 0, volume24h || 0,
+          contractAddress || null, blockchain || null, color || '#FF6B00'
+        ];
+
+        await query(insertSql, values);
+
+        res.json({
+          success: true,
+          message: `Coin "${name}" created successfully`,
+          coinId: coinId,
+          coin: {
+            id: coinId,
+            name, symbol: symbol.toUpperCase(), decimals,
+            initialPrice, marketCap, description, website,
+            launchDate, totalSupply, circulatingSupply, dayChange,
+            volume24h, contractAddress, blockchain, color
+          }
+        });
+
+        log(`✅ Coin created: ${symbol.toUpperCase()} (${name})`, 'SUCCESS');
+      } catch (err) {
+        log(`❌ Coin creation error: ${err.message}`, 'ERROR');
+        res.status(500).json({ error: 'Failed to create coin' });
+      }
+    });
+
+    // Get all custom coins
+    app.get('/api/coins', async (req, res) => {
+      try {
+        const coins = await query('SELECT * FROM custom_coins ORDER BY createdAt DESC');
+        res.json({ coins: coins || [] });
+      } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch coins' });
+      }
+    });
+
+    // Get coin by symbol
+    app.get('/api/coins/:symbol', async (req, res) => {
+      try {
+        const { symbol } = req.params;
+        const coins = await query(
+          'SELECT * FROM custom_coins WHERE symbol = ? LIMIT 1',
+          [symbol.toUpperCase()]
+        );
+
+        if (coins && coins.length > 0) {
+          res.json({ coin: coins[0] });
+        } else {
+          res.status(404).json({ error: 'Coin not found' });
+        }
+      } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch coin' });
+      }
+    });
+
+    // Update coin price (for real-time updates)
+    app.put('/api/coins/:symbol/price', async (req, res) => {
+      try {
+        const { symbol } = req.params;
+        const { price, dayChange, volume24h } = req.body;
+
+        const updateSql = `
+          UPDATE custom_coins 
+          SET initialPrice = ?, dayChange = ?, volume24h = ?
+          WHERE symbol = ?
+        `;
+
+        await query(updateSql, [price, dayChange, volume24h, symbol.toUpperCase()]);
+
+        // Broadcast real-time update
+        io.emit('coin:update', {
+          symbol: symbol.toUpperCase(),
+          price, dayChange, volume24h,
+          timestamp: new Date()
+        });
+
+        res.json({ success: true, message: 'Coin price updated' });
+      } catch (err) {
+        res.status(500).json({ error: 'Failed to update coin' });
+      }
+    });
+
+    // Delete custom coin
+    app.delete('/api/coins/:symbol', async (req, res) => {
+      try {
+        const { symbol } = req.params;
+
+        await query('DELETE FROM custom_coins WHERE symbol = ?', [symbol.toUpperCase()]);
+
+        io.emit('coin:deleted', { symbol: symbol.toUpperCase() });
+
+        res.json({ success: true, message: 'Coin deleted successfully' });
+        log(`🗑️ Coin deleted: ${symbol.toUpperCase()}`, 'INFO');
+      } catch (err) {
+        res.status(500).json({ error: 'Failed to delete coin' });
+      }
     });
 
     // WebSocket

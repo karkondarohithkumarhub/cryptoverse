@@ -29,7 +29,7 @@ async function setupDatabase() {
     console.log('📚 Creating database if not exists...');
     await connection.query(`CREATE DATABASE IF NOT EXISTS ${DB_CONFIG.database}`);
     console.log(`✅ Database '${DB_CONFIG.database}' ready\n`);
-    
+
     // Step 3: Select Database
     await connection.query(`USE ${DB_CONFIG.database}`);
     console.log(`✅ Using database '${DB_CONFIG.database}'\n`);

@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Indicator Demo - Cryptoverse</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #00d4ff;
+        }
+
+        h1 {
+            color: #00d4ff;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #a0a0a0;
+            font-size: 14px;
+        }
+
+        .demo-section {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 5px solid #00d4ff;
+        }
+
+        .demo-section h2 {
+            color: #00d4ff;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .demo-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background: #00d4ff;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #00b8d4;
+            transform: translateY(-2px);
+        }
+
+        button.secondary {
+            background: rgba(0, 0, 0, 0.4);
+            color: #00d4ff;
+            border: 1px solid #00d4ff;
+        }
+
+        button.secondary:hover {
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .indicator-display {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #444;
+        }
+
+        .indicator-value {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #333;
+            font-size: 14px;
+        }
+
+        .indicator-value:last-child {
+            border-bottom: none;
+        }
+
+        .indicator-label {
+            color: #a0a0a0;
+            font-weight: 600;
+        }
+
+        .indicator-result {
+            color: #00d4ff;
+            font-weight: bold;
+        }
+
+        .signal-card {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(0, 100, 150, 0.1) 100%);
+            border: 2px solid #00d4ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .signal-card.buy {
+            border-color: #00ff00;
+            background: linear-gradient(135deg, rgba(0, 255, 0, 0.1) 0%, rgba(0, 150, 0, 0.1) 100%);
+        }
+
+        .signal-card.sell {
+            border-color: #ff4444;
+            background: linear-gradient(135deg, rgba(255, 68, 68, 0.1) 0%, rgba(200, 0, 0, 0.1) 100%);
+        }
+
+        .signal-card.active {
+            display: block;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(0, 212, 255, 0);
+            }
+        }
+
+        .signal-header {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .signal-header.buy {
+            color: #00ff00;
+        }
+
+        .signal-header.sell {
+            color: #ff4444;
+        }
+
+        .confidence-bar {
+            background: rgba(0, 0, 0, 0.4);
+            height: 30px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+            border: 1px solid #444;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6600, #ffaa00, #00ff00);
+            width: 0%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: #000;
+            transition: width 0.3s ease;
+        }
+
+        .reason-list {
+            list-style: none;
+            margin-top: 10px;
+            padding-left: 0;
+        }
+
+        .reason-list li {
+            padding: 5px 0;
+            color: #a0a0a0;
+            font-size: 13px;
+        }
+
+        .reason-list li:before {
+            content: "✓ ";
+            color: #00d4ff;
+            margin-right: 8px;
+            font-weight: bold;
+        }
+
+        .chart-container {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #444;
+        }
+
+        canvas {
+            width: 100%;
+            height: 300px;
+        }
+
+        .info-box {
+            background: rgba(0, 212, 255, 0.1);
+            border-left: 4px solid #00d4ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .feature-box {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 3px solid #00d4ff;
+        }
+
+        .feature-box h4 {
+            color: #00d4ff;
+            margin-bottom: 8px;
+        }
+
+        .feature-box p {
+            color: #a0a0a0;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        #notifications-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>🔮 Advanced Predictive Indicator Demo</h1>
+            <p class="subtitle">Real-time cryptocurrency trend prediction system with advance buy/sell notifications</p>
+        </header>
+
+        <!-- Features Overview -->
+        <div class="demo-section">
+            <h2>📊 System Features</h2>
+            <div class="feature-grid">
+                <div class="feature-box">
+                    <h4>📈 6 Technical Indicators</h4>
+                    <p>RSI, MACD, Bollinger Bands, ADX, EMA, and Volume Analysis combined for maximum accuracy</p>
+                </div>
+                <div class="feature-box">
+                    <h4>🎯 Confidence Scoring</h4>
+                    <p>Each signal gets a 0-100% confidence score based on multiple indicator confirmations</p>
+                </div>
+                <div class="feature-box">
+                    <h4>🔔 Advance Notifications</h4>
+                    <p>Desktop alerts, sound notifications, and in-app notifications before price moves</p>
+                </div>
+                <div class="feature-box">
+                    <h4>💪 Trend Strength</h4>
+                    <p>ADX analysis ensures you only trade when trends are strong and reliable</p>
+                </div>
+                <div class="feature-box">
+                    <h4>📊 Volume Confirmation</h4>
+                    <p>Signals are confirmed by volume to eliminate false breakouts</p>
+                </div>
+                <div class="feature-box">
+                    <h4>⚙️ Fully Configurable</h4>
+                    <p>Adjust RSI periods, MACD settings, Bollinger Bands, and thresholds</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demo Controls -->
+        <div class="demo-section">
+            <h2>🎮 Interactive Demo</h2>
+            <div class="demo-controls">
+                <button onclick="generateBuySignal()">📈 Generate BUY Signal</button>
+                <button onclick="generateSellSignal()">📉 Generate SELL Signal</button>
+                <button onclick="generateWeakSignal()" class="secondary">⚠️ Weak Signal (50%)</button>
+                <button onclick="clearSignals()" class="secondary">🗑️ Clear</button>
+            </div>
+
+            <div class="info-box">
+                💡 Click buttons above to simulate real signals. Watch as the indicator generates notifications with confidence scores and detailed reasoning.
+            </div>
+
+            <!-- Simulated Signal Display -->
+            <div id="buy-signal" class="signal-card buy">
+                <div class="signal-header buy">🚀 BUY SIGNAL - Strong Uptrend Expected</div>
+                <div style="margin-top: 10px; color: #e0e0e0;">
+                    <p><strong>Current Price:</strong> $45,234.56 USDT</p>
+                    <p><strong>Trend:</strong> BULLISH (STRONG)</p>
+                    <p><strong>Confidence:</strong></p>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" id="buy-confidence" style="background: linear-gradient(90deg, #00ff00, #00ff00); width: 85%;"></div>
+                    </div>
+                    <span id="buy-confidence-text" style="color: #00ff00;">85%</span>
+                </div>
+                <p style="margin-top: 10px; color: #a0a0a0; font-size: 12px;">Signal Reasons:</p>
+                <ul class="reason-list" id="buy-reasons">
+                    <li>✓ MACD Bullish Crossover</li>
+                    <li>✓ RSI Recovering from Oversold</li>
+                    <li>✓ Price at Lower Bollinger Band Support</li>
+                    <li>✓ Strong Uptrend (ADX > 25)</li>
+                    <li>✓ Above Average Volume</li>
+                </ul>
+            </div>
+
+            <div id="sell-signal" class="signal-card sell">
+                <div class="signal-header sell">⛔ SELL SIGNAL - Strong Downtrend Expected</div>
+                <div style="margin-top: 10px; color: #e0e0e0;">
+                    <p><strong>Current Price:</strong> $46,890.23 USDT</p>
+                    <p><strong>Trend:</strong> BEARISH (STRONG)</p>
+                    <p><strong>Confidence:</strong></p>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" id="sell-confidence" style="background: linear-gradient(90deg, #ff0000, #ff0000); width: 78%;"></div>
+                    </div>
+                    <span id="sell-confidence-text" style="color: #ff4444;">78%</span>
+                </div>
+                <p style="margin-top: 10px; color: #a0a0a0; font-size: 12px;">Signal Reasons:</p>
+                <ul class="reason-list" id="sell-reasons">
+                    <li>✓ MACD Bearish Crossover</li>
+                    <li>✓ RSI Declining from Overbought</li>
+                    <li>✓ Price at Upper Bollinger Band Resistance</li>
+                    <li>✓ Strong Downtrend (ADX > 25)</li>
+                    <li>✓ Above Average Volume</li>
+                </ul>
+            </div>
+
+            <div id="weak-signal" class="signal-card">
+                <div class="signal-header" style="color: #ffaa00;">⚠️ WEAK SIGNAL - Consider Additional Confirmation</div>
+                <div style="margin-top: 10px; color: #e0e0e0;">
+                    <p><strong>Current Price:</strong> $45,678.90 USDT</p>
+                    <p><strong>Trend:</strong> NEUTRAL</p>
+                    <p><strong>Confidence:</strong></p>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" id="weak-confidence" style="background: linear-gradient(90deg, #ff6600, #ffaa00); width: 50%;"></div>
+                    </div>
+                    <span id="weak-confidence-text" style="color: #ffaa00;">50%</span>
+                </div>
+                <p style="margin-top: 10px; color: #a0a0a0; font-size: 12px;">Signal Reasons:</p>
+                <ul class="reason-list">
+                    <li>✓ Price Above EMA(20)</li>
+                    <li>⚠️ Weak trend strength (ADX < 25)</li>
+                    <li>⚠️ Partial volume confirmation</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Indicator Calculations -->
+        <div class="demo-section">
+            <h2>📊 Sample Indicator Calculations</h2>
+            
+            <div class="indicator-display">
+                <h3 style="color: #00d4ff; margin-bottom: 15px;">RSI (14) - Relative Strength Index</h3>
+                <div class="indicator-value">
+                    <span class="indicator-label">Current RSI Value:</span>
+                    <span class="indicator-result">35.42</span>
+                </div>
+                <div class="indicator-value">
+                    <span class="indicator-label">Status:</span>
+                    <span class="indicator-result" style="color: #ffaa00;">Approaching Oversold (Below 30)</span>
+                </div>
+                <div class="indicator-value">
+                    <span class="indicator-label">Signal:</span>
+                    <span class="indicator-result" style="color: #00ff00;">Potential Bounce Expected</span>
+                </div>
+            </div>
+
+            <div class="indicator-display">
+                <h3 style="color: #00d4ff; margin-bottom: 15px;">MACD - Moving Average Convergence Divergence</h3>
+                <div class="indicator-value">
+                    <span class="indicator-label">MACD Line:</span>
+                    <span class="indicator-result">245.32</span>
+                </div>
+                <div class="indicator-value">
+                    <span class="indicator-label">Signal Line:</span>
+                    <span class="indicator-result">238.89</span>
+                </div>
+                <div class="indicator-value">
+                    <span class="indicator-label">Histogram:</span>
+                    <span class="indicator-result" style="color: #00ff00;">+6.43 (Bullish)</span>
+                </div>
+                <div class="indicator-value">
+                    <span class="indicator-label">Status:</span>
+                    <span class="indicator-result" style="color: #00ff00;">Bullish Momentum Building</span>
+                </div>
+            </div>
+
+            <div class="indicator-display">
+                <h3 style="color: #00d4ff; margin-bottom: 15px;">ADX - Average Directional Index</h3>
+                <div class="indicator-value">
+                    <span class="indicator-label">ADX Value:</span>
+                    <span class="indicator-result">28.67</span>
+                </div>
+                <div class="indicator-value">
+                    <span class="indicator-label">Trend Strength:</span>
+                    <span class="indicator-result" style="color: #00d4ff;">STRONG (> 25)</span>
+                </div>
+                <div class="indicator-value">
+                    <span class="indicator-label">+DI (Up Direction):</span>
+                    <span class="indicator-result" style="color: #00ff00;">26.45</span>
+                </div>
+                <div class="indicator-value">
+                    <span class="indicator-label">-DI (Down Direction):</span>
+                    <span class="indicator-result" style="color: #ff4444;">18.92</span>
+                </div>
+                <div class="indicator-value">
+                    <span class="indicator-label">Direction:</span>
+                    <span class="indicator-result" style="color: #00ff00;">Uptrend Confirmed</span>
+                </div>
+            </div>
+
+            <div class="indicator-display">
+                <h3 style="color: #00d4ff; margin-bottom: 15px;">Bollinger Bands</h3>
+                <div class="indicator-value">
+                    <span class="indicator-label">Upper Band:</span>
+                    <span class="indicator-result">47,234.56</span>
+                </div>
+                <div class="indicator-value">
+                    <span class="indicator-label">Middle Band (SMA):</span>
+                    <span class="indicator-result">45,123.45</span>
+                </div>
+                <div class="indicator-value">
+                    <span class="indicator-label">Lower Band:</span>
+                    <span class="indicator-result">43,012.34</span>
+                </div>
+                <div class="indicator-value">
+                    <span class="indicator-label">Current Price Position:</span>
+                    <span class="indicator-result" style="color: #ffaa00;">Near Lower Band - Potential Support</span>
+                </div>
+            </div>
+
+            <div class="indicator-display">
+                <h3 style="color: #00d4ff; margin-bottom: 15px;">Volume Analysis</h3>
+                <div class="indicator-value">
+                    <span class="indicator-label">Current Volume:</span>
+                    <span class="indicator-result">125,456.78 BTC</span>
+                </div>
+                <div class="indicator-value">
+                    <span class="indicator-label">20-Period Avg Volume:</span>
+                    <span class="indicator-result">98,234.56 BTC</span>
+                </div>
+                <div class="indicator-value">
+                    <span class="indicator-label">Volume Strength:</span>
+                    <span class="indicator-result" style="color: #00ff00;">127.7% (Above Average)</span>
+                </div>
+                <div class="indicator-value">
+                    <span class="indicator-label">Signal Confirmation:</span>
+                    <span class="indicator-result" style="color: #00ff00;">✓ Strong Volume Support</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Information Section -->
+        <div class="demo-section">
+            <h2>ℹ️ How It Works</h2>
+            <div class="info-box">
+                <strong>Real-Time Processing:</strong> The indicator analyzes new candle data every 5 seconds and calculates all 6 indicators simultaneously.
+            </div>
+            <div class="info-box">
+                <strong>Multi-Indicator Confirmation:</strong> A signal only triggers when multiple indicators align (e.g., MACD bullish crossover + RSI exit from oversold + price above EMA).
+            </div>
+            <div class="info-box">
+                <strong>Confidence Scoring:</strong> Each confirmed indicator adds to the confidence score. Scores below 60% are filtered out to reduce false signals.
+            </div>
+            <div class="info-box">
+                <strong>Advance Notifications:</strong> Desktop notifications, sound alerts, and in-app popups notify you BEFORE major price movements.
+            </div>
+            <div class="info-box">
+                <strong>Trend Validation:</strong> ADX ensures the trend is strong (>25) before generating signals, avoiding choppy market conditions.
+            </div>
+        </div>
+
+        <!-- Implementation Info -->
+        <div class="demo-section">
+            <h2>🚀 Implementation Status</h2>
+            <div class="feature-grid">
+                <div class="feature-box" style="border-left-color: #00ff00;">
+                    <h4 style="color: #00ff00;">✅ Completed</h4>
+                    <p>✓ Advanced Indicator Module (6 indicators)<br>✓ Notification System (Desktop + Sound + In-App)<br>✓ Live Charts Integration<br>✓ Real-time Signal Detection<br>✓ Confidence Scoring</p>
+                </div>
+                <div class="feature-box">
+                    <h4>📍 How to Use</h4>
+                    <p>1. Open live-charts.html<br>2. Click "🚀 Activate Indicator"<br>3. Customize parameters (optional)<br>4. Monitor in real-time<br>5. Receive advance notifications</p>
+                </div>
+                <div class="feature-box">
+                    <h4>📂 Files Created</h4>
+                    <p>✓ js/advanced-indicator.js<br>✓ js/notification-system.js<br>✓ Updated live-charts.html<br>✓ All 100% Open-Source</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notifications-container"></div>
+
+    <!-- Advanced Indicator Script -->
+    <script src="js/advanced-indicator.js"></script>
+    <script src="js/notification-system.js"></script>
+
+    <script>
+        function generateBuySignal() {
+            document.getElementById('buy-signal').classList.add('active');
+            document.getElementById('sell-signal').classList.remove('active');
+            document.getElementById('weak-signal').classList.remove('active');
+            
+            // Play sound notification
+            playSignalSound('buy');
+            
+            // Show desktop notification
+            if (tradingNotifications) {
+                tradingNotifications.showDesktopNotification('🚀 BUY Signal Generated', {
+                    body: '✓ MACD Bullish Crossover\n✓ RSI Recovering from Oversold\n✓ Strong Volume Confirmation',
+                    tag: 'buy-signal'
+                });
+            }
+        }
+
+        function generateSellSignal() {
+            document.getElementById('sell-signal').classList.add('active');
+            document.getElementById('buy-signal').classList.remove('active');
+            document.getElementById('weak-signal').classList.remove('active');
+            
+            // Play sound notification
+            playSignalSound('sell');
+            
+            // Show desktop notification
+            if (tradingNotifications) {
+                tradingNotifications.showDesktopNotification('⛔ SELL Signal Generated', {
+                    body: '✓ MACD Bearish Crossover\n✓ RSI Declining from Overbought\n✓ Strong Volume Confirmation',
+                    tag: 'sell-signal'
+                });
+            }
+        }
+
+        function generateWeakSignal() {
+            document.getElementById('weak-signal').classList.add('active');
+            document.getElementById('buy-signal').classList.remove('active');
+            document.getElementById('sell-signal').classList.remove('active');
+        }
+
+        function clearSignals() {
+            document.getElementById('buy-signal').classList.remove('active');
+            document.getElementById('sell-signal').classList.remove('active');
+            document.getElementById('weak-signal').classList.remove('active');
+        }
+
+        function playSignalSound(type) {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const now = audioContext.currentTime;
+                const frequency = type === 'buy' ? 800 : 400;
+                const duration = 0.5;
+                
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.frequency.value = frequency;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.3, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + duration);
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.start(now);
+                oscillator.stop(now + duration);
+            } catch (e) {
+                console.log('Audio unavailable');
+            }
+        }
+    </script>
+</body>
+</html>

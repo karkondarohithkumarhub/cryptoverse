@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indicator Test Diagnostic</title>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@latest"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: #222;
+            color: #0f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0 0 10px 0;
+        }
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .panel {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .panel h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #0f0;
+            padding-bottom: 10px;
+        }
+        #chart-container {
+            height: 500px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        #console-output {
+            background: #222;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 500px;
+            overflow-y: auto;
+            line-height: 1.4;
+        }
+        .console-line {
+            margin: 2px 0;
+        }
+        .success { color: #00ff00; }
+        .error { color: #ff3333; }
+        .warning { color: #ffff00; }
+        .info { color: #00ffff; }
+        button {
+            background: #0f0;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px 5px 5px 0;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #00dd00;
+        }
+        button.active {
+            background: #ff3333;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .stat-box {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 4px solid #0f0;
+        }
+        .stat-box strong {
+            display: block;
+            color: #0f0;
+        }
+        .stat-box span {
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔮 Indicator System Test & Diagnostic</h1>
+            <p>This page tests the indicator system and shows all console output in real-time</p>
+        </div>
+
+        <div class="row">
+            <div class="panel">
+                <h2>Chart</h2>
+                <div id="chart-container"></div>
+                <button onclick="loadChart()">📊 Load Chart</button>
+                <button id="indicator-btn" onclick="toggleIndicators()">🔮 Show Indicators</button>
+                <button onclick="clearConsole()">Clear Log</button>
+            </div>
+            
+            <div class="panel">
+                <h2>Signal Status</h2>
+                <div id="signal-display" style="background: #f9f9f9; padding: 15px; border-radius: 4px; margin-bottom: 15px;">
+                    <div style="text-align: center; color: #999;">No signal yet</div>
+                </div>
+                <h2 style="margin-top: 20px;">Console Output</h2>
+                <div id="console-output"></div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Statistics</h2>
+            <div class="stats">
+                <div class="stat-box">
+                    <strong>Candles Loaded</strong>
+                    <span id="stat-candles">0</span>
+                </div>
+                <div class="stat-box">
+                    <strong>EMA Points</strong>
+                    <span id="stat-ema">0</span>
+                </div>
+                <div class="stat-box">
+                    <strong>BB Points</strong>
+                    <span id="stat-bb">0</span>
+                </div>
+                <div class="stat-box">
+                    <strong>Series on Chart</strong>
+                    <span id="stat-series">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/advanced-indicator.js"></script>
+    <script src="js/indicator-renderer.js"></script>
+    <script>
+        let chartHandler = null;
+        let advancedIndicator = null;
+        let indicatorRenderer = null;
+        let indicatorsVisible = false;
+
+        // Override console methods to show on page
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+
+        function addConsoleOutput(message, type = 'info') {
+            const consoleDiv = document.getElementById('console-output');
+            const line = document.createElement('div');
+            line.className = `console-line ${type}`;
+            line.textContent = message;
+            consoleDiv.appendChild(line);
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
+
+        console.log = function(...args) {
+            const message = args.join(' ');
+            addConsoleOutput('📋 ' + message, 'info');
+            originalLog.apply(console, args);
+        };
+
+        console.error = function(...args) {
+            const message = args.join(' ');
+            addConsoleOutput('❌ ' + message, 'error');
+            originalError.apply(console, args);
+        };
+
+        console.warn = function(...args) {
+            const message = args.join(' ');
+            addConsoleOutput('⚠️  ' + message, 'warning');
+            originalWarn.apply(console, args);
+        };
+
+        function updateStats() {
+            if (!chartHandler) {
+                document.getElementById('stat-candles').textContent = '0';
+                document.getElementById('stat-series').textContent = '0';
+                return;
+            }
+            document.getElementById('stat-candles').textContent = chartHandler.candlesData?.length || '0';
+            document.getElementById('stat-ema').textContent = indicatorRenderer?.emaData?.length || '0';
+            document.getElementById('stat-bb').textContent = indicatorRenderer?.bbData?.upper?.length || '0';
+            
+            // Count series on chart
+            const seriesCount = chartHandler.chart?.w?.config?.series?.length || 0;
+            document.getElementById('stat-series').textContent = seriesCount;
+        }
+
+        function clearConsole() {
+            document.getElementById('console-output').innerHTML = '';
+            addConsoleOutput('Console cleared', 'info');
+        }
+
+        async function loadChart() {
+            try {
+                addConsoleOutput('🚀 Starting chart load...', 'info');
+
+                // Mock chart handler
+                chartHandler = {
+                    containerId: 'chart-container',
+                    chart: null,
+                    candlesData: [],
+                    currentSymbol: 'BTCUSDT',
+                    interval: '1h'
+                };
+
+                // Initialize ApexCharts
+                const options = {
+                    series: [
+                        {
+                            name: 'candles',
+                            data: []
+                        }
+                    ],
+                    chart: {
+                        type: 'candlestick',
+                        height: 450,
+                        id: 'chart',
+                        toolbar: {
+                            autoSelected: 'zoom',
+                            tools: {
+                                download: true,
+                                selection: true,
+                                zoom: true,
+                                zoomin: true,
+                                zoomout: true,
+                                pan: true,
+                                reset: true
+                            }
+                        }
+                    },
+                    title: {
+                        text: 'BTC/USDT - Live Chart'
+                    },
+                    xaxis: {
+                        type: 'datetime'
+                    },
+                    yaxis: {
+                        tooltip: {
+                            enabled: true
+                        }
+                    },
+                    plotOptions: {
+                        candlestick: {
+                            colors: {
+                                upward: '#00ff88',
+                                downward: '#ff3333'
+                            }
+                        }
+                    }
+                };
+
+                chartHandler.chart = new ApexCharts(document.querySelector('#chart-container'), options);
+                chartHandler.chart.render();
+                addConsoleOutput('✅ ApexCharts initialized', 'success');
+
+                // Fetch historical data
+                addConsoleOutput('📥 Fetching historical data from Binance...', 'info');
+                const response = await fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=100');
+                const data = await response.json();
+
+                chartHandler.candlesData = data.map(candle => ({
+                    x: new Date(candle[0]),
+                    y: [
+                        parseFloat(candle[1]),
+                        parseFloat(candle[2]),
+                        parseFloat(candle[3]),
+                        parseFloat(candle[4])
+                    ]
+                }));
+
+                addConsoleOutput(`✅ Loaded ${chartHandler.candlesData.length} candles`, 'success');
+
+                // Update chart with candles
+                chartHandler.chart.updateSeries([
+                    {
+                        data: chartHandler.candlesData
+                    }
+                ]);
+
+                // Initialize indicator system
+                advancedIndicator = new AdvancedIndicator();
+                addConsoleOutput('✅ Advanced indicator initialized', 'success');
+
+                updateStats();
+            } catch (error) {
+                addConsoleOutput(`❌ Error loading chart: ${error.message}`, 'error');
+            }
+        }
+
+        function toggleIndicators() {
+            if (!chartHandler || !chartHandler.candlesData) {
+                addConsoleOutput('❌ Chart not loaded yet', 'error');
+                return;
+            }
+
+            indicatorsVisible = !indicatorsVisible;
+            const btn = document.getElementById('indicator-btn');
+
+            if (indicatorsVisible) {
+                btn.classList.add('active');
+                btn.textContent = '🔮 Hide Indicators';
+                showIndicators();
+            } else {
+                btn.classList.remove('active');
+                btn.textContent = '🔮 Show Indicators';
+                hideIndicators();
+            }
+        }
+
+        function showIndicators() {
+            try {
+                addConsoleOutput('🚀 === SHOWING INDICATORS ===', 'info');
+
+                if (!indicatorRenderer) {
+                    addConsoleOutput('🔧 Creating new IndicatorRenderer', 'info');
+                    indicatorRenderer = new IndicatorRenderer(chartHandler);
+                }
+
+                addConsoleOutput('📊 Calling renderIndicators...', 'info');
+                const success = indicatorRenderer.renderIndicators(
+                    chartHandler.candlesData,
+                    advancedIndicator
+                );
+
+                if (success) {
+                    addConsoleOutput('✅ Indicators rendered successfully!', 'success');
+                    
+                    // Display signal status if available
+                    if (indicatorRenderer.signals) {
+                        const signal = indicatorRenderer.signals;
+                        const signalType = signal.buySignal ? '✅ BUY SIGNAL' : signal.sellSignal ? '⚠️ SELL SIGNAL' : '⚪ NO SIGNAL';
+                        const signalColor = signal.buySignal ? '#00ff00' : signal.sellSignal ? '#ff3333' : '#999';
+                        const signalBg = signal.buySignal ? 'rgba(0,255,0,0.1)' : signal.sellSignal ? 'rgba(255,51,51,0.1)' : '#f9f9f9';
+                        
+                        const signalHtml = `
+                            <div style="background: ${signalBg}; border: 2px solid ${signalColor}; padding: 15px; border-radius: 4px; text-align: center;">
+                                <div style="font-size: 20px; color: ${signalColor}; font-weight: bold; margin-bottom: 10px;">${signalType}</div>
+                                <div style="color: #666; margin: 5px 0;">Confidence: <strong style="color: ${signalColor};">${signal.confidence.toFixed(0)}%</strong></div>
+                                <div style="color: #666; margin: 5px 0;">Trend: <strong style="color: ${signalColor};">${signal.trend}</strong></div>
+                                <div style="font-size: 12px; color: #999; margin-top: 10px;">Reasons:</div>
+                                <div style="font-size: 11px; color: #666; text-align: left; margin-top: 5px;">
+                                    ${(signal.reasons || []).slice(0, 3).map(r => '• ' + r).join('<br>')}
+                                </div>
+                            </div>
+                        `;
+                        
+                        document.getElementById('signal-display').innerHTML = signalHtml;
+                        addConsoleOutput(`📊 ${signalType} - Confidence: ${signal.confidence.toFixed(0)}%`, 'success');
+                    }
+                } else {
+                    addConsoleOutput('❌ Indicator rendering failed', 'error');
+                }
+
+                updateStats();
+            } catch (error) {
+                addConsoleOutput(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        function hideIndicators() {
+            try {
+                if (indicatorRenderer) {
+                    indicatorRenderer.clearIndicators();
+                    addConsoleOutput('✅ Indicators cleared', 'success');
+                }
+            } catch (error) {
+                addConsoleOutput(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Auto-load on page load
+        window.addEventListener('load', () => {
+            addConsoleOutput('🟢 Page loaded - ready to test', 'success');
+            addConsoleOutput('Click "Load Chart" to begin', 'info');
+        });
+    </script>
+</body>
+</html>

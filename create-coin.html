@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Cryptocurrency - Cryptoverse Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00d4ff;
+            --primary-dark: #0099cc;
+            --secondary: #26a69a;
+            --danger: #ef5350;
+            --success: #26a69a;
+            --warning: #ff9800;
+            --bg-primary: #1e1e2e;
+            --bg-secondary: #2d2d44;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--primary);
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .form-section {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .form-section h2 {
+            color: var(--primary);
+            margin-bottom: 25px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 13px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .required {
+            color: var(--danger);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        input[type="date"],
+        textarea,
+        select {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .info-box {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .info-box strong {
+            color: var(--primary);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--primary);
+        }
+
+        .coins-section {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .coins-section h2 {
+            color: var(--primary);
+            margin-bottom: 25px;
+            font-size: 20px;
+        }
+
+        .coins-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .coin-card {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .coin-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 212, 255, 0.2);
+        }
+
+        .coin-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .coin-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .coin-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+
+        .coin-name {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .coin-symbol {
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .coin-price {
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .coin-change {
+            font-size: 12px;
+            padding: 3px 6px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+
+        .coin-change.positive {
+            background: rgba(38, 166, 154, 0.2);
+            color: var(--success);
+        }
+
+        .coin-change.negative {
+            background: rgba(239, 83, 80, 0.2);
+            color: var(--danger);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .status-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .status-message.success {
+            background: rgba(38, 166, 154, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+            display: block;
+        }
+
+        .status-message.error {
+            background: rgba(239, 83, 80, 0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            display: block;
+        }
+
+        .status-message.warning {
+            background: rgba(255, 152, 0, 0.2);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+            display: block;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(0, 212, 255, 0.2);
+            border-top: 2px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .preview-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .preview-section h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .preview-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 13px;
+        }
+
+        .preview-item:last-child {
+            border-bottom: none;
+        }
+
+        .preview-label {
+            color: var(--text-secondary);
+        }
+
+        .preview-value {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab:hover:not(.active) {
+            color: var(--text-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .coins-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            header {
+                padding: 20px;
+            }
+
+            .form-section,
+            .coins-section {
+                padding: 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🪙 Create New Cryptocurrency</h1>
+            <p class="subtitle">Add a new cryptocurrency to the Cryptoverse market</p>
+        </header>
+
+        <div class="main-grid">
+            <!-- Form Section -->
+            <div class="form-section">
+                <h2>📝 Coin Details</h2>
+
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('basic')">Basic Info</button>
+                    <button class="tab" onclick="switchTab('advanced')">Advanced</button>
+                </div>
+
+                <!-- Basic Info Tab -->
+                <div id="basic" class="tab-content active">
+                    <div class="info-box">
+                        <strong>💡 Tip:</strong> Fill in all required fields to create a new cryptocurrency coin in the Cryptoverse platform.
+                    </div>
+
+                    <div class="form-group">
+                        <label for="coinName">Coin Name <span class="required">*</span></label>
+                        <input type="text" id="coinName" placeholder="e.g., Bitcoin" maxlength="50">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="coinSymbol">Symbol <span class="required">*</span></label>
+                            <input type="text" id="coinSymbol" placeholder="e.g., BTC" maxlength="10" style="text-transform: uppercase;">
+                        </div>
+                        <div class="form-group">
+                            <label for="coinDecimals">Decimals <span class="required">*</span></label>
+                            <input type="number" id="coinDecimals" placeholder="e.g., 8" min="0" max="18" value="8">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="initialPrice">Initial Price (USD) <span class="required">*</span></label>
+                            <input type="number" id="initialPrice" placeholder="e.g., 50000" step="0.01" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="marketCap">Market Cap (Optional)</label>
+                            <input type="number" id="marketCap" placeholder="e.g., 1000000000" step="1">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" placeholder="Describe the cryptocurrency coin..."></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="website">Website</label>
+                            <input type="text" id="website" placeholder="https://example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="launchDate">Launch Date</label>
+                            <input type="date" id="launchDate">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced Tab -->
+                <div id="advanced" class="tab-content">
+                    <div class="info-box">
+                        <strong>⚙️ Advanced Settings:</strong> Configure technical parameters for your coin.
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="totalSupply">Total Supply</label>
+                            <input type="number" id="totalSupply" placeholder="e.g., 21000000" step="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="circulatingSupply">Circulating Supply</label>
+                            <input type="number" id="circulatingSupply" placeholder="e.g., 19000000" step="1">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dayChange">24h Price Change (%)</label>
+                            <input type="number" id="dayChange" placeholder="e.g., 5.25" step="0.01" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="volume24h">24h Volume (USD)</label>
+                            <input type="number" id="volume24h" placeholder="e.g., 100000000" step="1">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contractAddress">Contract Address</label>
+                            <input type="text" id="contractAddress" placeholder="0x..." value="0x" style="font-family: 'Courier New', monospace;">
+                        </div>
+                        <div class="form-group">
+                            <label for="blockchain">Blockchain Network</label>
+                            <select id="blockchain">
+                                <option value="">Select Network</option>
+                                <option value="ethereum">Ethereum (ERC-20)</option>
+                                <option value="binance">Binance Smart Chain (BEP-20)</option>
+                                <option value="polygon">Polygon (MATIC)</option>
+                                <option value="solana">Solana</option>
+                                <option value="bitcoin">Bitcoin</option>
+                                <option value="cardano">Cardano</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="coinColor">Coin Color</label>
+                        <div class="form-row full">
+                            <input type="text" id="coinColor" placeholder="#FF6B00" maxlength="7" style="font-family: 'Courier New', monospace;">
+                            <div style="display: flex; gap: 10px;">
+                                <input type="color" id="colorPicker" style="width: 50px; cursor: pointer;">
+                                <button class="btn-secondary" onclick="syncColorPicker()" style="flex: 0;">Sync</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preview Section -->
+                <div class="preview-section">
+                    <h3>👁️ Preview</h3>
+                    <div class="preview-item">
+                        <span class="preview-label">Coin Name:</span>
+                        <span class="preview-value" id="previewName">Not set</span>
+                    </div>
+                    <div class="preview-item">
+                        <span class="preview-label">Symbol:</span>
+                        <span class="preview-value" id="previewSymbol">-</span>
+                    </div>
+                    <div class="preview-item">
+                        <span class="preview-label">Current Price:</span>
+                        <span class="preview-value" id="previewPrice">$0.00</span>
+                    </div>
+                    <div class="preview-item">
+                        <span class="preview-label">24h Change:</span>
+                        <span class="preview-value" id="previewChange">+0.00%</span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="button-group">
+                    <button class="btn-secondary" onclick="resetForm()">Reset</button>
+                    <button class="btn-primary" onclick="createCoin()">Create Coin</button>
+                </div>
+
+                <div id="statusMessage" class="status-message"></div>
+            </div>
+
+            <!-- Coins Display Section -->
+            <div class="coins-section">
+                <h2>💰 Available Coins</h2>
+                <div id="coinsList" class="coins-grid">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <p>No coins created yet.</p>
+                        <p style="font-size: 12px; margin-top: 5px;">Create your first cryptocurrency!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =============================================
+        // Form Management
+        // =============================================
+
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active class from buttons
+            document.querySelectorAll('.tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        function syncColorPicker() {
+            const hexInput = document.getElementById('coinColor');
+            const colorPicker = document.getElementById('colorPicker');
+            colorPicker.value = hexInput.value || '#FF6B00';
+        }
+
+        function updatePreview() {
+            const name = document.getElementById('coinName').value || 'Not set';
+            const symbol = document.getElementById('coinSymbol').value || '-';
+            const price = parseFloat(document.getElementById('initialPrice').value) || 0;
+            const change = parseFloat(document.getElementById('dayChange').value) || 0;
+
+            document.getElementById('previewName').textContent = name;
+            document.getElementById('previewSymbol').textContent = symbol.toUpperCase();
+            document.getElementById('previewPrice').textContent = `$${price.toFixed(2)}`;
+            document.getElementById('previewChange').textContent = `${change >= 0 ? '+' : ''}${change.toFixed(2)}%`;
+
+            // Update color
+            const changeElement = document.getElementById('previewChange');
+            if (change >= 0) {
+                changeElement.style.color = '#26a69a';
+            } else {
+                changeElement.style.color = '#ef5350';
+            }
+        }
+
+        // Update preview on input
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('coinName').addEventListener('input', updatePreview);
+            document.getElementById('coinSymbol').addEventListener('input', updatePreview);
+            document.getElementById('initialPrice').addEventListener('input', updatePreview);
+            document.getElementById('dayChange').addEventListener('input', updatePreview);
+
+            // Load coins from localStorage
+            loadCoinsFromStorage();
+        });
+
+        // =============================================
+        // Coin Creation
+        // =============================================
+
+        async function createCoin() {
+            const statusMsg = document.getElementById('statusMessage');
+            statusMsg.classList.remove('success', 'error', 'warning');
+            statusMsg.textContent = '';
+
+            // Get form data
+            const coinData = {
+                name: document.getElementById('coinName').value.trim(),
+                symbol: document.getElementById('coinSymbol').value.toUpperCase().trim(),
+                decimals: parseInt(document.getElementById('coinDecimals').value) || 8,
+                initialPrice: parseFloat(document.getElementById('initialPrice').value),
+                marketCap: parseFloat(document.getElementById('marketCap').value) || 0,
+                description: document.getElementById('description').value.trim(),
+                website: document.getElementById('website').value.trim(),
+                launchDate: document.getElementById('launchDate').value,
+                totalSupply: parseFloat(document.getElementById('totalSupply').value) || 0,
+                circulatingSupply: parseFloat(document.getElementById('circulatingSupply').value) || 0,
+                dayChange: parseFloat(document.getElementById('dayChange').value) || 0,
+                volume24h: parseFloat(document.getElementById('volume24h').value) || 0,
+                contractAddress: document.getElementById('contractAddress').value.trim(),
+                blockchain: document.getElementById('blockchain').value,
+                color: document.getElementById('coinColor').value || '#FF6B00',
+                createdAt: new Date().toISOString()
+            };
+
+            // Validation
+            if (!coinData.name) {
+                showStatus('error', '❌ Coin name is required');
+                return;
+            }
+
+            if (!coinData.symbol || coinData.symbol.length < 2) {
+                showStatus('error', '❌ Symbol must be at least 2 characters');
+                return;
+            }
+
+            if (!coinData.initialPrice || coinData.initialPrice <= 0) {
+                showStatus('error', '❌ Initial price must be greater than 0');
+                return;
+            }
+
+            // Check for duplicate symbol
+            const coins = getCoinsFromStorage();
+            if (coins.some(c => c.symbol === coinData.symbol)) {
+                showStatus('error', '❌ Coin symbol already exists');
+                return;
+            }
+
+            try {
+                // Show loading state
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.innerHTML = '<span class="loading-spinner"></span>Creating...';
+                btn.disabled = true;
+
+                // Send to backend
+                const response = await fetch('/api/coins/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(coinData)
+                }).catch(() => null);
+
+                // Save locally (fallback if backend unavailable)
+                coins.push(coinData);
+                localStorage.setItem('cryptoverse_coins', JSON.stringify(coins));
+
+                // Reset form
+                resetForm();
+
+                // Update display
+                loadCoinsFromStorage();
+
+                showStatus('success', `✅ Coin "${coinData.name}" created successfully!`);
+
+                btn.textContent = originalText;
+                btn.disabled = false;
+            } catch (error) {
+                showStatus('error', `❌ Error: ${error.message}`);
+                event.target.disabled = false;
+            }
+        }
+
+        // =============================================
+        // Display & Storage
+        // =============================================
+
+        function getCoinsFromStorage() {
+            const coins = localStorage.getItem('cryptoverse_coins');
+            return coins ? JSON.parse(coins) : [];
+        }
+
+        function saveCoinsToStorage(coins) {
+            localStorage.setItem('cryptoverse_coins', JSON.stringify(coins));
+        }
+
+        function loadCoinsFromStorage() {
+            const coins = getCoinsFromStorage();
+            const coinsList = document.getElementById('coinsList');
+
+            if (coins.length === 0) {
+                coinsList.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <div class="empty-state-icon">📭</div>
+                        <p>No coins created yet.</p>
+                        <p style="font-size: 12px; margin-top: 5px;">Create your first cryptocurrency!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            coinsList.innerHTML = coins.map((coin, index) => `
+                <div class="coin-card" onclick="viewCoinDetails(${index})">
+                    <div class="coin-icon" style="background: linear-gradient(135deg, ${coin.color}, ${coin.color}dd);">
+                        ${coin.symbol.substring(0, 2)}
+                    </div>
+                    <div class="coin-name">${coin.name}</div>
+                    <div class="coin-symbol">${coin.symbol}</div>
+                    <div class="coin-price">$${coin.initialPrice.toFixed(2)}</div>
+                    <div class="coin-change ${coin.dayChange >= 0 ? 'positive' : 'negative'}">
+                        ${coin.dayChange >= 0 ? '+' : ''}${coin.dayChange.toFixed(2)}%
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function viewCoinDetails(index) {
+            const coins = getCoinsFromStorage();
+            const coin = coins[index];
+
+            alert(`
+Coin: ${coin.name} (${coin.symbol})
+Price: $${coin.initialPrice.toFixed(2)}
+24h Change: ${coin.dayChange.toFixed(2)}%
+Market Cap: $${coin.marketCap.toLocaleString()}
+Total Supply: ${coin.totalSupply.toLocaleString()}
+Blockchain: ${coin.blockchain || 'N/A'}
+
+Description:
+${coin.description || 'N/A'}
+
+Created: ${new Date(coin.createdAt).toLocaleString()}
+            `);
+        }
+
+        // =============================================
+        // Utilities
+        // =============================================
+
+        function showStatus(type, message) {
+            const statusMsg = document.getElementById('statusMessage');
+            statusMsg.textContent = message;
+            statusMsg.className = `status-message ${type}`;
+
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                statusMsg.classList.remove(type);
+            }, 5000);
+        }
+
+        function resetForm() {
+            document.querySelectorAll('input[type="text"], input[type="number"], input[type="date"], textarea, select')
+                .forEach(input => input.value = '');
+
+            document.getElementById('coinDecimals').value = '8';
+            document.getElementById('dayChange').value = '0';
+            document.getElementById('coinColor').value = '#FF6B00';
+
+            updatePreview();
+            showStatus('warning', '🔄 Form cleared');
+        }
+
+        // Auto-uppercase symbol input
+        document.getElementById('coinSymbol').addEventListener('input', (e) => {
+            e.target.value = e.target.value.toUpperCase();
+        });
+
+        // Color picker sync
+        document.getElementById('colorPicker').addEventListener('change', (e) => {
+            document.getElementById('coinColor').value = e.target.value;
+        });
+    </script>
+</body>
+</html>

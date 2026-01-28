@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Crypto Charts - Cryptoverse</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #00d4ff;
+        }
+
+        h1 {
+            color: #00d4ff;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #a0a0a0;
+            font-size: 14px;
+        }
+
+        .controls {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        label {
+            color: #00d4ff;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        select {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            border: 2px solid #00d4ff;
+            padding: 10px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        select:hover {
+            border-color: #00ff88;
+            box-shadow: 0 0 8px rgba(0, 212, 255, 0.3);
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #00ff88;
+            box-shadow: 0 0 12px rgba(0, 212, 255, 0.5);
+        }
+
+        button {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+            color: white !important;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 700 !important;
+            font-size: 14px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, rgba(0, 100, 150, 0.08) 100%);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #00d4ff;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .stat-label {
+            color: #a0a0a0;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            color: #00d4ff;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .stat-change {
+            color: #26a69a;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .stat-change.negative {
+            color: #ef5350;
+        }
+
+        #chart-container {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #444;
+            display: flex;
+            flex-direction: column;
+            min-height: 500px;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 0 10px;
+        }
+
+        #chart-main {
+            width: 100%;
+            flex-grow: 1;
+            min-height: 450px;
+        }
+
+        .apexcharts-toolbar {
+            background: rgba(0, 0, 0, 0.6) !important;
+            border-color: #444 !important;
+        }
+
+        .apexcharts-menu-item {
+            color: #e0e0e0 !important;
+        }
+
+        .apexcharts-menu-item:hover {
+            background: #00d4ff !important;
+            color: #000 !important;
+        }
+
+        .info-section {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, rgba(0, 100, 150, 0.08) 100%);
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #00d4ff;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            margin-top: 30px;
+        }
+
+        .info-section h2 {
+            color: #00d4ff;
+            margin-bottom: 15px;
+            font-size: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .info-section h3 {
+            color: #00d4ff;
+            margin-bottom: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-section ul {
+            list-style: none;
+            color: #d0d0d0;
+            line-height: 2;
+            padding-left: 0;
+        }
+
+        .info-section li {
+            padding: 8px 0;
+            background: rgba(0, 212, 255, 0.05);
+            padding-left: 15px;
+            padding-right: 15px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .info-section li strong {
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        .info-section li:before {
+            content: "▸ ";
+            color: #00d4ff;
+            margin-right: 8px;
+            font-weight: bold;
+        }
+
+        .code-block {
+            background: #1e1e2e;
+            border: 1px solid #444;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .code-block code {
+            color: #d4d4d4;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .status.connected {
+            background: rgba(38, 166, 154, 0.2);
+            color: #26a69a;
+            border: 1px solid #26a69a;
+        }
+
+        .status.loading {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+            border: 1px solid #00d4ff;
+        }
+
+        .status.error {
+            background: rgba(239, 83, 80, 0.2);
+            color: #ef5350;
+            border: 1px solid #ef5350;
+        }
+
+        /* Indicator Controls */
+        .indicator-panel {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, rgba(0, 100, 150, 0.08) 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.1);
+        }
+
+        .indicator-panel h3 {
+            color: #00d4ff;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .indicator-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .control-group label {
+            color: #00d4ff;
+            font-size: 12px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .control-group input,
+        .control-group select {
+            padding: 10px 12px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #444;
+            border-radius: 6px;
+            color: #e0e0e0;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .control-group input:focus,
+        .control-group select:focus {
+            outline: none;
+            border-color: #00d4ff;
+            background: rgba(0, 212, 255, 0.15);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+        }
+
+        .indicator-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .indicator-buttons button {
+            padding: 11px 20px;
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 212, 255, 0.3);
+            min-width: 120px;
+        }
+
+        .indicator-buttons button:hover {
+            background: linear-gradient(135deg, #00b8d4 0%, #0077aa 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.5);
+        }
+
+        .indicator-buttons button:active {
+            transform: translateY(0);
+        }
+
+        .indicator-buttons button.secondary {
+            background: rgba(0, 0, 0, 0.5);
+            color: #00d4ff;
+            border: 2px solid #00d4ff;
+            box-shadow: none;
+        }
+
+        .indicator-buttons button.secondary:hover {
+            background: rgba(0, 212, 255, 0.15);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+        }
+
+        .indicator-status {
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            color: #a0a0a0;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #444;
+        }
+
+        .indicator-status.active {
+            border-left: 4px solid #00ff00;
+            background: rgba(0, 255, 0, 0.05);
+            color: #e0e0e0;
+        }
+
+        .indicator-status strong {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        #notifications-container {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        /* Indicator Chart Overlays */
+        .indicator-toggle {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%) !important;
+            color: white !important;
+            border: 2px solid #00ff88 !important;
+            padding: 8px 16px !important;
+            border-radius: 6px !important;
+            cursor: pointer !important;
+            font-weight: 700 !important;
+            font-size: 13px !important;
+            box-shadow: 0 2px 8px rgba(0, 212, 255, 0.4) !important;
+            transition: all 0.3s ease !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8) !important;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .indicator-toggle:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .indicator-toggle:hover:not(:disabled) {
+            background: linear-gradient(135deg, #00b8d4 0%, #0077aa 100%) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.6) !important;
+        }
+
+        .indicator-toggle.active {
+            background: linear-gradient(135deg, #00ff00 0%, #00cc00 100%) !important;
+            box-shadow: 0 4px 12px rgba(0, 255, 0, 0.5) !important;
+        }
+
+        .indicator-legend {
+            background: linear-gradient(135deg, rgba(0, 20, 40, 0.6) 0%, rgba(0, 40, 80, 0.6) 100%);
+            border: 1px solid #00d4ff;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            display: none;
+            /* Hidden by default */
+            max-width: 600px;
+        }
+
+        .indicator-legend.active {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        /* Custom scrollbar for legend */
+        .indicator-legend::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .indicator-legend::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+        }
+
+        .indicator-legend::-webkit-scrollbar-thumb {
+            background: rgba(0, 212, 255, 0.5);
+            border-radius: 4px;
+        }
+
+        .indicator-legend::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 212, 255, 0.8);
+        }
+
+        .legend-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 51, 51, 0.8);
+            color: white;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            z-index: 210;
+        }
+
+        .legend-close-btn:hover {
+            background: rgba(255, 80, 80, 1);
+            transform: scale(1.1);
+        }
+
+        .indicator-legend.active {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .indicator-legend strong {
+            color: #00ff88;
+            display: block;
+            margin-bottom: 15px;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: flex-start;
+            margin: 12px 0;
+            padding: 10px;
+            background: rgba(0, 212, 255, 0.08);
+            border-radius: 6px;
+            font-size: 13px;
+            color: #d0d0d0;
+            border-left: 3px solid transparent;
+            line-height: 1.5;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            margin-right: 12px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .chart-info-overlay {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, rgba(20, 20, 40, 0.95) 0%, rgba(30, 30, 60, 0.95) 100%);
+            border: 3px solid #00d4ff;
+            padding: 20px 25px;
+            border-radius: 12px;
+            font-size: 14px;
+            z-index: 100;
+            display: none;
+            color: #e0e0e0;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.5), 0 8px 32px rgba(0, 0, 0, 0.8);
+            line-height: 1.8;
+            min-width: 280px;
+            max-width: 400px;
+        }
+
+        .chart-info-overlay.active {
+            display: block;
+            animation: slideDown 0.3s ease-out, glow 1.5s infinite;
+        }
+
+        @keyframes glow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(0, 212, 255, 0.4), 0 8px 32px rgba(0, 0, 0, 0.8);
+                border-color: #00d4ff;
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(0, 212, 255, 0.8), 0 8px 32px rgba(0, 0, 0, 0.8);
+                border-color: #00ffff;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chart-info-overlay.buy-signal {
+            border-color: #00ff00;
+            background: linear-gradient(135deg, rgba(0, 60, 0, 0.95) 0%, rgba(0, 40, 20, 0.95) 100%);
+        }
+
+        .chart-info-overlay.buy-signal.active {
+            animation: slideDown 0.3s ease-out, buyGlow 1s infinite;
+        }
+
+        @keyframes buyGlow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(0, 255, 0, 0.4), 0 8px 32px rgba(0, 0, 0, 0.8);
+                border-color: #00ff00;
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(0, 255, 0, 0.8), 0 8px 32px rgba(0, 0, 0, 0.8);
+                border-color: #00ff88;
+            }
+        }
+
+        .chart-info-overlay.sell-signal {
+            border-color: #ff3333;
+            background: linear-gradient(135deg, rgba(60, 0, 0, 0.95) 0%, rgba(40, 0, 0, 0.95) 100%);
+        }
+
+        .chart-info-overlay.sell-signal.active {
+            animation: slideDown 0.3s ease-out, sellGlow 1s infinite;
+        }
+
+        @keyframes sellGlow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(255, 51, 51, 0.4), 0 8px 32px rgba(0, 0, 0, 0.8);
+                border-color: #ff3333;
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(255, 51, 51, 0.8), 0 8px 32px rgba(0, 0, 0, 0.8);
+                border-color: #ff5555;
+            }
+        }
+
+        .chart-info-overlay strong {
+            color: #ffff00;
+            font-weight: 700;
+            font-size: 18px;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        .chart-info-overlay strong.sell {
+            color: #ff3333;
+            font-size: 20px;
+        }
+
+        .chart-info-overlay strong.buy {
+            color: #00ff00;
+            font-size: 20px;
+        }
+
+        .signal-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+
+        .signal-info div {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px;
+            border-radius: 4px;
+            border-left: 3px solid #00d4ff;
+        }
+
+        .signal-info .label {
+            color: #a0a0a0;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .signal-info .value {
+            color: #00ff88;
+            font-weight: bold;
+            margin-top: 2px;
+        }
+
+        .signal-reasons {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 11px;
+            color: #c0c0c0;
+        }
+
+        .signal-reasons strong {
+            color: #00d4ff;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .reason-item {
+            margin: 3px 0;
+            padding-left: 12px;
+            position: relative;
+        }
+
+        .reason-item:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #00ff00;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .control-group {
+                flex-direction: column;
+            }
+
+            select,
+            button {
+                width: 100%;
+            }
+
+            #chart-container {
+                height: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>📈 Live Cryptocurrency Charts</h1>
+            <p class="subtitle">Real-time candlestick charts powered by Binance API + ApexCharts (100% Free, No
+                TradingView)</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="symbol-select">Cryptocurrency:</label>
+                <select id="symbol-select">
+                    <option value="BTCUSDT">Bitcoin (BTC)</option>
+                    <option value="ETHUSDT">Ethereum (ETH)</option>
+                    <option value="BNBUSDT">Binance Coin (BNB)</option>
+                    <option value="ADAUSDT">Cardano (ADA)</option>
+                    <option value="DOGEUSDT">Dogecoin (DOGE)</option>
+                    <option value="XRPUSDT">Ripple (XRP)</option>
+                    <option value="LTCUSDT">Litecoin (LTC)</option>
+                    <option value="SOLUSDT">Solana (SOL)</option>
+                    <option value="MATICUSDT">Polygon (MATIC)</option>
+                    <option value="AVAXUSDT">Avalanche (AVAX)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="interval-select">Time Interval:</label>
+                <select id="interval-select">
+                    <option value="1m">1 Minute</option>
+                    <option value="5m">5 Minutes</option>
+                    <option value="15m">15 Minutes</option>
+                    <option value="30m">30 Minutes</option>
+                    <option value="1h" selected>1 Hour</option>
+                    <option value="4h">4 Hours</option>
+                    <option value="1d">1 Day</option>
+                    <option value="1w">1 Week</option>
+                </select>
+            </div>
+
+            <button onclick="updateChart()">Update Chart</button>
+            <button onclick="toggleFullscreen()">⛶ Fullscreen</button>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-label">Current Price</div>
+                <div class="stat-value" id="current-price">$0.00</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">24h High</div>
+                <div class="stat-value" id="high-24h">$0.00</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">24h Low</div>
+                <div class="stat-value" id="low-24h">$0.00</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">24h Change</div>
+                <div class="stat-value" id="change-24h">+0.00%</div>
+            </div>
+        </div>
+
+        <div id="chart-container">
+            <div class="chart-header">
+                <div class="indicator-legend" id="indicator-legend">
+                    <div class="legend-item" style="margin: 0; padding: 5px;">
+                        <div class="legend-color"
+                            style="background: rgba(0, 255, 0, 0.3); border: 1px solid #00ff00; width: 12px; height: 12px;">
+                        </div>
+                        <span>EMA(20)</span>
+                    </div>
+                    <div class="legend-item" style="margin: 0; padding: 5px;">
+                        <div class="legend-color"
+                            style="background: rgba(100, 150, 255, 0.3); border: 1px solid #6496ff; width: 12px; height: 12px;">
+                        </div>
+                        <span>Bollinger</span>
+                    </div>
+                    <div class="legend-item" style="margin: 0; padding: 5px;">
+                        <div class="legend-color" style="background: #ff6600; width: 12px; height: 12px;"></div>
+                        <span>Buy</span>
+                    </div>
+                    <div class="legend-item" style="margin: 0; padding: 5px;">
+                        <div class="legend-color" style="background: #ff3333; width: 12px; height: 12px;"></div>
+                        <span>Sell</span>
+                    </div>
+                </div>
+                <button class="indicator-toggle" id="indicator-toggle-btn" onclick="toggleChartIndicator()"
+                    title="Show/Hide Indicators on Chart">🔮 Show Indicators</button>
+            </div>
+
+            <div id="chart-main"></div>
+
+            <div class="chart-info-overlay" id="chart-info-overlay">
+                <strong>Signal Info:</strong><br>
+                <span id="overlay-signal-info">Waiting for signal...</span>
+            </div>
+        </div>
+
+        <!-- Indicator Control Panel -->
+        <div class="indicator-panel">
+            <h3>🔮 ADVANCED PREDICTIVE INDICATOR SYSTEM</h3>
+
+            <p style="color: #a0a0a0; font-size: 12px; margin-bottom: 15px; margin-top: -10px;">
+                📊 Combines 6 indicators for highly accurate buy/sell signals
+            </p>
+
+            <div class="indicator-controls">
+                <div class="control-group">
+                    <label>RSI Period</label>
+                    <input type="number" id="rsiPeriod" min="5" max="50" value="14" step="1">
+                </div>
+                <div class="control-group">
+                    <label>MACD Fast</label>
+                    <input type="number" id="macdFast" min="5" max="50" value="12" step="1">
+                </div>
+                <div class="control-group">
+                    <label>MACD Slow</label>
+                    <input type="number" id="macdSlow" min="10" max="100" value="26" step="1">
+                </div>
+                <div class="control-group">
+                    <label>BB Period</label>
+                    <input type="number" id="bbPeriod" min="10" max="50" value="20" step="1">
+                </div>
+                <div class="control-group">
+                    <label>ADX Period</label>
+                    <input type="number" id="adxPeriod" min="5" max="50" value="14" step="1">
+                </div>
+                <div class="control-group">
+                    <label>RSI Overbought</label>
+                    <input type="number" id="rsiOverbought" min="50" max="100" value="70" step="5">
+                </div>
+            </div>
+
+            <div class="indicator-buttons">
+                <button onclick="activateIndicator()">🚀 Activate Indicator</button>
+                <button onclick="deactivateIndicator()" class="secondary">⏹️ Deactivate</button>
+                <button onclick="showIndicatorInfo()" class="secondary">ℹ️ Info</button>
+                <button onclick="toggleNotifications()" class="secondary">🔔 Toggle Alerts</button>
+            </div>
+
+            <div class="indicator-status">
+                <span id="indicator-status-text">Indicator Status: <strong>Inactive</strong></span>
+                <span id="indicator-confidence" style="color: #00d4ff;"></span>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2>ℹ️ HOW TO USE THE INDICATOR</h2>
+            <ul>
+                <li><strong>Step 1:</strong> Select a cryptocurrency and time interval from the dropdown menus</li>
+                <li><strong>Step 2:</strong> Click <strong>"🔮 SHOW INDICATORS"</strong> button on the chart to
+                    visualize:
+                    <ul style="margin-top: 8px; margin-left: 20px;">
+                        <li>🟢 <strong>Green EMA line</strong> = 20-period moving average (trend direction)</li>
+                        <li>🔵 <strong>Blue Bollinger Bands</strong> = Price support & resistance zones</li>
+                    </ul>
+                </li>
+                <li><strong>Step 3:</strong> Click <strong>"🚀 ACTIVATE INDICATOR"</strong> to start monitoring for
+                    signals</li>
+                <li><strong>Step 4:</strong> Watch for <strong>buy/sell markers</strong> on the chart and <strong>info
+                        overlay</strong> at bottom-left</li>
+                <li><strong>Step 5:</strong> Receive advance notifications (desktop alerts + sound) when signals are
+                    generated</li>
+            </ul>
+
+            <h3 style="color: #00d4ff; margin-top: 20px; margin-bottom: 10px;">📊 WHAT EACH INDICATOR SHOWS</h3>
+            <ul>
+                <li><strong>EMA (20):</strong> Shows the trend direction. Price above EMA = uptrend, below = downtrend
+                </li>
+                <li><strong>Bollinger Bands:</strong> Upper band = resistance zone, Lower band = support zone</li>
+                <li><strong>🟢 BUY Signal:</strong> Green marker indicates bullish conditions (confidence ≥ 60%)</li>
+                <li><strong>🔴 SELL Signal:</strong> Red marker indicates bearish conditions (confidence ≥ 60%)</li>
+                <li><strong>Confidence %:</strong> Shows how reliable the signal is (higher = more reliable)</li>
+                <li><strong>Trend:</strong> Shows BULLISH, BEARISH, or NEUTRAL market direction</li>
+            </ul>
+
+            <h3 style="color: #00d4ff; margin-top: 20px; margin-bottom: 10px;">🎯 INDICATOR CONFIGURATION</h3>
+            <ul>
+                <li><strong>RSI Period:</strong> Lower values (5-10) = faster response, Higher (15-20) = less false
+                    signals</li>
+                <li><strong>MACD Fast:</strong> Default 12 - tracks faster price momentum</li>
+                <li><strong>MACD Slow:</strong> Default 26 - tracks slower price momentum</li>
+                <li><strong>BB Period:</strong> Default 20 - wider bands = larger price swings</li>
+                <li><strong>ADX Period:</strong> Default 14 - measures trend strength</li>
+            </ul>
+
+            <h3 style="color: #00d4ff; margin-top: 20px; margin-bottom: 10px;">💡 TIPS FOR BEST RESULTS</h3>
+            <ul>
+                <li>Use <strong>1h to 4h timeframes</strong> for swing trading (most reliable signals)</li>
+                <li>Combine signals with <strong>price action</strong> on the chart for confirmation</li>
+                <li>Higher <strong>confidence %</strong> = more reliable signal (wait for 75%+)</li>
+                <li>Use <strong>STRONG</strong> trend strength for better accuracy</li>
+                <li>Check <strong>volume</strong> to confirm signal strength</li>
+            </ul>
+
+            <h2 style="margin-top: 30px;">ℹ️ CHART INFORMATION</h2>
+            <ul>
+                <li><strong>Data Source:</strong> Binance API (Free, No API Key Required)</li>
+                <li><strong>Chart Library:</strong> ApexCharts (Free, Open-Source)</li>
+                <li><strong>Real-Time Updates:</strong> Binance WebSocket (Live Candlesticks)</li>
+                <li><strong>Reliability:</strong> 99.9% Uptime, Enterprise-Grade Infrastructure</li>
+                <li><strong>Cost:</strong> Completely Free - No Paid Plans or API Limits</li>
+                <li><strong>Features:</strong> Zoom, Pan, Reset, Download Chart as Image</li>
+            </ul>
+
+            <h3 style="color: #00d4ff; margin-top: 20px; margin-bottom: 10px;">📊 AVAILABLE CRYPTOCURRENCIES</h3>
+            <ul>
+                <li>Bitcoin (BTC), Ethereum (ETH), Binance Coin (BNB), Cardano (ADA)</li>
+                <li>Dogecoin (DOGE), Ripple (XRP), Litecoin (LTC), Solana (SOL)</li>
+                <li>Polygon (MATIC), Avalanche (AVAX) + 1000+ more on Binance</li>
+            </ul>
+
+            <h3 style="color: #00d4ff; margin-top: 20px; margin-bottom: 10px;">⏱️ SUPPORTED TIME INTERVALS</h3>
+            <ul>
+                <li>Minutes: 1m, 5m, 15m, 30m</li>
+                <li>Hours: 1h, 4h</li>
+                <li>Days/Weeks: 1d, 1w</li>
+            </ul>
+
+            <h3 style="color: #00d4ff; margin-top: 20px; margin-bottom: 10px;">🔗 RESOURCES</h3>
+            <ul>
+                <li><strong>Binance API Docs:</strong> <a href="https://binance-docs.github.io/apidocs/" target="_blank"
+                        style="color: #00d4ff; text-decoration: none;">https://binance-docs.github.io/apidocs/</a></li>
+                <li><strong>ApexCharts Docs:</strong> <a href="https://apexcharts.com/" target="_blank"
+                        style="color: #00d4ff; text-decoration: none;">https://apexcharts.com/</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Notifications Container -->
+    <div id="notifications-container"></div>
+
+    <!-- ApexCharts Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.45.0/apexcharts.min.js"></script>
+
+    <!-- Chart Handler Script -->
+    <script src="js/chart.js"></script>
+
+    <!-- Advanced Indicator System -->
+    <script src="js/advanced-indicator.js"></script>
+    <script src="js/notification-system.js"></script>
+    <script src="js/indicator-renderer.js"></script>
+
+    <script>
+        let chartHandler;
+        let advancedIndicator;
+        let indicatorRenderer;
+        let indicatorActive = false;
+        let chartIndicatorVisible = false;
+        let indicatorCheckInterval;
+        let lastSignalTime = 0;
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            chartHandler = new CryptoChart('chart-main');
+            advancedIndicator = new AdvancedIndicator();
+            chartHandler.initChart();
+
+            // Fetch custom coins from backend
+            await fetchBackendCoins();
+
+            // Wait for chart to be ready
+            setTimeout(() => {
+                if (chartHandler.chart) {
+                    indicatorRenderer = new IndicatorRenderer(chartHandler);
+                }
+            }, 500);
+
+            // Load default Bitcoin chart
+            await chartHandler.fetchHistoricalData('BTCUSDT', '1h', 100);
+            chartHandler.connectWebSocket('BTCUSDT', '1h');
+
+            // Load 24h stats
+            await updateStats('BTCUSDT');
+        });
+
+        // Fetch custom coins from backend
+        async function fetchBackendCoins() {
+            try {
+                const response = await fetch('http://localhost:3001/api/coins');
+                const data = await response.json();
+                const select = document.getElementById('symbol-select');
+
+                if (data.coins && data.coins.length > 0) {
+                    // Add a separator or label
+                    const optGroup = document.createElement('optgroup');
+                    optGroup.label = "Custom Backend Coins";
+
+                    data.coins.forEach(coin => {
+                        const option = document.createElement('option');
+                        option.value = coin.symbol + 'USDT'; // Assuming USDT pair for Binance format Compatibility or custom logic
+                        option.textContent = `${coin.name} (${coin.symbol})`;
+                        optGroup.appendChild(option);
+                    });
+
+                    select.appendChild(optGroup);
+                }
+            } catch (err) {
+                console.warn('Backend not available or no coins found:', err.message);
+            }
+        }
+
+        // Toggle Chart Indicator Visibility
+        // Toggle Legend Dropdown
+        function toggleLegend() {
+            const legend = document.getElementById('indicator-legend');
+            // For the new inline legend, this function might not be needed or needs re-evaluation.
+            // Keeping it for now, but it won't toggle a dropdown.
+            // If the intent was to show/hide the inline legend, then:
+            // legend.style.display = legend.style.display === 'none' ? 'flex' : 'none';
+            console.log("toggleLegend called. With inline legend, this might not have a visible effect.");
+        }
+
+        function toggleChartIndicator() {
+            if (!chartHandler || !chartHandler.candlesData) return;
+            if (!indicatorActive) return; // Only show indicators if indicator is active
+
+            chartIndicatorVisible = !chartIndicatorVisible;
+            const btn = document.getElementById('indicator-toggle-btn');
+            const overlay = document.getElementById('chart-info-overlay');
+
+            if (chartIndicatorVisible) {
+                btn.classList.add('active');
+                btn.textContent = '🔮 Hide Indicators';
+                if (overlay) overlay.classList.add('active');
+
+                // Render indicators
+                console.log('📊 Showing indicators...');
+                updateChartWithIndicators();
+
+                // Start monitoring for signals every 2 seconds
+                if (!indicatorCheckInterval) {
+                    indicatorCheckInterval = setInterval(monitorSignals, 2000);
+                }
+            } else {
+                btn.classList.remove('active');
+                btn.textContent = '🔮 Show Indicators';
+                if (overlay) overlay.classList.remove('active');
+
+                console.log('📊 Hiding indicators...');
+                // Clear visual indicators from chart but don't stop indicator system
+                if (indicatorRenderer) {
+                    indicatorRenderer.clearIndicators();
+                }
+            }
+        }
+
+        // Update Chart With Indicator Overlays
+        function updateChartWithIndicators() {
+            try {
+                console.log('🟢 updateChartWithIndicators called');
+
+                if (!chartHandler || !chartHandler.candlesData || chartHandler.candlesData.length === 0) {
+                    console.error('❌ Chart handler or candle data missing');
+                    return;
+                }
+
+                console.log('📊 Chart data available:', chartHandler.candlesData.length, 'candles');
+
+                if (!indicatorRenderer) {
+                    console.log('🔧 Creating new IndicatorRenderer');
+                    indicatorRenderer = new IndicatorRenderer(chartHandler);
+                }
+
+                // Clear old indicators first
+                if (indicatorRenderer) {
+                    indicatorRenderer.clearIndicators();
+                }
+
+                // Render all indicators fresh
+                console.log('🚀 Calling renderIndicators...');
+                const success = indicatorRenderer.renderIndicators(
+                    chartHandler.candlesData,
+                    advancedIndicator
+                );
+
+                if (!success) {
+                    console.warn('⚠️ renderIndicators returned false');
+                } else {
+                    console.log('✅ Indicators rendered successfully');
+
+                    // Display signal status if available
+                    updateSignalDisplay();
+                }
+            } catch (error) {
+                console.error('❌ Error updating chart with indicators:', error);
+                console.error('❌ Stack:', error.stack);
+            }
+        }
+
+        // Update signal display in the overlay
+        function updateSignalDisplay() {
+            const overlay = document.getElementById('chart-info-overlay');
+            if (!overlay) return;
+
+            if (!indicatorRenderer || !indicatorRenderer.signals) {
+                overlay.classList.remove('active', 'buy-signal', 'sell-signal');
+                overlay.innerHTML = `
+                    <strong style="color: #00d4ff; font-size: 14px;">🔄 ANALYZING MARKET...</strong>
+                    <span style="color: #a0a0a0; font-size: 11px; display: block; margin-top: 8px;">
+                        Waiting for buy/sell signal. Keep watching!
+                    </span>
+                `;
+                return;
+            }
+
+            const signal = indicatorRenderer.signals;
+            const isBuySignal = signal.buySignal;
+            const isSellSignal = signal.sellSignal;
+            const confidence = signal.confidence ? signal.confidence.toFixed(0) : '0';
+            const trend = signal.trend || 'NEUTRAL';
+
+            if (!isBuySignal && !isSellSignal) {
+                // No active signal
+                overlay.classList.remove('active', 'buy-signal', 'sell-signal');
+                overlay.innerHTML = `
+                    <strong style="color: #ffff00; font-size: 14px;">🔄 MONITORING...</strong>
+                    <span style="color: #a0a0a0; font-size: 11px; display: block; margin-top: 8px;">
+                        Waiting for 60%+ confidence signal
+                    </span>
+                `;
+                return;
+            }
+
+            // Signal detected - make it VERY PROMINENT
+            const signalType = isBuySignal ? 'buy-signal' : 'sell-signal';
+            const signalTitle = isBuySignal ? '▲▲▲ BUY NOW ▲▲▲' : '▼▼▼ SELL NOW ▼▼▼';
+            const lastCandle = chartHandler.candlesData[chartHandler.candlesData.length - 1];
+            const price = Array.isArray(lastCandle.y) ? lastCandle.y[3] : lastCandle.close;
+            const priceStr = typeof price === 'number' ? price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : price;
+
+            overlay.className = `chart-info-overlay ${signalType} active`;
+
+            const reasonsHtml = (signal.reasons || []).slice(0, 4)
+                .map(r => `<div class="reason-item">✓ ${r}</div>`)
+                .join('');
+
+            overlay.innerHTML = `
+                <strong class="${isBuySignal ? 'buy' : 'sell'}" style="font-size: 24px;">${signalTitle}</strong>
+                <div class="signal-info">
+                    <div>
+                        <div class="label">Price Now</div>
+                        <div class="value">$${priceStr}</div>
+                    </div>
+                    <div>
+                        <div class="label">Confidence</div>
+                        <div class="value">${confidence}%</div>
+                    </div>
+                    <div>
+                        <div class="label">Trend</div>
+                        <div class="value">${trend}</div>
+                    </div>
+                    <div>
+                        <div class="label">Strength</div>
+                        <div class="value">${signal.strength ? signal.strength.toFixed(1) + '%' : 'N/A'}</div>
+                    </div>
+                </div>
+                ${signal.reasons && signal.reasons.length > 0 ? `
+                    <div class="signal-reasons">
+                        <strong style="color: #00ff00; font-size: 12px;">Why Now?</strong>
+                        ${reasonsHtml}
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        // Monitor signals and update in real-time
+        function monitorSignals() {
+            if (!chartHandler || !chartHandler.candlesData) {
+                return;
+            }
+
+            try {
+                // Recalculate signals for latest candles
+                const signals = advancedIndicator.generateSignals(chartHandler.candlesData);
+
+                if (signals) {
+                    // Update indicator renderer with signal data
+                    if (indicatorRenderer) {
+                        indicatorRenderer.signals = signals;
+
+                        // Add markers for active signals
+                        if (signals.buySignal || signals.sellSignal) {
+                            const lastCandle = chartHandler.candlesData[chartHandler.candlesData.length - 1];
+                            indicatorRenderer.addSignalMarker(signals, lastCandle);
+                        }
+                    }
+
+                    // Update display
+                    updateSignalDisplay();
+
+                    // Log real-time updates
+                    if (signals.buySignal || signals.sellSignal) {
+                        const signalType = signals.buySignal ? 'BUY' : 'SELL';
+                        console.log(`🔔 ${signalType} SIGNAL: Confidence ${signals.confidence.toFixed(0)}% | Trend: ${signals.trend}`);
+                    }
+                }
+            } catch (error) {
+                console.error('Error monitoring signals:', error);
+            }
+        }
+
+        // Update chart when dropdown changes
+        async function updateChart() {
+            const select = document.getElementById('symbol-select');
+            const intervalSelect = document.getElementById('interval-select');
+            if (!select || !intervalSelect) return;
+
+            const symbol = select.value;
+            const interval = intervalSelect.value;
+
+            console.log(`📊 Switching to ${symbol} (${interval})`);
+
+            // PERSISTENCE: Do NOT deactivate indicators
+            // Logic to keep them if they are already on
+            const wasIndicatorVisible = chartIndicatorVisible;
+
+            await chartHandler.changeSymbol(symbol, interval);
+            await updateStats(symbol);
+            if (toggleBtn) {
+                toggleBtn.style.display = 'block';
+                toggleBtn.disabled = false;
+            }
+            if (legendBtn) {
+                legendBtn.style.display = 'block';
+            }
+
+            // Re-show indicators if they were visible
+            if (wasChartIndicatorVisible) {
+                chartIndicatorVisible = true;
+                const btn = document.getElementById('indicator-toggle-btn');
+                if (btn) {
+                    btn.classList.add('active');
+                    btn.textContent = '🔮 Hide Indicators';
+                }
+                const overlay = document.getElementById('chart-info-overlay');
+                if (overlay) overlay.classList.add('active');
+
+                // Re-render indicators with new data
+                setTimeout(() => {
+                    updateChartWithIndicators();
+                    if (!indicatorCheckInterval) {
+                        indicatorCheckInterval = setInterval(monitorSignals, 2000);
+                    }
+                }, 500);
+            }
+        }
+
+        // Update 24h stats
+        async function updateStats(symbol) {
+            const stats = await chartHandler.get24hStats(symbol);
+            if (stats) {
+                const currentPriceEl = document.getElementById('current-price');
+                const highEl = document.getElementById('high-24h');
+                const lowEl = document.getElementById('low-24h');
+                const changeEl = document.getElementById('change-24h');
+
+                if (currentPriceEl) currentPriceEl.textContent = `$${stats.price.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+                if (highEl) highEl.textContent = `$${stats.high24h.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+                if (lowEl) lowEl.textContent = `$${stats.low24h.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+
+                if (changeEl) {
+                    changeEl.textContent = `${stats.change24h > 0 ? '+' : ''}${stats.change24h.toFixed(2)}%`;
+                    changeEl.className = stats.change24h >= 0 ? 'stat-value' : 'stat-value negative';
+                }
+            }
+        }
+
+        // Activate Advanced Indicator
+        function activateIndicator() {
+            if (!chartHandler || !chartHandler.candlesData) {
+                alert('Chart not ready. Please wait...');
+                return;
+            }
+
+            // Get custom parameters
+            const config = {
+                rsiPeriod: parseInt(document.getElementById('rsiPeriod').value) || 14,
+                macdFast: parseInt(document.getElementById('macdFast').value) || 12,
+                macdSlow: parseInt(document.getElementById('macdSlow').value) || 26,
+                bbPeriod: parseInt(document.getElementById('bbPeriod').value) || 20,
+                adxPeriod: parseInt(document.getElementById('adxPeriod').value) || 14,
+                rsiOverbought: parseInt(document.getElementById('rsiOverbought').value) || 70,
+                rsiOversold: 100 - (parseInt(document.getElementById('rsiOverbought').value) || 70)
+            };
+
+            advancedIndicator.setConfiguration(config);
+            indicatorActive = true;
+
+            // Show the indicator control buttons
+            const toggleBtn = document.getElementById('indicator-toggle-btn');
+            const legendBtn = document.getElementById('legend-toggle-btn');
+            if (toggleBtn) {
+                toggleBtn.style.display = 'block';
+                toggleBtn.disabled = false;
+            }
+            if (legendBtn) {
+                legendBtn.style.display = 'block';
+            }
+
+            // Auto-show indicators on chart
+            if (!chartIndicatorVisible) {
+                chartIndicatorVisible = true;
+                if (toggleBtn) {
+                    toggleBtn.classList.add('active');
+                    toggleBtn.textContent = '🔮 Hide Indicators';
+                }
+                const overlay = document.getElementById('chart-info-overlay');
+                if (overlay) overlay.classList.add('active');
+
+                // Render indicators
+                updateChartWithIndicators();
+
+                // Start monitoring for signals every 2 seconds
+                if (!indicatorCheckInterval) {
+                    indicatorCheckInterval = setInterval(monitorSignals, 2000);
+                }
+            }
+
+            // Update UI
+            document.getElementById('indicator-status-text').innerHTML =
+                'Indicator Status: <strong style="color: #00ff00;">🟢 Active</strong>';
+            document.querySelector('.indicator-status').classList.add('active');
+
+            console.log('%c✅ Advanced Indicator Activated', 'color: #00ff00; font-size: 14px; font-weight: bold;', config);
+
+            // Show notification
+            tradingNotifications.showDesktopNotification(
+                '🔮 Advanced Indicator Activated',
+                { body: `RSI(${config.rsiPeriod}) MACD(${config.macdFast},${config.macdSlow}) BB(${config.bbPeriod})` }
+            );
+        }
+
+
+
+        // Deactivate Indicator
+        function deactivateIndicator() {
+            indicatorActive = false;
+            chartIndicatorVisible = false;
+            clearInterval(indicatorCheckInterval);
+            indicatorCheckInterval = null;
+
+            // Hide the indicator control buttons
+            const toggleBtn = document.getElementById('indicator-toggle-btn');
+            const legendBtn = document.getElementById('legend-toggle-btn');
+            if (toggleBtn) {
+                toggleBtn.style.display = 'none';
+                toggleBtn.disabled = true;
+                toggleBtn.classList.remove('active');
+                toggleBtn.textContent = '🔮 Show Indicators';
+            }
+            if (legendBtn) {
+                legendBtn.style.display = 'none';
+            }
+
+            const legend = document.getElementById('indicator-legend');
+            if (legend) legend.classList.remove('active');
+            document.body.style.overflow = 'auto';
+
+            // Update UI
+            document.getElementById('indicator-status-text').innerHTML =
+                'Indicator Status: <strong>⚫ Inactive</strong>';
+            document.getElementById('indicator-confidence').textContent = '';
+            document.querySelector('.indicator-status').classList.remove('active');
+
+            // Hide chart indicators
+            if (chartIndicatorVisible) {
+                toggleChartIndicator();
+            }
+
+            console.log('%c⏹️ Advanced Indicator Deactivated', 'color: #ff6600; font-size: 14px; font-weight: bold;');
+
+            tradingNotifications.showDesktopNotification('🛑 Advanced Indicator Deactivated', { body: 'Monitoring stopped' });
+        }
+
+        // Toggle Notifications
+        function toggleNotifications() {
+            const isEnabled = !tradingNotifications.desktopNotificationsEnabled;
+            tradingNotifications.toggleNotifications(isEnabled);
+            tradingNotifications.toggleSound(isEnabled);
+            alert(`Notifications ${isEnabled ? 'Enabled ✅' : 'Disabled ❌'}`);
+        }
+
+        // Show Indicator Info
+        function showIndicatorInfo() {
+            const config = advancedIndicator.getConfiguration();
+            const info = `
+🔮 ADVANCED PREDICTIVE INDICATOR - SYSTEM INFO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 INDICATORS USED:
+✓ RSI (Relative Strength Index) - Overbought/Oversold Detection
+✓ MACD (Moving Average Convergence Divergence) - Momentum & Trend
+✓ Bollinger Bands - Volatility & Price Extremes
+✓ ADX (Average Directional Index) - Trend Strength
+✓ EMA (Exponential Moving Average) - Trend Direction
+✓ Volume Analysis - Signal Confirmation
+
+⚙️ CURRENT CONFIGURATION:
+• RSI Period: ${config.rsiPeriod}
+• MACD Fast EMA: ${config.macdFast}
+• MACD Slow EMA: ${config.macdSlow}
+• Bollinger Bands Period: ${config.bbPeriod}
+• ADX Period: ${config.adxPeriod}
+• RSI Overbought: ${config.rsiOverbought}
+• RSI Oversold: ${config.rsiOversold}
+
+🎯 SIGNAL REQUIREMENTS:
+✓ Confidence Score ≥ 60%
+✓ Multiple indicator confirmation
+✓ Volume validation
+✓ Trend strength verification
+
+💡 WHY MORE ACCURATE:
+• Combines 6 different technical indicators
+• Volume confirmation eliminates false signals
+• ADX ensures only strong trends are traded
+• Multiple crossover confirmations
+• Predictive signals (lead, not lag indicators)
+
+📱 NOTIFICATIONS:
+✓ Browser desktop notifications
+✓ In-app visual alerts with confidence scores
+✓ Sound notifications for each signal
+✓ Detailed reason breakdown
+`;
+            alert(info);
+        }
+
+        // Fullscreen toggle
+        function toggleFullscreen() {
+            const element = document.getElementById('chart-container');
+            if (!document.fullscreenElement) {
+                element.requestFullscreen().catch(err => {
+                    alert(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (indicatorActive) {
+                deactivateIndicator();
+            }
+            if (chartHandler) {
+                chartHandler.disconnect();
+            }
+        });
+    </script>
+</body>
+
+</html>

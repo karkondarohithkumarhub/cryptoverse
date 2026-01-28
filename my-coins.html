@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Coins - Cryptoverse</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00d4ff;
+            --primary-dark: #0099cc;
+            --secondary: #26a69a;
+            --danger: #ef5350;
+            --success: #26a69a;
+            --warning: #ff9800;
+            --bg-primary: #1e1e2e;
+            --bg-secondary: #2d2d44;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--primary);
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--primary);
+        }
+
+        .btn-danger {
+            background: rgba(239, 83, 80, 0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 83, 80, 0.3);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            color: var(--primary);
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .coins-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .coin-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .coin-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .coin-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .coin-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .coin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .coin-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .coin-title {
+            flex: 1;
+            margin-left: 15px;
+        }
+
+        .coin-name {
+            color: var(--primary);
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .coin-symbol {
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .coin-menu {
+            display: flex;
+            gap: 5px;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 20px;
+            padding: 5px;
+            transition: color 0.3s;
+        }
+
+        .menu-btn:hover {
+            color: var(--primary);
+        }
+
+        .coin-details {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 13px;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: var(--text-secondary);
+        }
+
+        .detail-value {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .price-section {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .price-label {
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .price-value {
+            color: var(--primary);
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .price-change {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .price-change.positive {
+            background: rgba(38, 166, 154, 0.2);
+            color: var(--success);
+        }
+
+        .price-change.negative {
+            background: rgba(239, 83, 80, 0.2);
+            color: var(--danger);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        .action-buttons button {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .empty-state-subtext {
+            font-size: 12px;
+            margin-bottom: 25px;
+        }
+
+        .info-box {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 25px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .info-box strong {
+            color: var(--primary);
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .search-bar input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+        }
+
+        .search-bar button {
+            padding: 12px 25px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: #000;
+            border-color: var(--primary);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            color: var(--primary);
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .modal-close:hover {
+            color: var(--primary);
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+        }
+
+        .status-message {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .status-message.success {
+            background: rgba(38, 166, 154, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+            display: block;
+        }
+
+        .status-message.error {
+            background: rgba(239, 83, 80, 0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            display: block;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(0, 212, 255, 0.2);
+            border-top: 2px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .coins-container {
+                grid-template-columns: 1fr;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .header-actions {
+                flex-direction: column;
+            }
+
+            .header-actions button {
+                width: 100%;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🪙 My Coins</h1>
+            <p class="subtitle">Manage your custom cryptocurrencies</p>
+            <div class="header-actions">
+                <button class="btn-primary" onclick="goToCreateCoin()">+ Create New Coin</button>
+                <button class="btn-secondary" onclick="refreshCoins()">🔄 Refresh</button>
+            </div>
+        </header>
+
+        <div id="statusMessage" class="status-message"></div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('my-coins')">🪙 My Coins</button>
+            <button class="tab" onclick="switchTab('statistics')">📊 Statistics</button>
+            <button class="tab" onclick="switchTab('settings')">⚙️ Settings</button>
+        </div>
+
+        <!-- Tab 1: My Coins -->
+        <div id="my-coins" class="tab-content active">
+            <div class="info-box">
+                <strong>💡 Tip:</strong> Click on any coin card to view more details, edit, or delete. You can search and filter your coins below.
+            </div>
+
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search coins by name or symbol..." onkeyup="searchCoins()">
+                <button class="btn-secondary" onclick="searchCoins()">🔍 Search</button>
+            </div>
+
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="filterCoins('all')">All Coins</button>
+                <button class="filter-btn" onclick="filterCoins('ethereum')">Ethereum</button>
+                <button class="filter-btn" onclick="filterCoins('binance')">BSC</button>
+                <button class="filter-btn" onclick="filterCoins('polygon')">Polygon</button>
+            </div>
+
+            <div id="coinsContainer" class="coins-container">
+                <!-- Coins will load here -->
+            </div>
+        </div>
+
+        <!-- Tab 2: Statistics -->
+        <div id="statistics" class="tab-content">
+            <div class="info-box">
+                <strong>📊 Statistics:</strong> Overview of your cryptocurrency portfolio and market performance.
+            </div>
+
+            <div class="stats-grid" id="statsGrid">
+                <!-- Stats will load here -->
+            </div>
+
+            <div style="background: rgba(0, 0, 0, 0.4); padding: 25px; border-radius: 10px; border: 1px solid rgba(0, 212, 255, 0.2);">
+                <h2 style="color: var(--primary); margin-bottom: 20px; font-size: 18px;">📈 Coin Performance</h2>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid rgba(0, 212, 255, 0.2);">
+                                <th style="text-align: left; padding: 12px; color: var(--text-secondary);">Coin</th>
+                                <th style="text-align: left; padding: 12px; color: var(--text-secondary);">Symbol</th>
+                                <th style="text-align: right; padding: 12px; color: var(--text-secondary);">Price</th>
+                                <th style="text-align: right; padding: 12px; color: var(--text-secondary);">24h Change</th>
+                                <th style="text-align: right; padding: 12px; color: var(--text-secondary);">Market Cap</th>
+                            </tr>
+                        </thead>
+                        <tbody id="statsTable">
+                            <!-- Table rows will load here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Settings -->
+        <div id="settings" class="tab-content">
+            <div class="info-box">
+                <strong>⚙️ Settings:</strong> Manage your coin creation preferences and account settings.
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                <!-- Theme Settings -->
+                <div style="background: rgba(0, 0, 0, 0.4); padding: 20px; border-radius: 10px; border-left: 3px solid var(--primary);">
+                    <h3 style="color: var(--primary); margin-bottom: 15px;">🎨 Appearance</h3>
+                    <div class="form-group">
+                        <label>Default Coin Color</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="color" id="defaultColor" value="#FF6B00" style="width: 50px; cursor: pointer;">
+                            <input type="text" id="defaultColorHex" value="#FF6B00" style="flex: 1;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notification Settings -->
+                <div style="background: rgba(0, 0, 0, 0.4); padding: 20px; border-radius: 10px; border-left: 3px solid var(--primary);">
+                    <h3 style="color: var(--primary); margin-bottom: 15px;">🔔 Notifications</h3>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" checked>
+                            <span>Price updates</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" checked>
+                            <span>New coin alerts</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox">
+                            <span>Market updates</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Danger Zone -->
+                <div style="background: rgba(239, 83, 80, 0.1); padding: 20px; border-radius: 10px; border-left: 3px solid var(--danger);">
+                    <h3 style="color: var(--danger); margin-bottom: 15px;">⚠️ Danger Zone</h3>
+                    <button class="btn-danger" style="width: 100%;" onclick="confirmDeleteAll()">Delete All Coins</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Coin Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>✏️ Edit Coin</h2>
+                <button class="modal-close" onclick="closeModal('editModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Coin Name</label>
+                    <input type="text" id="editName" placeholder="Coin name">
+                </div>
+                <div class="form-group">
+                    <label>Symbol</label>
+                    <input type="text" id="editSymbol" placeholder="Symbol" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Current Price (USD)</label>
+                    <input type="number" id="editPrice" placeholder="Price" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>24h Change (%)</label>
+                    <input type="number" id="editChange" placeholder="Change %" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="editDescription" placeholder="Coin description" style="min-height: 80px;"></textarea>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="btn-primary" style="flex: 1;" onclick="saveEditedCoin()">Save Changes</button>
+                    <button class="btn-secondary" style="flex: 1;" onclick="closeModal('editModal')">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Coin Details Modal -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="detailsTitle">Coin Details</h2>
+                <button class="modal-close" onclick="closeModal('detailsModal')">×</button>
+            </div>
+            <div class="modal-body" id="detailsBody">
+                <!-- Details will load here -->
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-primary" style="flex: 1;" onclick="editCoin()">✏️ Edit</button>
+                <button class="btn-danger" style="flex: 1;" onclick="deleteCoinConfirm()">🗑️ Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =============================================
+        // STATE MANAGEMENT
+        // =============================================
+
+        let allCoins = [];
+        let selectedCoin = null;
+        let currentFilter = 'all';
+
+        // =============================================
+        // TAB SWITCHING
+        // =============================================
+
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active class from buttons
+            document.querySelectorAll('.tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            // Load content
+            if (tabName === 'statistics') {
+                loadStatistics();
+            }
+        }
+
+        // =============================================
+        // LOAD & DISPLAY COINS
+        // =============================================
+
+        async function loadCoins() {
+            try {
+                const response = await fetch('/api/coins');
+                const data = await response.json();
+                allCoins = data.coins || [];
+                displayCoins();
+                console.log(`✅ Loaded ${allCoins.length} coins`);
+            } catch (error) {
+                console.error('Error loading coins:', error);
+                allCoins = JSON.parse(localStorage.getItem('cryptoverse_coins') || '[]');
+                displayCoins();
+            }
+        }
+
+        function displayCoins() {
+            const container = document.getElementById('coinsContainer');
+
+            if (allCoins.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <div class="empty-state-icon">📭</div>
+                        <div class="empty-state-text">No coins created yet</div>
+                        <div class="empty-state-subtext">Create your first cryptocurrency to get started</div>
+                        <button class="btn-primary" onclick="goToCreateCoin()">+ Create Coin</button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = allCoins.map(coin => `
+                <div class="coin-card">
+                    <div class="coin-header">
+                        <div style="display: flex; align-items: start;">
+                            <div class="coin-icon" style="background: linear-gradient(135deg, ${coin.color}, ${coin.color}dd);">
+                                ${coin.symbol.substring(0, 2)}
+                            </div>
+                            <div class="coin-title">
+                                <div class="coin-name">${coin.name}</div>
+                                <div class="coin-symbol">${coin.symbol}</div>
+                            </div>
+                        </div>
+                        <div class="coin-menu">
+                            <button class="menu-btn" onclick="openDetailsModal('${coin.symbol}')">👁️</button>
+                            <button class="menu-btn" onclick="openEditModal('${coin.symbol}')">✏️</button>
+                            <button class="menu-btn" onclick="confirmDelete('${coin.symbol}')">🗑️</button>
+                        </div>
+                    </div>
+
+                    <div class="price-section">
+                        <div class="price-label">Current Price</div>
+                        <div class="price-value">$${parseFloat(coin.initialPrice).toFixed(2)}</div>
+                        <div class="price-change ${coin.dayChange >= 0 ? 'positive' : 'negative'}">
+                            ${coin.dayChange >= 0 ? '+' : ''}${parseFloat(coin.dayChange).toFixed(2)}%
+                        </div>
+                    </div>
+
+                    <div class="coin-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Market Cap</span>
+                            <span class="detail-value">$${parseFloat(coin.marketCap || 0).toLocaleString()}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Blockchain</span>
+                            <span class="detail-value">${coin.blockchain || 'N/A'}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Created</span>
+                            <span class="detail-value">${new Date(coin.createdAt).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn-secondary" onclick="openDetailsModal('${coin.symbol}')">View</button>
+                        <button class="btn-primary" onclick="openEditModal('${coin.symbol}')">Edit</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // =============================================
+        // SEARCH & FILTER
+        // =============================================
+
+        function searchCoins() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            
+            const filtered = allCoins.filter(coin =>
+                coin.name.toLowerCase().includes(query) ||
+                coin.symbol.toLowerCase().includes(query) ||
+                (coin.description?.toLowerCase().includes(query))
+            );
+
+            displayFilteredCoins(filtered);
+        }
+
+        function filterCoins(blockchain) {
+            currentFilter = blockchain;
+
+            // Update button states
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Filter coins
+            if (blockchain === 'all') {
+                displayCoins();
+            } else {
+                const filtered = allCoins.filter(coin => coin.blockchain === blockchain);
+                displayFilteredCoins(filtered);
+            }
+        }
+
+        function displayFilteredCoins(coins) {
+            const container = document.getElementById('coinsContainer');
+
+            if (coins.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <div class="empty-state-icon">🔍</div>
+                        <div class="empty-state-text">No coins found</div>
+                        <div class="empty-state-subtext">Try adjusting your search or filters</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = coins.map(coin => `
+                <div class="coin-card">
+                    <div class="coin-header">
+                        <div style="display: flex; align-items: start;">
+                            <div class="coin-icon" style="background: linear-gradient(135deg, ${coin.color}, ${coin.color}dd);">
+                                ${coin.symbol.substring(0, 2)}
+                            </div>
+                            <div class="coin-title">
+                                <div class="coin-name">${coin.name}</div>
+                                <div class="coin-symbol">${coin.symbol}</div>
+                            </div>
+                        </div>
+                        <div class="coin-menu">
+                            <button class="menu-btn" onclick="openDetailsModal('${coin.symbol}')">👁️</button>
+                            <button class="menu-btn" onclick="openEditModal('${coin.symbol}')">✏️</button>
+                            <button class="menu-btn" onclick="confirmDelete('${coin.symbol}')">🗑️</button>
+                        </div>
+                    </div>
+
+                    <div class="price-section">
+                        <div class="price-label">Current Price</div>
+                        <div class="price-value">$${parseFloat(coin.initialPrice).toFixed(2)}</div>
+                        <div class="price-change ${coin.dayChange >= 0 ? 'positive' : 'negative'}">
+                            ${coin.dayChange >= 0 ? '+' : ''}${parseFloat(coin.dayChange).toFixed(2)}%
+                        </div>
+                    </div>
+
+                    <div class="coin-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Market Cap</span>
+                            <span class="detail-value">$${parseFloat(coin.marketCap || 0).toLocaleString()}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Blockchain</span>
+                            <span class="detail-value">${coin.blockchain || 'N/A'}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Created</span>
+                            <span class="detail-value">${new Date(coin.createdAt).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn-secondary" onclick="openDetailsModal('${coin.symbol}')">View</button>
+                        <button class="btn-primary" onclick="openEditModal('${coin.symbol}')">Edit</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // =============================================
+        // MODALS
+        // =============================================
+
+        function openDetailsModal(symbol) {
+            const coin = allCoins.find(c => c.symbol === symbol);
+            if (!coin) return;
+
+            selectedCoin = coin;
+
+            const body = document.getElementById('detailsBody');
+            body.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div class="coin-icon" style="width: 80px; height: 80px; font-size: 32px; margin: 0 auto 15px; background: linear-gradient(135deg, ${coin.color}, ${coin.color}dd);">
+                        ${coin.symbol.substring(0, 2)}
+                    </div>
+                </div>
+
+                <div class="detail-row" style="border: none;">
+                    <span class="detail-label">Symbol</span>
+                    <span class="detail-value">${coin.symbol}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Price</span>
+                    <span class="detail-value">$${parseFloat(coin.initialPrice).toFixed(2)}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">24h Change</span>
+                    <span class="detail-value ${coin.dayChange >= 0 ? 'positive' : 'negative'}" style="color: ${coin.dayChange >= 0 ? 'var(--success)' : 'var(--danger)'};">
+                        ${coin.dayChange >= 0 ? '+' : ''}${parseFloat(coin.dayChange).toFixed(2)}%
+                    </span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Market Cap</span>
+                    <span class="detail-value">$${parseFloat(coin.marketCap || 0).toLocaleString()}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Total Supply</span>
+                    <span class="detail-value">${parseFloat(coin.totalSupply || 0).toLocaleString()}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Circulating</span>
+                    <span class="detail-value">${parseFloat(coin.circulatingSupply || 0).toLocaleString()}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Blockchain</span>
+                    <span class="detail-value">${coin.blockchain || 'N/A'}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Created</span>
+                    <span class="detail-value">${new Date(coin.createdAt).toLocaleString()}</span>
+                </div>
+
+                ${coin.description ? `
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                        <div class="detail-label">Description</div>
+                        <p style="color: var(--text-primary); margin-top: 10px; line-height: 1.6;">${coin.description}</p>
+                    </div>
+                ` : ''}
+
+                ${coin.website ? `
+                    <div style="margin-top: 15px;">
+                        <a href="${coin.website}" target="_blank" style="color: var(--primary); text-decoration: none;">🔗 Visit Website →</a>
+                    </div>
+                ` : ''}
+            `;
+
+            document.getElementById('detailsModal').classList.add('show');
+        }
+
+        function openEditModal(symbol) {
+            const coin = allCoins.find(c => c.symbol === symbol);
+            if (!coin) return;
+
+            selectedCoin = coin;
+
+            document.getElementById('editName').value = coin.name;
+            document.getElementById('editSymbol').value = coin.symbol;
+            document.getElementById('editPrice').value = coin.initialPrice;
+            document.getElementById('editChange').value = coin.dayChange;
+            document.getElementById('editDescription').value = coin.description || '';
+
+            document.getElementById('editModal').classList.add('show');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+
+        // =============================================
+        // EDIT & DELETE
+        // =============================================
+
+        async function saveEditedCoin() {
+            if (!selectedCoin) return;
+
+            const updatedData = {
+                name: document.getElementById('editName').value,
+                initialPrice: parseFloat(document.getElementById('editPrice').value),
+                dayChange: parseFloat(document.getElementById('editChange').value),
+                description: document.getElementById('editDescription').value
+            };
+
+            try {
+                const response = await fetch(`/api/coins/${selectedCoin.symbol}/price`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedData)
+                }).catch(() => null);
+
+                // Update local storage
+                const coins = JSON.parse(localStorage.getItem('cryptoverse_coins') || '[]');
+                const index = coins.findIndex(c => c.symbol === selectedCoin.symbol);
+                if (index !== -1) {
+                    coins[index] = { ...coins[index], ...updatedData };
+                    localStorage.setItem('cryptoverse_coins', JSON.stringify(coins));
+                }
+
+                closeModal('editModal');
+                loadCoins();
+                showStatus('success', '✅ Coin updated successfully!');
+            } catch (error) {
+                showStatus('error', '❌ Error updating coin');
+            }
+        }
+
+        function confirmDelete(symbol) {
+            if (confirm(`Are you sure you want to delete ${symbol}? This cannot be undone.`)) {
+                deleteCoin(symbol);
+            }
+        }
+
+        function deleteCoinConfirm() {
+            if (selectedCoin && confirm(`Delete ${selectedCoin.name} (${selectedCoin.symbol})?`)) {
+                deleteCoin(selectedCoin.symbol);
+                closeModal('detailsModal');
+            }
+        }
+
+        async function deleteCoin(symbol) {
+            try {
+                await fetch(`/api/coins/${symbol}`, { method: 'DELETE' }).catch(() => null);
+
+                // Remove from local storage
+                let coins = JSON.parse(localStorage.getItem('cryptoverse_coins') || '[]');
+                coins = coins.filter(c => c.symbol !== symbol);
+                localStorage.setItem('cryptoverse_coins', JSON.stringify(coins));
+
+                loadCoins();
+                showStatus('success', '🗑️ Coin deleted successfully');
+            } catch (error) {
+                showStatus('error', 'Error deleting coin');
+            }
+        }
+
+        // =============================================
+        // STATISTICS
+        // =============================================
+
+        function loadStatistics() {
+            if (allCoins.length === 0) return;
+
+            const stats = {
+                total: allCoins.length,
+                avgPrice: allCoins.reduce((sum, c) => sum + parseFloat(c.initialPrice), 0) / allCoins.length,
+                avgChange: allCoins.reduce((sum, c) => sum + parseFloat(c.dayChange), 0) / allCoins.length,
+                totalMarketCap: allCoins.reduce((sum, c) => sum + parseFloat(c.marketCap || 0), 0)
+            };
+
+            const statsGrid = document.getElementById('statsGrid');
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-label">Total Coins</div>
+                    <div class="stat-value">${stats.total}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Average Price</div>
+                    <div class="stat-value">$${stats.avgPrice.toFixed(2)}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Average 24h Change</div>
+                    <div class="stat-value" style="color: ${stats.avgChange >= 0 ? 'var(--success)' : 'var(--danger)'};">
+                        ${stats.avgChange >= 0 ? '+' : ''}${stats.avgChange.toFixed(2)}%
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Market Cap</div>
+                    <div class="stat-value">$${stats.totalMarketCap.toLocaleString()}</div>
+                </div>
+            `;
+
+            const statsTable = document.getElementById('statsTable');
+            statsTable.innerHTML = allCoins.map(coin => `
+                <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                    <td style="padding: 12px; color: var(--text-primary);">${coin.name}</td>
+                    <td style="padding: 12px; color: var(--text-secondary);">${coin.symbol}</td>
+                    <td style="padding: 12px; color: var(--primary); text-align: right;">$${parseFloat(coin.initialPrice).toFixed(2)}</td>
+                    <td style="padding: 12px; text-align: right; color: ${coin.dayChange >= 0 ? 'var(--success)' : 'var(--danger)'};">
+                        ${coin.dayChange >= 0 ? '+' : ''}${parseFloat(coin.dayChange).toFixed(2)}%
+                    </td>
+                    <td style="padding: 12px; color: var(--text-secondary); text-align: right;">$${parseFloat(coin.marketCap || 0).toLocaleString()}</td>
+                </tr>
+            `).join('');
+        }
+
+        // =============================================
+        // UTILITIES
+        // =============================================
+
+        function goToCreateCoin() {
+            window.location.href = '/create-coin.html';
+        }
+
+        async function refreshCoins() {
+            await loadCoins();
+            showStatus('success', '🔄 Coins refreshed');
+        }
+
+        function confirmDeleteAll() {
+            if (confirm('Are you sure? This will delete ALL coins and cannot be undone!')) {
+                localStorage.setItem('cryptoverse_coins', '[]');
+                allCoins = [];
+                displayCoins();
+                showStatus('success', '✅ All coins deleted');
+            }
+        }
+
+        function editCoin() {
+            closeModal('detailsModal');
+            openEditModal(selectedCoin.symbol);
+        }
+
+        function showStatus(type, message) {
+            const msg = document.getElementById('statusMessage');
+            msg.textContent = message;
+            msg.className = `status-message ${type}`;
+
+            setTimeout(() => {
+                msg.classList.remove(type);
+            }, 5000);
+        }
+
+        // =============================================
+        // INIT
+        // =============================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCoins();
+        });
+
+        // Close modals on outside click
+        window.addEventListener('click', (e) => {
+            const editModal = document.getElementById('editModal');
+            const detailsModal = document.getElementById('detailsModal');
+
+            if (e.target === editModal) editModal.classList.remove('show');
+            if (e.target === detailsModal) detailsModal.classList.remove('show');
+        });
+    </script>
+</body>
+</html>
