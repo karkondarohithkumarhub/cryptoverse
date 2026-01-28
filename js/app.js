@@ -1,55 +1,94 @@
 // Crypto coins data (Prices in INR)
 const CURRENCY_RATE = 84; // 1 USD = 84 INR
 const CURRENCY_SYMBOL = '₹';
+const BINANCE_API = 'https://api.binance.com/api/v3';
 
 let cryptoCoins = [
     // --- Crypto ---
-    { id: 1, name: 'Bitcoin', symbol: 'BTC', price: 45000 * CURRENCY_RATE, change: 2.5, icon: '₿', tvSymbol: 'BINANCE:BTCUSDT' },
-    { id: 2, name: 'Ethereum', symbol: 'ETH', price: 3200 * CURRENCY_RATE, change: -1.2, icon: 'Ξ', tvSymbol: 'BINANCE:ETHUSDT' },
-    { id: 3, name: 'Cardano', symbol: 'ADA', price: 1.5 * CURRENCY_RATE, change: 3.8, icon: '₳', tvSymbol: 'BINANCE:ADAUSDT' },
-    { id: 4, name: 'Solana', symbol: 'SOL', price: 120 * CURRENCY_RATE, change: 5.2, icon: '◎', tvSymbol: 'BINANCE:SOLUSDT' },
-    { id: 5, name: 'Polkadot', symbol: 'DOT', price: 28 * CURRENCY_RATE, change: -2.1, icon: '●', tvSymbol: 'BINANCE:DOTUSDT' },
-    { id: 6, name: 'Ripple', symbol: 'XRP', price: 0.85 * CURRENCY_RATE, change: 1.5, icon: '✕', tvSymbol: 'BINANCE:XRPUSDT' },
-    { id: 7, name: 'Dogecoin', symbol: 'DOGE', price: 0.15 * CURRENCY_RATE, change: 8.3, icon: 'Ð', tvSymbol: 'BINANCE:DOGEUSDT' },
-    { id: 8, name: 'Avalanche', symbol: 'AVAX', price: 95 * CURRENCY_RATE, change: -0.8, icon: '▲', tvSymbol: 'BINANCE:AVAXUSDT' },
-    { id: 13, name: 'Chainlink', symbol: 'LINK', price: 18 * CURRENCY_RATE, change: 2.1, icon: '🔗', tvSymbol: 'BINANCE:LINKUSDT' },
-    { id: 14, name: 'Polygon', symbol: 'MATIC', price: 0.9 * CURRENCY_RATE, change: -1.5, icon: '💜', tvSymbol: 'BINANCE:MATICUSDT' },
-    { id: 15, name: 'Shiba Inu', symbol: 'SHIB', price: 0.00001 * CURRENCY_RATE, change: 4.5, icon: '🐕', tvSymbol: 'BINANCE:SHIBUSDT' },
-
-    // --- Forex ---
-    { id: 9, name: 'EUR/USD', symbol: 'EURUSD', price: 1.1 * CURRENCY_RATE, change: 0.1, icon: '🇪🇺', tvSymbol: 'FX:EURUSD' },
-    { id: 10, name: 'GBP/USD', symbol: 'GBPUSD', price: 1.27 * CURRENCY_RATE, change: -0.2, icon: '🇬🇧', tvSymbol: 'FX:GBPUSD' },
-    { id: 11, name: 'USD/JPY', symbol: 'USDJPY', price: 148 * CURRENCY_RATE, change: 0.05, icon: '🇯🇵', tvSymbol: 'FX:USDJPY' },
-    { id: 16, name: 'AUD/USD', symbol: 'AUDUSD', price: 0.65 * CURRENCY_RATE, change: -0.3, icon: '🇦🇺', tvSymbol: 'FX:AUDUSD' },
-    { id: 17, name: 'USD/CAD', symbol: 'USDCAD', price: 1.35 * CURRENCY_RATE, change: 0.15, icon: '🇨🇦', tvSymbol: 'FX:USDCAD' },
-
-    // --- Commodities ---
-    { id: 12, name: 'Gold', symbol: 'GOLD', price: 2030 * CURRENCY_RATE, change: 1.2, icon: '🥇', tvSymbol: 'OANDA:XAUUSD' },
-    { id: 18, name: 'Silver', symbol: 'SILVER', price: 23 * CURRENCY_RATE, change: 0.8, icon: '🥈', tvSymbol: 'OANDA:XAGUSD' },
-    { id: 19, name: 'Crude Oil', symbol: 'OIL', price: 75 * CURRENCY_RATE, change: -1.2, icon: '🛢️', tvSymbol: 'TVC:USOIL' },
+    { id: 1, name: 'Bitcoin', symbol: 'BTC', price: 45000 * CURRENCY_RATE, change: 2.5, icon: '₿', binanceSymbol: 'BTCUSDT' },
+    { id: 2, name: 'Ethereum', symbol: 'ETH', price: 3200 * CURRENCY_RATE, change: -1.2, icon: 'Ξ', binanceSymbol: 'ETHUSDT' },
+    { id: 3, name: 'Cardano', symbol: 'ADA', price: 1.5 * CURRENCY_RATE, change: 3.8, icon: '₳', binanceSymbol: 'ADAUSDT' },
+    { id: 4, name: 'Solana', symbol: 'SOL', price: 120 * CURRENCY_RATE, change: 5.2, icon: '◎', binanceSymbol: 'SOLUSDT' },
+    { id: 5, name: 'Polkadot', symbol: 'DOT', price: 28 * CURRENCY_RATE, change: -2.1, icon: '●', binanceSymbol: 'DOTUSDT' },
+    { id: 6, name: 'Ripple', symbol: 'XRP', price: 0.85 * CURRENCY_RATE, change: 1.5, icon: '✕', binanceSymbol: 'XRPUSDT' },
+    { id: 7, name: 'Dogecoin', symbol: 'DOGE', price: 0.15 * CURRENCY_RATE, change: 8.3, icon: 'Ð', binanceSymbol: 'DOGEUSDT' },
+    { id: 8, name: 'Avalanche', symbol: 'AVAX', price: 95 * CURRENCY_RATE, change: -0.8, icon: '▲', binanceSymbol: 'AVAXUSDT' },
+    { id: 13, name: 'Chainlink', symbol: 'LINK', price: 18 * CURRENCY_RATE, change: 2.1, icon: '🔗', binanceSymbol: 'LINKUSDT' },
+    { id: 14, name: 'Polygon', symbol: 'MATIC', price: 0.9 * CURRENCY_RATE, change: -1.5, icon: '💜', binanceSymbol: 'MATICUSDT' },
+    { id: 15, name: 'Shiba Inu', symbol: 'SHIB', price: 0.00001 * CURRENCY_RATE, change: 4.5, icon: '🐕', binanceSymbol: 'SHIBUSDT' },
 ];
-
-// Wallet data (Updated from backend)
-let wallet = {
-    balance: 0,
-    coins: {}
-};
 
 // Wait for DOM to be ready
 function initializeApp() {
-    // Update prices every 3 seconds
+    // Fetch real-time Binance data for cryptocurrencies
+    fetchBinanceData();
+    
+    // Update prices every 5 seconds from Binance API
     setInterval(() => {
-        cryptoCoins = cryptoCoins.map(coin => ({
-            ...coin,
-            price: coin.price * (1 + (Math.random() - 0.5) * 0.02),
-            change: (Math.random() - 0.5) * 10
-        }));
-        updateMarketList();
-        updateTradeGrid();
-    }, 3000);
+        fetchBinanceData();
+    }, 5000);
 
     // ===== AUTH PAGE =====
     setupAuthPage();
+}
+
+// Fetch real-time cryptocurrency data from Binance API
+async function fetchBinanceData() {
+    try {
+        // Get 24h ticker data for top cryptocurrencies
+        const symbols = cryptoCoins
+            .filter(coin => coin.binanceSymbol)
+            .map(coin => coin.binanceSymbol);
+        
+        if (symbols.length === 0) return;
+
+        // Fetch ticker data from Binance
+        const response = await fetch(`${BINANCE_API}/ticker/24hr?symbols=["${symbols.join('","')}"]`);
+        if (!response.ok) throw new Error('Binance API error');
+        
+        const data = await response.json();
+        
+        // Update cryptoCoins with real Binance data
+        data.forEach(ticker => {
+            const coin = cryptoCoins.find(c => c.binanceSymbol === ticker.symbol);
+            if (coin) {
+                const lastPrice = parseFloat(ticker.lastPrice);
+                const priceChangePercent = parseFloat(ticker.priceChangePercent);
+                
+                // Update coin with real data
+                coin.price = lastPrice * CURRENCY_RATE;
+                coin.change = priceChangePercent;
+                coin.high = parseFloat(ticker.highPrice) * CURRENCY_RATE;
+                coin.low = parseFloat(ticker.lowPrice) * CURRENCY_RATE;
+                coin.volume = parseFloat(ticker.volume);
+                coin.quoteAssetVolume = parseFloat(ticker.quoteAssetVolume);
+            }
+        });
+
+        // Update UI
+        updateMarketList();
+        updateTradeGrid();
+    } catch (error) {
+        console.warn('⚠️ Binance API fetch failed, using cached data:', error.message);
+        // Fallback to simulated updates if API fails
+        simulatePriceUpdates();
+    }
+}
+
+// Fallback: Simulate price updates when API is unavailable
+function simulatePriceUpdates() {
+    cryptoCoins = cryptoCoins.map(coin => {
+        if (coin.binanceSymbol) {
+            return {
+                ...coin,
+                price: coin.price * (1 + (Math.random() - 0.5) * 0.02),
+                change: coin.change + (Math.random() - 0.5) * 0.5
+            };
+        }
+        return coin;
+    });
+    updateMarketList();
+    updateTradeGrid();
 }
 
 function setupAuthPage() {

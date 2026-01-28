@@ -72,7 +72,7 @@ function loadTradingViewWidgets() {
             script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js';
             script.async = true;
             script.innerHTML = JSON.stringify({
-                "symbol": coin.tvSymbol,
+                "symbol": coin.binanceSymbol ? `BINANCE:${coin.binanceSymbol}` : `BINANCE:BTCUSDT`,
                 "width": "100%",
                 "height": "100%",
                 "locale": "en",
@@ -194,10 +194,7 @@ function openCoinDetail(coinId) {
 
     // Load the chart data immediately
     if (currentMarketChart) {
-        let symbol = currentCoin.tvSymbol;
-        if (symbol.includes(':')) {
-            symbol = symbol.split(':')[1];
-        }
+        let symbol = currentCoin.binanceSymbol || 'BTCUSDT';
         console.log(`📊 Opening Detail View for ${symbol}`);
         currentMarketChart.changeSymbol(symbol, '1h');
     }
