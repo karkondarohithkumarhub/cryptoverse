@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>History - CryptoVerse</title>
     <link rel="stylesheet" href="css/style.css?v=2.0">
+    <script src="js/theme.js"></script>
 </head>
 
 <body>
@@ -54,49 +55,65 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
-                            <td style="padding: 1rem; color: #eee;">Oct 24, 2024</td>
-                            <td style="padding: 1rem;"><span
-                                    style="background: rgba(0, 212, 255, 0.1); color: #00d4ff; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem;">DEPOSIT</span>
-                            </td>
-                            <td style="padding: 1rem; color: #eee;">UPI Transfer (PhonePe)</td>
-                            <td style="padding: 1rem; text-align: right; color: #10b981; font-weight: bold;">+ ₹5,000
-                            </td>
-                            <td style="padding: 1rem; text-align: right; color: #10b981;">Completed</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
-                            <td style="padding: 1rem; color: #eee;">Oct 22, 2024</td>
-                            <td style="padding: 1rem;"><span
-                                    style="background: rgba(124, 58, 237, 0.1); color: #7c3aed; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem;">WITHDRAW</span>
-                            </td>
-                            <td style="padding: 1rem; color: #eee;">Bank Transfer</td>
-                            <td style="padding: 1rem; text-align: right; color: #eee; font-weight: bold;">- ₹2,000</td>
-                            <td style="padding: 1rem; text-align: right; color: #10b981;">Completed</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
-                            <td style="padding: 1rem; color: #eee;">Oct 20, 2024</td>
-                            <td style="padding: 1rem;"><span
-                                    style="background: rgba(255, 159, 67, 0.1); color: #ff9f43; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem;">TRADE</span>
-                            </td>
-                            <td style="padding: 1rem; color: #eee;">Bought BTC</td>
-                            <td style="padding: 1rem; text-align: right; color: #eee; font-weight: bold;">- ₹10,000</td>
-                            <td style="padding: 1rem; text-align: right; color: #10b981;">Completed</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
-                            <td style="padding: 1rem; color: #eee;">Oct 15, 2024</td>
-                            <td style="padding: 1rem;"><span
-                                    style="background: rgba(0, 212, 255, 0.1); color: #00d4ff; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem;">DEPOSIT</span>
-                            </td>
-                            <td style="padding: 1rem; color: #eee;">Card Payment</td>
-                            <td style="padding: 1rem; text-align: right; color: #10b981; font-weight: bold;">+ ₹15,000
-                            </td>
-                            <td style="padding: 1rem; text-align: right; color: #10b981;">Completed</td>
-                        </tr>
+                        <!-- Transactions will be dynamically inserted here -->
                     </tbody>
                 </table>
             </div>
         </div>
     </main>
+
+    <script>
+        // Replace with logged-in user's ID dynamically if you have auth
+        const userId = "user-1";
+
+        // Format timestamp to readable date
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+
+        // Create a transaction row
+        function addTransactionRow(transaction) {
+            const tbody = document.querySelector("tbody");
+            const tr = document.createElement("tr");
+            tr.style.borderBottom = "1px solid rgba(255, 255, 255, 0.05)";
+
+            // Determine type color
+            let typeColor;
+            if (transaction.type === "DEPOSIT") typeColor = "rgba(0, 212, 255, 0.1); color: #00d4ff";
+            else if (transaction.type === "WITHDRAW") typeColor = "rgba(124, 58, 237, 0.1); color: #7c3aed";
+            else typeColor = "rgba(255, 159, 67, 0.1); color: #ff9f43"; // TRADE
+
+            // Fill in table row
+            tr.innerHTML = `
+                <td style="padding: 1rem; color: #eee;">${formatDate(transaction.timestamp)}</td>
+                <td style="padding: 1rem;">
+                    <span style="background: ${typeColor}; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem;">
+                        ${transaction.type}
+                    </span>
+                </td>
+                <td style="padding: 1rem; color: #eee;">
+                    ${transaction.type === 'TRADE' ? transaction.details || transaction.currency : transaction.fromAddress || transaction.toAddress || 'N/A'}
+                </td>
+                <td style="padding: 1rem; text-align: right; color: ${transaction.type === 'DEPOSIT' ? '#10b981' : '#eee'}; font-weight: bold;">
+                    ${transaction.type === 'DEPOSIT' ? '+' : '-'} ₹${transaction.amount}
+                </td>
+                <td style="padding: 1rem; text-align: right; color: #10b981;">${transaction.status}</td>
+            `;
+
+            tbody.appendChild(tr);
+        }
+
+        // Fetch transactions from backend API
+        fetch(`http://localhost:5000/api/transactions/${userId}`)
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.querySelector("tbody");
+                tbody.innerHTML = ""; // Clear placeholder
+                data.forEach(tx => addTransactionRow(tx));
+            })
+            .catch(err => console.error("Error fetching transactions:", err));
+    </script>
 </body>
 
 </html>

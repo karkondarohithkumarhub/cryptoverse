@@ -130,6 +130,7 @@ function setupAuthPage() {
                 console.log('Attempting login with:', username);
                 await loginUser(username, password);
                 console.log('Login successful, redirecting...');
+                 localStorage.setItem('username', username);
                 window.location.href = 'home.html';
             } catch (err) {
                 console.error('Login error:', err);
@@ -147,6 +148,9 @@ function setupAuthPage() {
                 try {
                     await loginUser(username, password);
                     window.location.href = 'home.html';
+                     localStorage.setItem('username', username);
+                     localStorage.setItem('email', document.getElementById('signup-email').value);
+                    
                 } catch (err) {
                     alert('Signup failed. Please try again.');
                 }
@@ -166,6 +170,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
         // Load wallet from backend
         await updateWallet();
+        localStorage.setItem('wallet', currentUser.walletBalance || 0);
     }
 });
 

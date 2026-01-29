@@ -498,4 +498,3 @@ process.on('SIGINT', async () => {
   if (mysqlPool) await mysqlPool.end();
   process.exit(0);
 });
-

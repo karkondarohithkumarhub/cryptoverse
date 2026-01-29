@@ -1,11 +1,17 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const fs = require('fs');
+const express = require('express');
+const cors = require('cors');
+
+const app = express();
+app.use(cors());
+app.use(express.json());
 
 const dbPath = path.join(__dirname, 'database', 'wallet_main.db');
 const dbDir = path.dirname(dbPath);
 
-// Ensure database directory exists
+
 if (!fs.existsSync(dbDir)) {
   fs.mkdirSync(dbDir, { recursive: true });
   console.log('📁 Created database directory');
@@ -19,7 +25,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
   console.log('✅ Connected to SQLite database:', dbPath);
 });
 
-// Initialize tables
+
 db.serialize(() => {
   console.log('\n📊 Creating tables...\n');
 
@@ -127,42 +133,36 @@ db.serialize(() => {
     else console.log('✅ Sessions table ready');
   });
 
-  // Sample Data
+  // Sample Data Insertion (Users, Wallets, Market Data)
   console.log('\n📥 Inserting sample data...\n');
 
-  // Insert sample user
+  // Sample user
   db.run(
     `INSERT OR IGNORE INTO users (id, username, password, email, fullName, phone) VALUES (?, ?, ?, ?, ?, ?)`,
     ['user-1', 'testuser', 'hashed_password_123456', 'test@cryptoverse.com', 'Test User', '+1234567890'],
     function(err) {
-      if (err) {
-        console.error('Error inserting user:', err.message);
-      } else {
-        console.log('✅ Added sample user: testuser');
-      }
+      if (err) console.error('Error inserting user:', err.message);
+      else console.log('✅ Added sample user: testuser');
     }
   );
 
-  // Insert sample wallets
+  // Sample wallets
   const wallets = [
     ['wallet-btc', 'user-1', 'BTC', 2.5, '1A1z7agoat3wgZCSh8BqQ2GJjXPvAr7xfv'],
     ['wallet-eth', 'user-1', 'ETH', 15.75, '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb'],
     ['wallet-usdt', 'user-1', 'USDT', 50000.50, '0x8E870D67F660D95d5be530380D0eC0bd388289C1']
   ];
-
   wallets.forEach(wallet => {
     db.run(
       `INSERT OR IGNORE INTO wallets (id, userId, currency, balance, address) VALUES (?, ?, ?, ?, ?)`,
       wallet,
       function(err) {
-        if (!err) {
-          console.log(`✅ Added ${wallet[2]} wallet`);
-        }
+        if (!err) console.log(`✅ Added ${wallet[2]} wallet`);
       }
     );
   });
 
-  // Insert market data
+  // Sample market data
   const marketData = [
     ['btc-1', 'BTC', 'Bitcoin', 45230.50, 2.35, 884700000000, 890000000000],
     ['eth-1', 'ETH', 'Ethereum', 2850.75, 1.80, 342500000000, 350000000000],
@@ -170,28 +170,59 @@ db.serialize(() => {
     ['bnb-1', 'BNB', 'Binance Coin', 618.50, 3.20, 94500000000, 95000000000],
     ['sol-1', 'SOL', 'Solana', 178.90, 5.15, 58900000000, 59500000000]
   ];
-
   marketData.forEach(data => {
     db.run(
       `INSERT OR IGNORE INTO market_data (id, symbol, name, price, change24h, volume, marketCap) VALUES (?, ?, ?, ?, ?, ?, ?)`,
       data,
       function(err) {
-        if (!err) {
-          console.log(`✅ Added ${data[1]} market data`);
-        }
+        if (!err) console.log(`✅ Added ${data[1]} market data`);
       }
     );
   });
 });
 
-// Close after a delay to let queries execute
+// ------------------ NEW CODE: Express API Endpoints ------------------
+
+// Get transactions for a user
+app.get("/api/transactions/:userId", (req, res) => {
+  const userId = req.params.userId;
+  const query = `SELECT * FROM transactions WHERE userId = ? ORDER BY timestamp DESC`;
+
+  db.all(query, [userId], (err, rows) => {
+    if (err) {
+      console.error("❌ Error fetching transactions:", err.message);
+      return res.status(500).json({ error: err.message });
+    }
+    res.json(rows);
+  });
+});
+
+// Add a new transaction
+app.post("/api/transactions", (req, res) => {
+  const { id, userId, type, currency, amount, fromAddress, toAddress, status } = req.body;
+  const query = `
+    INSERT INTO transactions (id, userId, type, currency, amount, fromAddress, toAddress, status)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+  db.run(query, [id, userId, type, currency, amount, fromAddress, toAddress, status || "completed"], function(err) {
+    if (err) {
+      console.error("❌ Error adding transaction:", err.message);
+      return res.status(500).json({ error: err.message });
+    }
+    res.json({ message: "Transaction added successfully", transactionId: id });
+  });
+});
+
+// Start Express server
+const PORT = 5000;
+app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
+
+// ------------------ End of File ------------------
+
+// Close database after a delay (keep this if needed for your initialization script)
 setTimeout(() => {
   db.close((err) => {
-    if (err) {
-      console.error('❌ Error closing database:', err.message);
-      process.exit(1);
-    }
-    console.log('\n✅ Database initialization complete!\n');
-    process.exit(0);
+    if (err) console.error('❌ Error closing database:', err.message);
+    else console.log('✅ Database initialization complete!');
   });
 }, 1000);

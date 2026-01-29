@@ -6,7 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile - CryptoVerse</title>
     <link rel="stylesheet" href="css/style.css?v=2.0">
+    <script type="module" src="js/profile.js"></script>
     <script src="js/theme.js"></script>
+    
+    <script src="js/app.js"></script>
 </head>
 
 <body>
@@ -47,30 +50,72 @@
                     style="width: 120px; height: 120px; background: linear-gradient(135deg, #00d4ff, #7c3aed); border-radius: 50%; margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center; font-size: 4rem; box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);">
                     👤
                 </div>
-                <h1 style="margin-bottom: 0.5rem;">CryptoTrader_01</h1>
-                <p style="color: #aaa;">user@example.com</p>
-                <div
-                    style="display: inline-block; background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.9rem; margin-top: 1rem;">
-                    ✓ KYC Verified
-                </div>
-            </div>
+                <h2>My Profile</h2>
+                <br>
+           
+          
+
+              
+                
+            
+            
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 15px;">
+
+    <!-- Username -->
+    <div style="display: inline-flex; align-items: center; gap: 8px;
+        background: rgba(16, 185, 129, 0.2);
+        color: #10b981;
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.95rem;">
+        <span>Username:</span>
+        <span id="name" style="font-weight: bold; color: white;"></span>
+    </div>
+
+    <!-- Email -->
+    <div style="display: inline-flex; align-items: center; gap: 8px;
+        background: rgba(16, 185, 129, 0.2);
+        color: #10b981;
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.95rem;">
+        <span>Mail ID:</span>
+        <span id="email" style="font-weight: bold; color: white;"></span>
+    </div>
+
+    <!-- Wallet -->
+    <div style="display: inline-flex; align-items: center; gap: 8px;
+        background: rgba(16, 185, 129, 0.2);
+        color: #10b981;
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.95rem;">
+        <span>Wallet Balance:</span>
+        <span id="wallet" style="font-weight: bold; color: white;"></span>
+    </div>
+
+</div>
+
+
+
+
 
             <div class="profile-stats grid-3"
-                style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
+                style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem; margin-top: 30px;">
                 <div class="stat-card"
                     style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; text-align: center;">
                     <h3 style="color: #aaa; font-size: 0.9rem; margin-bottom: 0.5rem;">Total Volume</h3>
-                    <div style="font-size: 1.5rem; font-weight: bold;">₹12,50,000</div>
+                    <div style="font-size: 1.5rem; font-weight: bold;"></div>
                 </div>
                 <div class="stat-card"
                     style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; text-align: center;">
                     <h3 style="color: #aaa; font-size: 0.9rem; margin-bottom: 0.5rem;">Trades</h3>
-                    <div style="font-size: 1.5rem; font-weight: bold;">47</div>
+                    <div style="font-size: 1.5rem; font-weight: bold;"></div>
                 </div>
                 <div class="stat-card"
                     style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; text-align: center;">
                     <h3 style="color: #aaa; font-size: 0.9rem; margin-bottom: 0.5rem;">Member Since</h3>
-                    <div style="font-size: 1.5rem; font-weight: bold;">Jan 2024</div>
+                    <div style="font-size: 1.5rem; font-weight: bold;"></div>
                 </div>
             </div>
 
@@ -105,6 +150,26 @@
 
         </div>
     </main>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const nameEl = document.getElementById("name");
+        const username = localStorage.getItem("username"); 
+        const emailEl=localStorage.getItem("email")
+        const walletEl=localStorage.getItem("wallet")
+        if (nameEl && username) {
+            nameEl.textContent = username; // show username
+        }
+        const emailElement = document.getElementById("email");
+        if (emailElement && emailEl) {
+            emailElement.textContent = emailEl;
+        }
+        const walletElement = document.getElementById("wallet");
+        if (walletElement && walletEl) {
+            walletElement.textContent = walletEl;
+        }
+    });
+</script>
+
 </body>
 
 </html>

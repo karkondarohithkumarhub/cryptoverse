@@ -5,7 +5,7 @@ const fs = require('fs');
 const DB_CONFIG = {
   host: 'localhost',
   user: 'root',
-  password: '', // Change if needed
+  password: '', 
   database: 'cryptoverse'
 };
 
@@ -15,7 +15,7 @@ async function setupDatabase() {
   try {
     console.log('🚀 Starting MySQL Database Setup...\n');
 
-    // Step 1: Connect to MySQL (without database first)
+   
     console.log('📝 Connecting to MySQL Server...');
     connection = await mysql.createConnection({
       host: DB_CONFIG.host,
@@ -25,7 +25,7 @@ async function setupDatabase() {
     });
     console.log('✅ Connected to MySQL Server\n');
 
-    // Step 2: Create Database
+   
     console.log('📚 Creating database if not exists...');
     await connection.query(`CREATE DATABASE IF NOT EXISTS ${DB_CONFIG.database}`);
     console.log(`✅ Database '${DB_CONFIG.database}' ready\n`);
@@ -34,10 +34,10 @@ async function setupDatabase() {
     await connection.query(`USE ${DB_CONFIG.database}`);
     console.log(`✅ Using database '${DB_CONFIG.database}'\n`);
 
-    // Step 4: Create Tables
+    
     console.log('📊 Creating tables...\n');
 
-    // Users Table
+    
     const usersTable = `
       CREATE TABLE IF NOT EXISTS users (
         id VARCHAR(36) PRIMARY KEY,
