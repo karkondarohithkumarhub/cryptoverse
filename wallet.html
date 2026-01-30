@@ -66,7 +66,7 @@
 
             <div class="wallet-balance">
                 <h2>Balance</h2>
-                <p class="balance-amount" id="balance-amount">₹0.00</p>
+                <span id="main-wallet-balance">₹0.00</span>
                 <button class="btn-primary btn-large" onclick="openAddMoney()"
                     style="margin-top: 1rem; width: 100%; background: linear-gradient(135deg, #00d4ff, #0099cc);">
                     💳 Manage Wallet
@@ -91,7 +91,9 @@
             <!-- Main Screen with Buttons -->
             <div id="wallet-main" class="wallet-screen">
                 <h2>My Wallet</h2>
-                <h1 id="modal-balance" class="big-balance">₹0.00</h1>
+                
+                <h1><span id="modal-balance-modal" style="font-weight: bold; color: white;">₹0.00</span></h1>
+
                 <div class="modal-buttons">
                     <button class="btn-primary" onclick="showPaymentSection('deposit')">📥 Add Money</button>
                     <button class="btn-primary" onclick="showPaymentSection('withdraw')">📤 Withdraw</button>
@@ -140,6 +142,12 @@
     </div>
 
     <script>
+        window.updateWalletDisplay = function () {
+    const el = document.getElementById('main-wallet-balance');
+    if (el) el.textContent = `₹${Number(window.wallet.balance).toFixed(2)}`;
+    localStorage.setItem('cryptoverse_wallet', JSON.stringify(window.wallet));
+};
+
         window.addEventListener('DOMContentLoaded', () => {
             console.log('Wallet page loaded');
             if (window.updateWallet) updateWallet();

@@ -142,6 +142,7 @@ async function setupDatabase() {
         // Already exists
       }
     }
+    
 
     // Step 6: Verify tables
     console.log('\n📋 Verifying tables...\n');

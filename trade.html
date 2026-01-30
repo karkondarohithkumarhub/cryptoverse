@@ -37,13 +37,13 @@
         </nav>
         <div class="header-profile">
             <span style="color: #66B2FF; font-weight: 600;">👤</span>
-            <a href="profile.html" style="color: #ffffff; text-decoration: none; font-weight: 600;">Profile</a>
+            <a href="profile.html" style="color: #ffffff; text-decoration: none; font-weight: 600;"><span id="name"></span></a>
         </div>
     </header>
 
     <!-- Profile Section (Legacy) -->
             <div class="dropdown">
-                <button class="profile-btn">👤 <span id="user-name">User</span></button>
+                <button class="profile-btn">👤 <span id="user-name"><span id="name"></span></span></button>
                 <div class="dropdown-menu">
                     <a href="profile.html">Profile</a>
                     <a href="settings.html">Settings</a>
@@ -80,6 +80,16 @@
 
 
     <script src="js/app.js"></script>
+       <script>
+        document.addEventListener("DOMContentLoaded", () => {
+        const nameEl = document.getElementById("name");
+        const username = localStorage.getItem("username"); 
+        const emailEl=localStorage.getItem("email")
+        if (nameEl && username) {
+            nameEl.textContent = username; 
+        }
+    });
+    </script>
 </body>
 
 </html>

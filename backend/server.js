@@ -16,6 +16,7 @@ const io = new Server(server, {
 
 const PORT = 3001;
 
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -63,6 +64,8 @@ async function initializeDatabase() {
       password: '',
       connectTimeout: 5000
     });
+const walletRoutes = require('./routes/wallet');
+app.use('/api/wallet', walletRoutes);
 
     await tempConn.query('CREATE DATABASE IF NOT EXISTS cryptoverse');
     await tempConn.end();
@@ -178,7 +181,11 @@ async function initializeSchema() {
       updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       INDEX idx_symbol (symbol),
       INDEX idx_createdAt (createdAt)
-    )`
+    )`,
+    `CREATE TABLE wallets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNIQUE,
+    balance DECIMAL(10,2) DEFAULT 0)`,
   ];
 
   for (const table of tables) {

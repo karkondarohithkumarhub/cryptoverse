@@ -150,6 +150,7 @@ function setupAuthPage() {
                     window.location.href = 'home.html';
                      localStorage.setItem('username', username);
                      localStorage.setItem('email', document.getElementById('signup-email').value);
+                     localStorage.setItem('phone', document.getElementById('signup-phone').value);
                     
                 } catch (err) {
                     alert('Signup failed. Please try again.');
@@ -293,57 +294,43 @@ async function executeTradeFinal(amount) {
         alert("Trade failed: " + err.message);
     }
 }
-
-// ===== WALLET PAGE =====
+localStorage.removeItem('cryptoverse_wallet');
 async function updateWallet() {
+    if (!currentUser) return;
+
     try {
-        const remoteWallet = await getWallet();
-        if (remoteWallet) {
-            wallet = remoteWallet;
+        const remoteWallet = await getWallet();   // ✅ NOW it is defined properly
+
+        if (!remoteWallet) return;
+
+        // ✅ Force safe numeric balance
+        window.wallet = {
+            balance: Number(remoteWallet.balance) || 0,
+            coins: remoteWallet.coins || {}
+        };
+
+        // Save to localStorage for wallet_handlers.js
+        localStorage.setItem('cryptoverse_wallet', JSON.stringify(window.wallet));
+
+        // Update UI everywhere
+        if (typeof updateWalletDisplay === "function") {
+            updateWalletDisplay();
         }
+
     } catch (err) {
-        console.error("UpdateWallet fetch failed", err);
-        return;
-    }
-
-    const balanceAmount = document.getElementById('balance-amount');
-    const walletCoins = document.getElementById('wallet-coins');
-
-    if (balanceAmount) {
-        balanceAmount.textContent = `₹${wallet.balance.toFixed(2)}`;
-    }
-
-    if (walletCoins) {
-        const coinsArray = Object.entries(wallet.coins);
-
-        if (coinsArray.length === 0) {
-            walletCoins.innerHTML = '<p class="empty-message">No coins yet. Start trading!</p>';
-        } else {
-            walletCoins.innerHTML = coinsArray.map(([symbol, amount]) => {
-                const coin = cryptoCoins.find(c => c.symbol === symbol);
-                const icon = coin ? coin.icon : getSymbolIcon(symbol);
-                const name = coin ? coin.name : symbol;
-                const price = coin ? coin.price : 0;
-
-                return `
-                    <div class="wallet-coin">
-                        <div class="wallet-icon">${icon}</div>
-                        <div style="flex: 1;">
-                            <h3>${name}</h3>
-                            <p>Amount: ${amount.toFixed(4)} ${symbol}</p>
-                            ${price > 0 ? `<p>Value: <strong style="color: #00d4ff;">₹${(amount * price).toFixed(2)}</strong></p>` : ''}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-    }
-
-    const currentBalance = document.getElementById('current-balance');
-    if (currentBalance) {
-        currentBalance.textContent = `₹${wallet.balance.toFixed(2)}`;
+        console.error("Wallet fetch failed:", err);
     }
 }
+
+// ===== WALLET PAGE =====
+
+
+window.updateModalBalance = function () {
+    const el = document.getElementById('modal-balance-modal');
+    if (el && window.wallet) {
+        el.textContent = `₹${Number(window.wallet.balance).toFixed(2)}`;
+    }
+};
 
 function getSymbolIcon(symbol) {
     const icons = { 'BTC': '₿', 'ETH': 'Ξ', 'ADA': '₳', 'SOL': '◎', 'DOT': '●', 'XRP': '✕', 'DOGE': 'Ð', 'AVAX': '▲' };

@@ -7,6 +7,8 @@
     <title>History - CryptoVerse</title>
     <link rel="stylesheet" href="css/style.css?v=2.0">
     <script src="js/theme.js"></script>
+     
+    <script src="js/app.js"></script>
 </head>
 
 <body>
@@ -35,7 +37,7 @@
         </nav>
         <div class="header-profile">
             <span style="color: #66B2FF; font-weight: 600;">👤</span>
-            <a href="profile.html" style="color: #ffffff; text-decoration: none; font-weight: 600;">Profile</a>
+            <a href="profile.html" style="color: #ffffff; text-decoration: none; font-weight: 600;"><span id="name"></span>></a>
         </div>
     </header>
 
@@ -63,6 +65,16 @@
     </main>
 
     <script>
+         
+        document.addEventListener("DOMContentLoaded", () => {
+        const nameEl = document.getElementById("name");
+        const username = localStorage.getItem("username"); 
+        const emailEl=localStorage.getItem("email")
+        if (nameEl && username) {
+            nameEl.textContent = username; 
+        }
+    });
+    
         // Replace with logged-in user's ID dynamically if you have auth
         const userId = "user-1";
 
