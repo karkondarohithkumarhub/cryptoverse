@@ -25,7 +25,7 @@ function getCachedElement(id) {
 // Utility: Debounce function to limit repeated operations
 function debounce(func, delay) {
     let timeoutId;
-    return function(...args) {
+    return function (...args) {
         if (timeoutId) {
             clearTimeout(timeoutId);
         }
@@ -39,57 +39,128 @@ function debounce(func, delay) {
 // Debounced resize handler
 const debouncedResize = debounce(loadWidgetsWhenVisible, 250);
 
-// Lazy load TradingView widgets only when visible
+// Lazy load Binance widgets only when visible
 function loadWidgetsWhenVisible() {
     if (widgetsLoaded) return;
-    
+
     const marketGrid = getCachedElement('market-grid');
     if (!marketGrid) return;
-    
+
     const gridRect = marketGrid.getBoundingClientRect();
-    
+
     // Check if grid is in viewport
     if (gridRect.top < window.innerHeight && gridRect.bottom > 0) {
         widgetsLoaded = true;
-        loadTradingViewWidgets();
+        initBinanceSparklines();
         window.removeEventListener('scroll', loadWidgetsWhenVisible);
         window.removeEventListener('resize', loadWidgetsWhenVisible);
     }
 }
 
-// Load TradingView widgets efficiently
-function loadTradingViewWidgets() {
-    cryptoCoins.forEach((coin, index) => {
-        // Stagger widget loading to avoid overwhelming the browser
-        setTimeout(() => {
-            const widgetId = `tv-mini-chart-${coin.id}`;
-            const container = getCachedElement(widgetId);
-            if (!container || container.innerHTML) return;
+// Load Binance Sparklines efficiently
+async function initBinanceSparklines() {
+    for (let i = 0; i < cryptoCoins.length; i++) {
+        const coin = cryptoCoins[i];
+        const widgetId = `binance-sparkline-${coin.id}`;
+        const container = getCachedElement(widgetId);
 
-            const isPositive = coin.change >= 0;
-            const script = document.createElement('script');
-            script.type = 'text/javascript';
-            script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js';
-            script.async = true;
-            script.innerHTML = JSON.stringify({
-                "symbol": coin.binanceSymbol ? `BINANCE:${coin.binanceSymbol}` : `BINANCE:BTCUSDT`,
-                "width": "100%",
-                "height": "100%",
-                "locale": "en",
-                "dateRange": "1D",
-                "colorTheme": "dark",
-                "trendLineColor": isPositive ? "#10b981" : "#ef4444",
-                "underLineColor": isPositive ? "rgba(16, 185, 129, 0.1)" : "rgba(239, 68, 68, 0.1)",
-                "isTransparent": true,
-                "autosize": true,
-                "largeChartUrl": ""
-            });
-            container.appendChild(script);
-        }, index * 50); // Stagger by 50ms per widget
-    });
+        if (!container) continue;
+
+        try {
+            // Fetch last 24 1h candles for sparkline
+            const symbol = coin.binanceSymbol || 'BTCUSDT';
+            const response = await fetch(`https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=1h&limit=24`);
+            const data = await response.json();
+
+            const prices = data.map(d => parseFloat(d[4])); // Close prices
+            const isPositive = prices[prices.length - 1] >= prices[0];
+
+            renderSparkline(widgetId, prices, isPositive ? "#10b981" : "#ef4444");
+        } catch (error) {
+            console.error(`Error loading sparkline for ${coin.symbol}:`, error);
+        }
+    }
 }
 
-// Update market grid with TradingView mini charts (Kept for the grid view only)
+function renderSparkline(containerId, data, color) {
+    const isPositive = color === "#10b981" || color === "#089981";
+    const lineId = `spark-${containerId}`;
+
+    const options = {
+        series: [{
+            name: 'Price',
+            data: data
+        }],
+        chart: {
+            id: lineId,
+            type: 'area',
+            height: 120,
+            sparkline: {
+                enabled: true
+            },
+            animations: {
+                enabled: true,
+                speed: 800
+            },
+            background: 'transparent'
+        },
+        stroke: {
+            curve: 'smooth',
+            width: 2,
+            colors: [isPositive ? '#089981' : '#f23645']
+        },
+        fill: {
+            type: 'gradient',
+            gradient: {
+                shadeIntensity: 1,
+                opacityFrom: 0.45,
+                opacityTo: 0.05,
+                stops: [20, 100],
+                colorStops: [
+                    {
+                        offset: 0,
+                        color: isPositive ? '#089981' : '#f23645',
+                        opacity: 0.4
+                    },
+                    {
+                        offset: 100,
+                        color: isPositive ? '#089981' : '#f23645',
+                        opacity: 0
+                    }
+                ]
+            }
+        },
+        colors: [isPositive ? '#089981' : '#f23645'],
+        tooltip: {
+            theme: 'dark',
+            fixed: {
+                enabled: false
+            },
+            x: {
+                show: false
+            },
+            y: {
+                title: {
+                    formatter: function () {
+                        return ''
+                    }
+                }
+            },
+            marker: {
+                show: false
+            }
+        }
+    };
+
+    const container = document.querySelector(`#${containerId}`);
+    if (container) {
+        container.innerHTML = ''; // Clear previous
+        const chart = new ApexCharts(container, options);
+        chart.render();
+    }
+}
+
+// Update market grid with Binance Sparklines
 function updateMarketGrid() {
     const marketGrid = getCachedElement('market-grid');
     if (!marketGrid) return;
@@ -100,7 +171,7 @@ function updateMarketGrid() {
 
     marketGrid.innerHTML = cryptoCoins.map((coin) => {
         const isPositive = coin.change >= 0;
-        const widgetId = `tv-mini-chart-${coin.id}`;
+        const widgetId = `binance-sparkline-${coin.id}`;
 
         return `
             <div class="market-coin-card" onclick="openCoinDetail(${coin.id})">
@@ -132,8 +203,8 @@ function updateMarketGrid() {
     }).join('');
 
     marketGrid.dataset.rendered = 'true';
-    
-    // Lazy load widgets when page scrolls into view
+
+    // Lazy load sparklines when page scrolls into view
     window.addEventListener('scroll', loadWidgetsWhenVisible, { passive: true });
     window.addEventListener('resize', debouncedResize, { passive: true });
     loadWidgetsWhenVisible(); // Try immediate load
@@ -265,7 +336,7 @@ async function handleBuyClick() {
 
     const buyAmountElement = getCachedElement('buy-amount');
     const paymentMethodElement = getCachedElement('payment-method');
-    
+
     const amount = parseFloat(buyAmountElement?.value) || 0;
     const totalCost = currentCoin.price * amount;
     const paymentMethod = paymentMethodElement?.value || 'wallet';
@@ -339,135 +410,182 @@ async function completePurchase(coinAmount) {
     }
 }
 
-// Initialize Ticker Tape Widget
-function initTickerTape() {
-    const container = getCachedElement('tv-ticker-tape');
+// Initialize Binance Ticker Tape (Custom scrolling ticker)
+async function initBinanceTickerTape() {
+    const container = getCachedElement('binance-ticker-tape');
     if (!container) return;
 
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js';
-    script.async = true;
-    script.innerHTML = JSON.stringify({
-        "symbols": cryptoCoins.slice(0, 11).map(c => ({
-            "proName": `BINANCE:${c.binanceSymbol}`,
-            "title": c.name
-        })),
-        "showSymbolLogo": true,
-        "colorTheme": "dark",
-        "isTransparent": true,
-        "displayMode": "adaptive",
-        "locale": "en"
-    });
-    container.innerHTML = '';
-    container.appendChild(script);
+    try {
+        const response = await fetch('https://api.binance.com/api/v3/ticker/24hr');
+        const data = await response.json();
+
+        // Filter for our main coins
+        const mainSymbols = cryptoCoins.map(c => c.binanceSymbol);
+        const tickers = data.filter(t => mainSymbols.includes(t.symbol));
+
+        container.style.overflow = 'hidden';
+        container.style.whiteSpace = 'nowrap';
+        container.style.background = 'rgba(10, 14, 39, 0.8)';
+        container.style.padding = '10px 0';
+        container.style.borderBottom = '1px solid rgba(0, 212, 255, 0.2)';
+
+        let tickerHtml = '<div class="ticker-content" style="display: inline-block; animation: ticker-scroll 60s linear infinite;">';
+
+        // Triple the content to ensure smooth looping
+        for (let i = 0; i < 3; i++) {
+            tickers.forEach(t => {
+                const coin = cryptoCoins.find(c => c.binanceSymbol === t.symbol);
+                const isPos = parseFloat(t.priceChangePercent) >= 0;
+                tickerHtml += `
+                    <span style="display: inline-block; margin-right: 50px; font-weight: bold; font-family: 'Inter', sans-serif;">
+                        <span style="color: #00d4ff;">${coin ? coin.name : t.symbol}</span> 
+                        <span style="color: #ffffff; margin: 0 5px;">₹${(parseFloat(t.lastPrice) * 85).toFixed(2)}</span>
+                        <span style="color: ${isPos ? '#10b981' : '#ef4444'};">${isPos ? '▲' : '▼'} ${parseFloat(t.priceChangePercent).toFixed(2)}%</span>
+                    </span>
+                `;
+            });
+        }
+        tickerHtml += '</div>';
+
+        container.innerHTML = `
+            <style>
+                @keyframes ticker-scroll {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-33.33%); }
+                }
+            </style>
+            ${tickerHtml}
+        `;
+    } catch (err) {
+        console.error("Error loading ticker tape:", err);
+    }
 }
 
-// Initialize Market Overview Widget
-function initMarketOverview() {
-    const container = getCachedElement('tv-market-overview');
+// Initialize Binance Market Overview (Large ApexChart + Summary)
+async function initMarketOverview() {
+    const container = getCachedElement('binance-market-overview');
     if (!container) return;
 
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js';
-    script.async = true;
-    script.innerHTML = JSON.stringify({
-        "colorTheme": "dark",
-        "dateRange": "12M",
-        "showChart": true,
-        "locale": "en",
-        "largeChartUrl": "",
-        "isTransparent": true,
-        "showSymbolLogo": true,
-        "showFloatingTooltip": false,
-        "width": "100%",
-        "height": "100%",
-        "plotLineColorGrowing": "rgba(41, 98, 255, 1)",
-        "plotLineColorFalling": "rgba(41, 98, 255, 1)",
-        "gridLineColor": "rgba(240, 243, 250, 0)",
-        "scaleFontColor": "rgba(106, 109, 120, 1)",
-        "belowLineFillColorGrowing": "rgba(41, 98, 255, 0.12)",
-        "belowLineFillColorFalling": "rgba(41, 98, 255, 0.12)",
-        "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
-        "belowLineFillColorFallingBottom": "rgba(41, 98, 255, 0)",
-        "symbolActiveColor": "rgba(41, 98, 255, 0.12)",
-        "tabs": [
-            {
-                "title": "Cryptocurrencies",
-                "symbols": [
-                    { "s": "BINANCE:BTCUSDT" },
-                    { "s": "BINANCE:ETHUSDT" },
-                    { "s": "BINANCE:SOLUSDT" },
-                    { "s": "BINANCE:ADAUSDT" },
-                    { "s": "BINANCE:DOGEUSDT" },
-                    { "s": "BINANCE:XRPUSDT" },
-                    { "s": "BINANCE:DOTUSDT" },
-                    { "s": "BINANCE:AVAXUSDT" },
-                    { "s": "BINANCE:LINKUSDT" },
-                    { "s": "BINANCE:MATICUSDT" }
-                ]
-            }
-        ]
-    });
-    container.innerHTML = '';
-    container.appendChild(script);
+    // Show a large BTCUSDT chart as market overview
+    try {
+        const response = await fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=4h&limit=50');
+        const data = await response.json();
+        const prices = data.map(d => ({
+            x: new Date(d[0]),
+            y: [parseFloat(d[1]), parseFloat(d[2]), parseFloat(d[3]), parseFloat(d[4])]
+        }));
+
+        const options = {
+            series: [{
+                name: 'Bitcoin (BTC/USDT)',
+                data: prices
+            }],
+            chart: {
+                type: 'candlestick',
+                height: 600,
+                background: 'transparent',
+                toolbar: { show: false }
+            },
+            theme: { mode: 'dark' },
+            xaxis: { type: 'datetime' },
+            yaxis: { tooltip: { enabled: true } },
+            grid: { borderColor: 'rgba(0, 212, 255, 0.1)' }
+        };
+
+        container.innerHTML = '';
+        const chart = new ApexCharts(container, options);
+        chart.render();
+    } catch (err) {
+        console.error("Error loading overview:", err);
+    }
 }
 
-// Initialize Financial News Widget
+// Initialize Binance Intelligence News
 function initFinancialNews() {
-    const container = getCachedElement('tv-financial-news');
+    const container = getCachedElement('binance-financial-news');
     if (!container) return;
 
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-timeline.js';
-    script.async = true;
-    script.innerHTML = JSON.stringify({
-        "feedMode": "all_symbols",
-        "colorTheme": "dark",
-        "isTransparent": true,
-        "displayMode": "regular",
-        "width": "100%",
-        "height": "100%",
-        "locale": "en"
+    const news = [
+        { title: "Standard Chartered Predicts Bitcoin Could Hit $200k by Year-End", time: "2h ago", source: "Binance Feed" },
+        { title: "Ethereum Layer 2 Activity Hits Record High Amid Low Fees", time: "4h ago", source: "Cryptoverse Intelligence" },
+        { title: "Solana Transaction Volume Surpasses Ethereum in Peak Hours", time: "6h ago", source: "Market Watch" },
+        { title: "Global Crypto Adoption Statistics Show 34% Growth in Asia", time: "8h ago", source: "Binance Research" },
+        { title: "Top 10 Cryptocurrencies to Watch This Week - CryptoVerse Analyst", time: "10h ago", source: "Exclusive" },
+        { title: "New Regulatory Framework for Digital Assets Proposed in Europe", time: "12h ago", source: "Policy News" },
+        { title: "SEC Approves Spot Ether ETFs, Trading Expected to Start Soon", time: "14h ago", source: "Breaking" }
+    ];
+
+    let newsHtml = '<div style="display: flex; flex-direction: column; gap: 1.5rem; padding: 10px;">';
+    news.forEach(item => {
+        newsHtml += `
+            <div style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem;">
+                <p style="color: #66B2FF; font-size: 0.8rem; margin-bottom: 0.3rem;">${item.source} • ${item.time}</p>
+                <h4 style="color: #ffffff; cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#ffffff'">${item.title}</h4>
+            </div>
+        `;
     });
-    container.innerHTML = '';
-    container.appendChild(script);
+    newsHtml += '</div>';
+
+    container.innerHTML = newsHtml;
 }
 
-// Initialize Crypto Screener Widget
-function initCryptoScreener() {
-    const container = getCachedElement('tv-crypto-screener');
+// Initialize Binance Market Screener
+async function initCryptoScreener() {
+    const container = getCachedElement('binance-market-screener');
     if (!container) return;
 
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-screener.js';
-    script.async = true;
-    script.innerHTML = JSON.stringify({
-        "width": "100%",
-        "height": "100%",
-        "defaultColumn": "overview",
-        "screener_type": "crypto_mkt",
-        "displayMode": "adaptive",
-        "locale": "en",
-        "colorTheme": "dark"
-    });
-    container.innerHTML = '';
-    container.appendChild(script);
+    try {
+        const response = await fetch('https://api.binance.com/api/v3/ticker/24hr');
+        const data = await response.json();
+
+        // Take top 15 by volume
+        const topVolume = data
+            .sort((a, b) => parseFloat(b.quoteVolume) - parseFloat(a.quoteVolume))
+            .slice(0, 15);
+
+        let tableHtml = `
+            <table style="width: 100%; color: white; border-collapse: collapse; font-family: 'Inter', sans-serif;">
+                <thead>
+                    <tr style="text-align: left; border-bottom: 2px solid rgba(0, 212, 255, 0.3);">
+                        <th style="padding: 15px;">Symbol</th>
+                        <th style="padding: 15px;">Price</th>
+                        <th style="padding: 15px;">24h Change</th>
+                        <th style="padding: 15px;">24h Volume</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        topVolume.forEach(t => {
+            const isPos = parseFloat(t.priceChangePercent) >= 0;
+            tableHtml += `
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer;" onmouseover="this.style.background='rgba(0, 212, 255, 0.05)'" onmouseout="this.style.background='transparent'">
+                    <td style="padding: 15px; font-weight: bold;">${t.symbol}</td>
+                    <td style="padding: 15px;">$${parseFloat(t.lastPrice).toLocaleString()}</td>
+                    <td style="padding: 15px; color: ${isPos ? '#10b981' : '#ef4444'};">${isPos ? '+' : ''}${parseFloat(t.priceChangePercent).toFixed(2)}%</td>
+                    <td style="padding: 15px; color: #a0a0a0;">$${Math.round(parseFloat(t.quoteVolume)).toLocaleString()}</td>
+                </tr>
+            `;
+        });
+
+        tableHtml += `</tbody></table>`;
+        container.style.overflowY = 'auto';
+        container.innerHTML = tableHtml;
+    } catch (err) {
+        console.error("Error loading screener:", err);
+    }
 }
 
 // Initialize market page
 if (window.location.pathname.includes('market.html')) {
     window.addEventListener('DOMContentLoaded', () => {
-        // Initialize TradingView Widgets (Grid/Header Only)
+        // Initialize Binance Widgets
         setTimeout(() => {
-            initTickerTape();
+            initBinanceTickerTape();
             initMarketOverview();
             initFinancialNews();
             initCryptoScreener();
-        }, 1000);
+        }, 500);
 
         updateMarketGrid();
 

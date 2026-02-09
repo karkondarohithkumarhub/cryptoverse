@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const mysql = require('mysql2/promise');
+const bcrypt = require('bcrypt');
 const http = require('http');
 const { Server } = require('socket.io');
 
@@ -59,19 +60,18 @@ async function initializeDatabase() {
 
   try {
     const tempConn = await mysql.createConnection({
-      host: 'localhost',
+      host: '127.0.0.1',
       user: 'root',
       password: '',
       connectTimeout: 5000
     });
-const walletRoutes = require('./routes/wallet');
-app.use('/api/wallet', walletRoutes);
+
 
     await tempConn.query('CREATE DATABASE IF NOT EXISTS cryptoverse');
     await tempConn.end();
 
     mysqlPool = mysql.createPool({
-      host: 'localhost',
+      host: '127.0.0.1',
       user: 'root',
       password: '',
       database: 'cryptoverse',
@@ -198,11 +198,12 @@ async function initializeSchema() {
     }
   }
 
-  // Insert default admin
+  // Insert default admin (store hashed password)
   try {
+    const hashedAdmin = await bcrypt.hash('123456', 10);
     await mysqlPool.query(
       'INSERT INTO admins (id, username, password) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE password = ?',
-      ['admin-1', 'admin', '123456', '123456']
+      ['admin-1', 'admin', hashedAdmin, hashedAdmin]
     );
   } catch (err) {
     // Ignore duplicates
@@ -219,7 +220,7 @@ async function initializeSchema() {
       res.sendFile(path.join(__dirname, '..', 'index.html'));
     });
 
-    // Login endpoint
+    // Login endpoint (secure: hash on create, bcrypt compare on login)
     app.post('/api/auth/login', async (req, res) => {
       const { username, password } = req.body;
       log(`Login attempt: ${username}`, 'INFO');
@@ -231,17 +232,35 @@ async function initializeSchema() {
         let user = rows[0];
 
         if (!user) {
+          // Create user with hashed password (default to '123456' when none provided)
           const id = Date.now().toString();
           const defaultPassword = password || '123456';
+          const hashed = await bcrypt.hash(defaultPassword, 10);
           await query(
             'INSERT INTO users (id, username, password) VALUES (?, ?, ?)',
-            [id, username, defaultPassword]
+            [id, username, hashed]
           );
-          user = { id, username, password: defaultPassword };
+          user = { id, username };
           log(`New user created: ${username}`, 'SUCCESS');
-        } else if (password && user.password && user.password !== password) {
-          log(`Login failed: Invalid password for ${username}`, 'WARN');
-          return res.status(401).json({ error: 'Invalid credentials' });
+        } else if (password) {
+          const stored = user.password || '';
+          let matched = false;
+          if (stored.startsWith('$2')) {
+            matched = await bcrypt.compare(password, stored);
+          } else {
+            matched = password === stored;
+            if (matched) {
+              // Re-hash plaintext password into bcrypt
+              const newHash = await bcrypt.hash(password, 10);
+              await query('UPDATE users SET password = ? WHERE id = ?', [newHash, user.id]);
+              user.password = newHash;
+            }
+          }
+
+          if (!matched) {
+            log(`Login failed: Invalid password for ${username}`, 'WARN');
+            return res.status(401).json({ error: 'Invalid credentials' });
+          }
         }
 
         // Ensure wallet exists for the user
@@ -256,7 +275,8 @@ async function initializeSchema() {
         }
 
         log(`Login successful: ${username}`, 'SUCCESS');
-        res.json({ user });
+        // Return a minimal user object (do not include password)
+        res.json({ user: { id: user.id, username: user.username } });
       } catch (err) {
         log(`Login error: ${err.message}`, 'ERROR');
         res.status(500).json({ error: 'Internal server error' });

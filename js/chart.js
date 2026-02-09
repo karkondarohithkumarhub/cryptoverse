@@ -23,24 +23,21 @@ class CryptoChart {
           name: 'candles',
           type: 'candlestick',
           data: []
-        },
-        {
-          name: 'EMA (20)',
-          type: 'line',
-          data: [],
-          stroke: { width: 2, curve: 'smooth' },
-          color: '#ffff00'
         }
       ],
       chart: {
         type: 'candlestick',
-        height: 500,
+        height: '100%',
         id: 'chart',
         stacked: false,
+        background: '#131722', // TradingView Dark Background
+        foreColor: '#d1d4dc', // TradingView text color
+        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
         toolbar: {
+          show: true,
           autoSelected: 'zoom',
           tools: {
-            download: true,
+            download: false,
             selection: true,
             zoom: true,
             zoomin: true,
@@ -50,54 +47,82 @@ class CryptoChart {
           }
         },
         zoom: {
-          enabled: true
+          enabled: true,
+          type: 'x',
+          autoScaleYaxis: true
+        },
+        animations: {
+          enabled: false // Smoother for real-time
+        },
+        events: {
+          mouseMove: (event, chartContext, config) => {
+            if (config.dataPointIndex > -1) {
+              const series = config.config.series[0].data[config.dataPointIndex];
+              if (series && series.y) {
+                this.updateOHLC(series.y[0], series.y[1], series.y[2], series.y[3]);
+              }
+            }
+          },
+          mouseLeave: () => {
+            // Revert to latest candle data when mouse leaves
+            const latest = this.candlesData[this.candlesData.length - 1];
+            if (latest && latest.y) {
+              this.updateOHLC(latest.y[0], latest.y[1], latest.y[2], latest.y[3]);
+            }
+          }
         }
       },
+      legend: {
+        show: true,
+        position: 'top',
+        horizontalAlign: 'left',
+        labels: { colors: '#d1d4dc' }
+      },
       title: {
-        text: `${this.currentSymbol} - Live Chart (Updated in Real-Time)`,
-        align: 'left'
+        show: false // We use our own legend now
       },
       xaxis: {
         type: 'datetime',
+        axisBorder: { show: false },
+        axisTicks: { show: false },
         labels: {
-          formatter: function (val) {
-            return new Date(val).toLocaleDateString();
+          style: { colors: '#787b86', fontSize: '11px' }
+        },
+        crosshairs: {
+          show: true,
+          position: 'back',
+          stroke: {
+            color: '#787b86',
+            width: 1,
+            dashArray: 4
           }
         }
       },
       yaxis: {
+        opposite: true, // TradingView style
         tooltip: {
           enabled: true
         },
+        axisBorder: { show: false },
+        axisTicks: { show: false },
         labels: {
-          formatter: function (val) {
-            return '$' + val.toFixed(2);
-          }
+          style: { colors: '#787b86', fontSize: '11px' },
+          formatter: (val) => val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         }
       },
       tooltip: {
         enabled: true,
         theme: 'dark',
         x: {
-          formatter: function (val) {
-            return new Date(val).toLocaleString();
-          }
-        },
-        y: {
-          formatter: function (val) {
-            return val ? '$' + val.toFixed(2) : val;
-          }
-        },
-        style: {
-          fontSize: '13px',
-          fontWeight: 600
+          show: true,
+          format: 'dd MMM HH:mm'
         }
       },
       plotOptions: {
         candlestick: {
           colors: {
-            upward: '#00ff88',      // Bright green for upward candles
-            downward: '#ff3333'      // Bright red for downward candles
+            upward: '#089981',      // TradingView Green
+            downward: '#f23645'     // TradingView Red
           },
           wick: {
             useFillColor: true
@@ -106,17 +131,14 @@ class CryptoChart {
       },
       grid: {
         show: true,
-        borderColor: '#e7e7e7',
-        strokeDashArray: 3,
+        borderColor: '#2a2e39', // TradingView Grid Color
+        strokeDashArray: 2,
+        position: 'back',
         xaxis: {
-          lines: {
-            show: false
-          }
+          lines: { show: true }
         },
         yaxis: {
-          lines: {
-            show: true
-          }
+          lines: { show: true }
         }
       }
     };
@@ -231,14 +253,42 @@ class CryptoChart {
   }
 
   /**
-   * Update price display in UI
+   * Update price display and OHLC legend in UI
    */
   updatePriceDisplay(price, symbol) {
     const priceElement = document.getElementById('current-price');
     if (priceElement) {
       priceElement.textContent = `$${price.toFixed(2)}`;
-      priceElement.style.color = price > 0 ? '#26a69a' : '#ef5350';
+      priceElement.style.color = price > 0 ? '#089981' : '#f23645';
     }
+
+    // Also update OHLC legend with the latest candle if mouse is not hovering
+    const latest = this.candlesData[this.candlesData.length - 1];
+    if (latest && latest.y) {
+      this.updateOHLC(latest.y[0], latest.y[1], latest.y[2], latest.y[3]);
+    }
+  }
+
+  /**
+   * Update the OHLC overlay legend (TradingView style)
+   */
+  updateOHLC(o, h, l, c) {
+    const legend = document.getElementById('chart-ohlc-legend');
+    if (!legend) return;
+
+    const isPos = c >= o;
+    const color = isPos ? '#089981' : '#f23645';
+    const change = c - o;
+    const percent = ((c - o) / o) * 100;
+
+    legend.innerHTML = `
+      <span style="color: #d1d4dc; margin-right: 15px;">${this.currentSymbol}</span>
+      <span style="color: #787b86;">O</span><span style="color: ${color}; margin: 0 8px 0 4px;">${o.toFixed(2)}</span>
+      <span style="color: #787b86;">H</span><span style="color: ${color}; margin: 0 8px 0 4px;">${h.toFixed(2)}</span>
+      <span style="color: #787b86;">L</span><span style="color: ${color}; margin: 0 8px 0 4px;">${l.toFixed(2)}</span>
+      <span style="color: #787b86;">C</span><span style="color: ${color}; margin: 0 8px 0 4px;">${c.toFixed(2)}</span>
+      <span style="color: ${color}; margin-left: 10px;">${change >= 0 ? '+' : ''}${change.toFixed(2)} (${percent.toFixed(2)}%)</span>
+    `;
   }
 
   /**

@@ -27,6 +27,7 @@
                     <a href="news.html">News</a>
                     <a href="bookmarks.html">Bookmarks</a>
                     <a href="history.html">History</a>
+                    <a href="mining.html">Mining</a>
                     <a href="creator.html">Creator Center</a>
                     <a href="settings.html">Settings</a>
                     <a href="support.html">Help & Support</a>
@@ -41,29 +42,31 @@
 
     <main class="main-content">
         <div class="container" style="max-width: 900px; padding-top: 2rem;">
-            <Center><h1>📰 Latest Market News</h1></Center>
+            <Center>
+                <h1>📰 Latest Market News</h1>
+            </Center>
 
-    
-        <!-- 🔴 LIVE NEWS SECTION (New Feature Added) -->
-<div style="margin-top: 3rem;">
-    <h2 style="color:#00d4ff; margin-bottom:1rem;">🛰️ Live Crypto News</h2>
-    <div id="liveNewsContainer" style="display:flex; flex-direction:column; gap:1.5rem;"></div>
-</div>
+
+            <!-- 🔴 LIVE NEWS SECTION (New Feature Added) -->
+            <div style="margin-top: 3rem;">
+                <h2 style="color:#00d4ff; margin-bottom:1rem;">🛰️ Live Crypto News</h2>
+                <div id="liveNewsContainer" style="display:flex; flex-direction:column; gap:1.5rem;"></div>
+            </div>
 
     </main>
     <script>
-const NEWS_API = "https://api.rss2json.com/v1/api.json?rss_url=https://cointelegraph.com/rss";
+        const NEWS_API = "https://api.rss2json.com/v1/api.json?rss_url=https://cointelegraph.com/rss";
 
-async function loadLiveNews() {
-    const container = document.getElementById("liveNewsContainer");
+        async function loadLiveNews() {
+            const container = document.getElementById("liveNewsContainer");
 
-    try {
-        const res = await fetch(NEWS_API);
-        const data = await res.json();
+            try {
+                const res = await fetch(NEWS_API);
+                const data = await res.json();
 
-        const articles = data.items.slice(0, 5); // show latest 5
+                const articles = data.items.slice(0, 5); // show latest 5
 
-        container.innerHTML = articles.map(article => `
+                container.innerHTML = articles.map(article => `
             <div class="card"
                 style="background: rgba(255, 255, 255, 0.05); padding: 2rem; border-radius: 12px; display: flex; gap: 2rem; align-items: center; transition: background 0.3s;"
                 onmouseover="this.style.background='rgba(255, 255, 255, 0.08)'"
@@ -87,15 +90,15 @@ async function loadLiveNews() {
             </div>
         `).join("");
 
-    } catch (err) {
-        container.innerHTML = "<p style='color:#888;'>Unable to load live news right now.</p>";
-        console.error(err);
-    }
-}
+            } catch (err) {
+                container.innerHTML = "<p style='color:#888;'>Unable to load live news right now.</p>";
+                console.error(err);
+            }
+        }
 
-loadLiveNews();
-setInterval(loadLiveNews, 600000); // refresh every 10 mins
-</script>
+        loadLiveNews();
+        setInterval(loadLiveNews, 600000); // refresh every 10 mins
+    </script>
 
 </body>
 

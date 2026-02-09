@@ -22,7 +22,7 @@ let cryptoCoins = [
 function initializeApp() {
     // Fetch real-time Binance data for cryptocurrencies
     fetchBinanceData();
-    
+
     // Update prices every 5 seconds from Binance API
     setInterval(() => {
         fetchBinanceData();
@@ -39,22 +39,22 @@ async function fetchBinanceData() {
         const symbols = cryptoCoins
             .filter(coin => coin.binanceSymbol)
             .map(coin => coin.binanceSymbol);
-        
+
         if (symbols.length === 0) return;
 
         // Fetch ticker data from Binance
         const response = await fetch(`${BINANCE_API}/ticker/24hr?symbols=["${symbols.join('","')}"]`);
         if (!response.ok) throw new Error('Binance API error');
-        
+
         const data = await response.json();
-        
+
         // Update cryptoCoins with real Binance data
         data.forEach(ticker => {
             const coin = cryptoCoins.find(c => c.binanceSymbol === ticker.symbol);
             if (coin) {
                 const lastPrice = parseFloat(ticker.lastPrice);
                 const priceChangePercent = parseFloat(ticker.priceChangePercent);
-                
+
                 // Update coin with real data
                 coin.price = lastPrice * CURRENCY_RATE;
                 coin.change = priceChangePercent;
@@ -96,7 +96,7 @@ function setupAuthPage() {
     if (!loginForm) {
         return;
     }
-    
+
     const signupForm = document.getElementById('signup-form');
     const toggleBtn = document.getElementById('toggle-btn');
     const toggleText = document.getElementById('toggle-text');
@@ -130,7 +130,7 @@ function setupAuthPage() {
                 console.log('Attempting login with:', username);
                 await loginUser(username, password);
                 console.log('Login successful, redirecting...');
-                 localStorage.setItem('username', username);
+                localStorage.setItem('username', username);
                 window.location.href = 'home.html';
             } catch (err) {
                 console.error('Login error:', err);
@@ -148,10 +148,10 @@ function setupAuthPage() {
                 try {
                     await loginUser(username, password);
                     window.location.href = 'home.html';
-                     localStorage.setItem('username', username);
-                     localStorage.setItem('email', document.getElementById('signup-email').value);
-                     localStorage.setItem('phone', document.getElementById('signup-phone').value);
-                    
+                    localStorage.setItem('username', username);
+                    localStorage.setItem('email', document.getElementById('signup-email').value);
+                    localStorage.setItem('phone', document.getElementById('signup-phone').value);
+
                 } catch (err) {
                     alert('Signup failed. Please try again.');
                 }
@@ -161,18 +161,40 @@ function setupAuthPage() {
 }
 
 // ===== LOAD USER DATA =====
+// ===== LOAD USER DATA =====
+let loadingData = false;
 window.addEventListener('DOMContentLoaded', async () => {
-    if (currentUser) {
-        const username = currentUser.username;
-        const userNameElements = document.querySelectorAll('#user-name, #display-name');
-        userNameElements.forEach(el => {
-            if (el) el.textContent = username;
+    const savedUsername = localStorage.getItem('username');
+    if (savedUsername) {
+        // Update all potential username fields
+        const nameElements = document.querySelectorAll('#user-name, #name, #display-name, .user-name-display');
+        nameElements.forEach(el => {
+            if (el) {
+                // Determine if we should replace text or just inner part
+                // If it's the profile toggle, we might want to keep the emoji
+                if (el.id === 'profile-toggle') {
+                    // handled by child span
+                } else {
+                    el.textContent = savedUsername;
+                }
+            }
         });
 
-        // Load wallet from backend
-        await updateWallet();
-        localStorage.setItem('wallet', currentUser.walletBalance || 0);
+        // Also ensure currentUser is set if missing
+        if (typeof currentUser === 'undefined' || !currentUser) {
+            window.currentUser = { username: savedUsername };
+        }
     }
+
+    if (loadingData) return;
+    loadingData = true;
+
+    try {
+        if (currentUser) {
+            await updateWallet();
+        }
+    } catch (e) { console.log(e); }
+    loadingData = false;
 });
 
 // ===== LOGOUT =====

@@ -10,11 +10,11 @@
     <script src="js/theme.js"></script>
     <script src="http://localhost:3001/socket.io/socket.io.js"></script>
     <script src="js/app.js"></script>
-      <script src="js/wallet_handlers.js?v=3.0"></script>
-      
-<script type="module" src="js/profile.js"></script>
+    <script src="js/wallet_handlers.js?v=3.0"></script>
 
-      
+    <script type="module" src="js/profile.js"></script>
+
+
 </head>
 
 <body>
@@ -35,20 +35,21 @@
                     <a href="news.html">News</a>
                     <a href="bookmarks.html">Bookmarks</a>
                     <a href="history.html">History</a>
+                    <a href="mining.html">Mining</a>
                     <a href="creator.html">Creator Center</a>
                     <a href="settings.html">Settings</a>
                     <a href="support.html">Help & Support</a>
                 </div>
             </div>
         </nav>
-       
+
         <div class="header-profile">
-             <div class="dropdown">
-                
-                    <div  id="profile-toggle">👤 my profile</span></span></div>
-                
+            <div class="dropdown">
+
+                <div id="profile-toggle">👤 my profile</span></span></div>
+
                 <div class="dropdown-menu">
-                    
+
                     <a href="settings.html">Settings</a>
                     <a href="index.html" id="logout-btn">Logout</a>
                 </div>
@@ -65,122 +66,122 @@
                     👤
                 </div>
                 <h2>My Profile</h2>
-             
-           
-          
 
-              
-                
-            
-            
-    <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 15px;">
 
-    <!-- Username -->
-    <div style="display: inline-flex; align-items: center; gap: 8px;
+
+
+
+
+
+
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 15px;">
+
+                    <!-- Username -->
+                    <div style="display: inline-flex; align-items: center; gap: 8px;
         background: rgba(16, 185, 129, 0.2);
         color: #10b981;
         padding: 0.4rem 1rem;
         border-radius: 20px;
         font-size: 0.95rem;">
-        <span>Username:</span>
-        <span id="name" style="font-weight: bold; color: white;"></span>
-    </div>
+                        <span>Username:</span>
+                        <span id="name" style="font-weight: bold; color: white;"></span>
+                    </div>
 
-    <!-- Email -->
-    <div style="display: inline-flex; align-items: center; gap: 8px;
+                    <!-- Email -->
+                    <div style="display: inline-flex; align-items: center; gap: 8px;
         background: rgba(16, 185, 129, 0.2);
         color: #10b981;
         padding: 0.4rem 1rem;
         border-radius: 20px;
         font-size: 0.95rem;">
-        <span>Mail ID:</span>
-        <span id="email" style="font-weight: bold; color: white;"></span>
-    </div>
- <div style="display: inline-flex; align-items: center; gap: 8px;
+                        <span>Mail ID:</span>
+                        <span id="email" style="font-weight: bold; color: white;"></span>
+                    </div>
+                    <div style="display: inline-flex; align-items: center; gap: 8px;
         background: rgba(16, 185, 129, 0.2);
         color: #10b981;
         padding: 0.4rem 1rem;
         border-radius: 20px;
         font-size: 0.95rem;">
-        <span>Phone Number:</span>
-        <span id="phone" style="font-weight: bold; color: white;"></span>
-    </div>
-    <!-- Wallet -->
-    <div style="display: inline-flex; align-items: center; gap: 8px;
+                        <span>Phone Number:</span>
+                        <span id="phone" style="font-weight: bold; color: white;"></span>
+                    </div>
+                    <!-- Wallet -->
+                    <div style="display: inline-flex; align-items: center; gap: 8px;
         background: rgba(16, 185, 129, 0.2);
         color: #10b981;
         padding: 0.4rem 1rem;
         border-radius: 20px;
         font-size: 0.95rem;">
-        <span>Wallet Balance:</span>
-        <span id="main-wallet-balance" style="font-weight: bold; color: white;"></span>
+                        <span>Wallet Balance:</span>
+                        <span id="main-wallet-balance" style="font-weight: bold; color: white;"></span>
 
 
 
-    </div>
+                    </div>
 
-</div>
-
-
-
-
-
-            <div class="profile-stats grid-3"
-                style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem; margin-top: 30px;">
-                <div class="stat-card"
-                    style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; text-align: center;">
-                    <h3 style="color: #aaa; font-size: 0.9rem; margin-bottom: 0.5rem;">Total Volume</h3>
-                    <div style="font-size: 1.5rem; font-weight: bold;"></div>
                 </div>
-                <div class="stat-card"
-                    style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; text-align: center;">
-                    <h3 style="color: #aaa; font-size: 0.9rem; margin-bottom: 0.5rem;">Trades</h3>
-                    <div style="font-size: 1.5rem; font-weight: bold;"></div>
+
+
+
+
+
+                <div class="profile-stats grid-3"
+                    style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem; margin-top: 30px;">
+                    <div class="stat-card"
+                        style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; text-align: center;">
+                        <h3 style="color: #aaa; font-size: 0.9rem; margin-bottom: 0.5rem;">Total Volume</h3>
+                        <div style="font-size: 1.5rem; font-weight: bold;"></div>
+                    </div>
+                    <div class="stat-card"
+                        style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; text-align: center;">
+                        <h3 style="color: #aaa; font-size: 0.9rem; margin-bottom: 0.5rem;">Trades</h3>
+                        <div style="font-size: 1.5rem; font-weight: bold;"></div>
+                    </div>
+                    <div class="stat-card"
+                        style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; text-align: center;">
+                        <h3 style="color: #aaa; font-size: 0.9rem; margin-bottom: 0.5rem;">Member Since</h3>
+                        <div style="font-size: 1.5rem; font-weight: bold;"></div>
+                    </div>
                 </div>
-                <div class="stat-card"
-                    style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; text-align: center;">
-                    <h3 style="color: #aaa; font-size: 0.9rem; margin-bottom: 0.5rem;">Member Since</h3>
-                    <div style="font-size: 1.5rem; font-weight: bold;"></div>
+
+                <div class="profile-actions" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <a href="wallet.html"
+                        style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; text-decoration: none; color: white; display: flex; justify-content: space-between; align-items: center; transition: background 0.3s;"
+                        onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'"
+                        onmouseout="this.style.background='rgba(255, 255, 255, 0.05)'">
+                        <span style="display: flex; align-items: center; gap: 1rem;">
+                            <span style="font-size: 1.5rem;">💼</span> Wallet Details
+                        </span>
+                        <span>→</span>
+                    </a> <a href="security.html"
+                        style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; text-decoration: none; color: white; display: flex; justify-content: space-between; align-items: center; transition: background 0.3s;"
+                        onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'"
+                        onmouseout="this.style.background='rgba(255, 255, 255, 0.05)'">
+                        <span style="display: flex; align-items: center; gap: 1rem;">
+                            <span style="font-size: 1.5rem;">🔒</span> Security Settings
+                        </span>
+                        <span>→</span>
+                    </a>
+                    <a href="settings.html"
+                        style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; text-decoration: none; color: white; display: flex; justify-content: space-between; align-items: center; transition: background 0.3s;"
+                        onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'"
+                        onmouseout="this.style.background='rgba(255, 255, 255, 0.05)'">
+                        <span style="display: flex; align-items: center; gap: 1rem;">
+                            <span style="font-size: 1.5rem;">⚙️</span> Account Preferences
+                        </span>
+                        <span>→</span>
+                    </a>
                 </div>
+
             </div>
-
-            <div class="profile-actions" style="display: flex; flex-direction: column; gap: 1rem;">
-                <a href="wallet.html"
-                    style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; text-decoration: none; color: white; display: flex; justify-content: space-between; align-items: center; transition: background 0.3s;"
-                    onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'"
-                    onmouseout="this.style.background='rgba(255, 255, 255, 0.05)'">
-                    <span style="display: flex; align-items: center; gap: 1rem;">
-                        <span style="font-size: 1.5rem;">💼</span> Wallet Details
-                    </span>
-                    <span>→</span>
-                </a> <a href="security.html"
-                    style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; text-decoration: none; color: white; display: flex; justify-content: space-between; align-items: center; transition: background 0.3s;"
-                    onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'"
-                    onmouseout="this.style.background='rgba(255, 255, 255, 0.05)'">
-                    <span style="display: flex; align-items: center; gap: 1rem;">
-                        <span style="font-size: 1.5rem;">🔒</span> Security Settings
-                    </span>
-                    <span>→</span>
-                </a>
-                <a href="settings.html"
-                    style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; text-decoration: none; color: white; display: flex; justify-content: space-between; align-items: center; transition: background 0.3s;"
-                    onmouseover="this.style.background='rgba(255, 255, 255, 0.1)'"
-                    onmouseout="this.style.background='rgba(255, 255, 255, 0.05)'">
-                    <span style="display: flex; align-items: center; gap: 1rem;">
-                        <span style="font-size: 1.5rem;">⚙️</span> Account Preferences
-                    </span>
-                    <span>→</span>
-                </a>
-            </div>
-
-        </div>
     </main>
-<script>
- window.updateWalletDisplay = function () {
-    const el = document.getElementById('main-wallet-balance');
-    if (el) el.textContent = `₹${Number(window.wallet.balance).toFixed(2)}`;
-    localStorage.setItem('cryptoverse_wallet', JSON.stringify(window.wallet));
-};
+    <script>
+        window.updateWalletDisplay = function () {
+            const el = document.getElementById('main-wallet-balance');
+            if (el) el.textContent = `₹${Number(window.wallet.balance).toFixed(2)}`;
+            localStorage.setItem('cryptoverse_wallet', JSON.stringify(window.wallet));
+        };
 
         window.addEventListener('DOMContentLoaded', () => {
             console.log('Wallet page loaded');
@@ -190,32 +191,32 @@
         setInterval(() => {
             if (window.updateWallet) updateWallet();
         }, 2000);
-    
 
 
 
-    document.addEventListener("DOMContentLoaded", () => {
-        const nameEl = document.getElementById("name");
-        const username = localStorage.getItem("username"); 
-        const emailEl=localStorage.getItem("email")
-       
-        const phoneEl=localStorage.getItem("phone")
-        const phoneno=document.getElementById("phone")
-        if (nameEl && username) {
-            nameEl.textContent = username; // show username
-        }
-        const emailElement = document.getElementById("email");
-        if (emailElement && emailEl) {
-            emailElement.textContent = emailEl;
-        }
-        const phoneElement = document.getElementById("phone");
-        if (phoneElement && phoneEl) {
-            phoneElement.textContent = phoneEl;
-        }
 
-       
-    });
-</script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const nameEl = document.getElementById("name");
+            const username = localStorage.getItem("username");
+            const emailEl = localStorage.getItem("email")
+
+            const phoneEl = localStorage.getItem("phone")
+            const phoneno = document.getElementById("phone")
+            if (nameEl && username) {
+                nameEl.textContent = username; // show username
+            }
+            const emailElement = document.getElementById("email");
+            if (emailElement && emailEl) {
+                emailElement.textContent = emailEl;
+            }
+            const phoneElement = document.getElementById("phone");
+            if (phoneElement && phoneEl) {
+                phoneElement.textContent = phoneEl;
+            }
+
+
+        });
+    </script>
 
 </body>
 

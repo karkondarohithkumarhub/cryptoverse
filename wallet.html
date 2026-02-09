@@ -37,6 +37,7 @@
                     <a href="news.html">News</a>
                     <a href="bookmarks.html">Bookmarks</a>
                     <a href="history.html">History</a>
+                    <a href="mining.html">Mining</a>
                     <a href="creator.html">Creator Center</a>
                     <a href="settings.html">Settings</a>
                     <a href="support.html">Help & Support</a>
@@ -44,21 +45,19 @@
             </div>
         </nav>
         <div class="header-profile">
-            <span style="color: #66B2FF; font-weight: 600;">👤</span>
-            <a href="profile.html" style="color: #ffffff; text-decoration: none; font-weight: 600;">Profile</a>
-        </div>
-    </header>
-        <div class="profile-section">
             <div class="dropdown">
-                <button class="profile-btn">👤 <span id="user-name">User</span></button>
+                <div id="profile-toggle">👤 <span id="user-name"><span id="name"></span></span></div>
                 <div class="dropdown-menu">
-                    <div class="dropdown-item">Username</div>
+                    <a href="./profile.html">
+                        <div class="dropdown-item" id="display-name">Username</div>
+                    </a>
                     <a href="settings.html">Settings</a>
-                    <a href="index.html">Logout</a>
+                    <a href="index.html" id="logout-btn">Logout</a>
                 </div>
             </div>
         </div>
     </header>
+
 
     <main class="main-content">
         <div class="container">
@@ -87,11 +86,11 @@
     <div id="add-money-modal" class="modal">
         <div class="modal-content wallet-modal-content">
             <button onclick="closeAddMoney()" class="modal-close">×</button>
-            
+
             <!-- Main Screen with Buttons -->
             <div id="wallet-main" class="wallet-screen">
                 <h2>My Wallet</h2>
-                
+
                 <h1><span id="modal-balance-modal" style="font-weight: bold; color: white;">₹0.00</span></h1>
 
                 <div class="modal-buttons">
@@ -111,7 +110,8 @@
                 <p class="amount-hint">Minimum: ₹100</p>
                 <div class="payment-options-list">
                     <div class="payment-option" onclick="showPaymentDetails('upi', 'deposit')">📱 UPI</div>
-                    <div class="payment-option" onclick="showPaymentDetails('card', 'deposit')">💳 Credit/Debit Card</div>
+                    <div class="payment-option" onclick="showPaymentDetails('card', 'deposit')">💳 Credit/Debit Card
+                    </div>
                     <div class="payment-option" onclick="showPaymentDetails('bank', 'deposit')">🏦 Bank Transfer</div>
                     <div class="payment-option" onclick="showPaymentDetails('qr', 'deposit')">📷 QR Code</div>
                 </div>
@@ -128,7 +128,8 @@
                 <p class="amount-hint">Minimum: ₹100</p>
                 <div class="payment-options-list">
                     <div class="payment-option" onclick="showPaymentDetails('upi', 'withdraw')">📱 UPI</div>
-                    <div class="payment-option" onclick="showPaymentDetails('card', 'withdraw')">💳 Credit/Debit Card</div>
+                    <div class="payment-option" onclick="showPaymentDetails('card', 'withdraw')">💳 Credit/Debit Card
+                    </div>
                     <div class="payment-option" onclick="showPaymentDetails('bank', 'withdraw')">🏦 Bank Transfer</div>
                     <div class="payment-option" onclick="showPaymentDetails('qr', 'withdraw')">📷 QR Code</div>
                 </div>
@@ -138,25 +139,25 @@
             <div id="payment-details" class="wallet-screen" style="display: none;">
                 <button onclick="backToPaymentSection()" class="back-button">← Back</button>
                 <div id="payment-method-form"></div>
+            </div>
         </div>
-    </div>
 
-    <script>
-        window.updateWalletDisplay = function () {
-    const el = document.getElementById('main-wallet-balance');
-    if (el) el.textContent = `₹${Number(window.wallet.balance).toFixed(2)}`;
-    localStorage.setItem('cryptoverse_wallet', JSON.stringify(window.wallet));
-};
+        <script>
+            window.updateWalletDisplay = function () {
+                const el = document.getElementById('main-wallet-balance');
+                if (el) el.textContent = `₹${Number(window.wallet.balance).toFixed(2)}`;
+                localStorage.setItem('cryptoverse_wallet', JSON.stringify(window.wallet));
+            };
 
-        window.addEventListener('DOMContentLoaded', () => {
-            console.log('Wallet page loaded');
-            if (window.updateWallet) updateWallet();
-        });
+            window.addEventListener('DOMContentLoaded', () => {
+                console.log('Wallet page loaded');
+                if (window.updateWallet) updateWallet();
+            });
 
-        setInterval(() => {
-            if (window.updateWallet) updateWallet();
-        }, 2000);
-    </script>
+            setInterval(() => {
+                if (window.updateWallet) updateWallet();
+            }, 2000);
+        </script>
 </body>
 
 </html>

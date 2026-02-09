@@ -28,6 +28,7 @@
                     <a href="news.html">News</a>
                     <a href="bookmarks.html">Bookmarks</a>
                     <a href="history.html">History</a>
+                    <a href="mining.html">Mining</a>
                     <a href="creator.html">Creator Center</a>
                     <a href="settings.html">Settings</a>
                     <a href="support.html">Help & Support</a>
@@ -107,13 +108,13 @@
     </main>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-        const nameEl = document.getElementById("name");
-        const username = localStorage.getItem("username"); 
-        const emailEl=localStorage.getItem("email")
-        if (nameEl && username) {
-            nameEl.textContent = username; 
-        }
-    });
+            const nameEl = document.getElementById("name");
+            const username = localStorage.getItem("username");
+            const emailEl = localStorage.getItem("email")
+            if (nameEl && username) {
+                nameEl.textContent = username;
+            }
+        });
     </script>
 </body>
 

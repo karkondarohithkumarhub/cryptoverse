@@ -10,10 +10,11 @@ body {
     color: #ffffff;
     overflow-x: hidden;
 }
+
 /* ===== FAQ SECTION ===== */
 .faq-section {
     padding: 60px 20px;
-    
+
     color: white;
 }
 
@@ -90,11 +91,12 @@ body {
     max-height: 300px;
     padding: 0 20px 18px 20px;
 }
+
 .disclaimer {
-  font-size: 22px;
-  color: #888;
-  text-align: center;
-  margin-top: 20px;
+    font-size: 22px;
+    color: #888;
+    text-align: center;
+    margin-top: 20px;
 }
 
 /* Scrollbar */
@@ -103,7 +105,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-    background: #0a0e27;
+    background: #0e1335;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -367,13 +369,17 @@ input:focus {
 
 .dropdown-menu {
     position: absolute;
-    top: 120%;
+    top: 100%;
+    /* Changed from 120% to connect better */
     right: 0;
+    margin-top: 10px;
+    /* Visual gap */
     background: rgba(5, 8, 22, 0.98);
     border: 1.5px solid rgba(102, 178, 255, 0.5);
     border-radius: 12px;
     min-width: 220px;
-    overflow: hidden;
+    overflow: visible;
+    /* Changed from hidden to allow pseudo-element bridge */
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
     z-index: 1001;
     opacity: 0;
@@ -381,6 +387,16 @@ input:focus {
     transform: translateY(-10px);
     transition: all 0.3s ease;
     pointer-events: none;
+}
+
+.dropdown-menu::before {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    /* Increased bridge height to be super safe */
 }
 
 .dropdown:hover .dropdown-menu {
@@ -1741,8 +1757,15 @@ textarea:focus {
 }
 
 @keyframes slideIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .back-button {
@@ -2584,6 +2607,7 @@ textarea:focus {
     color: rgba(255, 255, 255, 0.9);
     font-weight: 600;
 }
+
 /* LIGHT MODE THEME */
 html.light-mode {
     --bg-primary: #FFFFFF;
@@ -2833,6 +2857,7 @@ html.light-mode small {
         opacity: 0;
         transform: translateY(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -2902,6 +2927,7 @@ button,
 
 /* Font rendering optimization */
 @font-feature-settings: "kern" 1;
+
 body {
     font-kerning: auto;
     text-rendering: optimizeLegibility;

@@ -394,8 +394,15 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
         }
 
         .efficiency-meter {
@@ -445,6 +452,7 @@
                 opacity: 0;
                 transform: translateY(-10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -619,7 +627,8 @@
                 <div class="live-indicator"></div>
                 <div style="flex: 1;">
                     <div style="color: #00d4ff; font-weight: 600;">Live Updates Every 3 Seconds</div>
-                    <div style="color: #a0a0a0; font-size: 0.85rem; margin-top: 3px;" id="lastUpdate">Last update: Just now</div>
+                    <div style="color: #a0a0a0; font-size: 0.85rem; margin-top: 3px;" id="lastUpdate">Last update: Just
+                        now</div>
                 </div>
                 <div style="color: #00ff00; font-weight: 600;" id="miningTicker">Connected</div>
             </div>

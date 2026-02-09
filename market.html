@@ -7,21 +7,20 @@
     <meta name="description" content="CryptoVerse Market - Real-time cryptocurrency and forex charts">
     <meta name="theme-color" content="#050816">
     <title>Market - CryptoVerse</title>
-    
+
     <link rel="stylesheet" href="css/style.css">
     <script src="js/app.js"></script>
     <!-- Preconnect to external services for faster loading -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="preconnect" href="https://s3.tradingview.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <!-- DNS Prefetch for faster resolution -->
-    <link rel="dns-prefetch" href="https://api.coingecko.com">
+    <link rel="dns-prefetch" href="https://api.binance.com">
     <link rel="dns-prefetch" href="https://cryptoverse-api.vercel.app">
     <!-- Critical rendering path scripts -->
     <script src="js/theme.js"></script>
     <script src="js/api.js"></script>
     <!-- Deferred external scripts -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.45.0/apexcharts.min.js"></script>
-    <script defer src="https://s3.tradingview.com/tv.js"></script>
 </head>
 
 <body>
@@ -43,6 +42,7 @@
                     <a href="news.html">News</a>
                     <a href="bookmarks.html">Bookmarks</a>
                     <a href="history.html">History</a>
+                    <a href="mining.html">Mining</a>
                     <a href="creator.html">Creator Center</a>
                     <a href="settings.html">Settings</a>
                     <a href="support.html">Help & Support</a>
@@ -51,34 +51,26 @@
         </nav>
         <div class="header-profile">
             <span style="color: #66B2FF; font-weight: 600;">👤</span>
-            <a href="profile.html" style="color: #ffffff; text-decoration: none; font-weight: 600;"><span id="name"></span></a>
+            <a href="profile.html" style="color: #ffffff; text-decoration: none; font-weight: 600;"><span
+                    id="name"></span></a>
         </div>
     </header>
 
-    <!-- Profile Section (Legacy) -->
-    <div class="dropdown">
-        <button class="profile-btn">👤 <span id="user-name">User</span></button>
-        <div class="dropdown-menu">
-            <div class="dropdown-item"><span id="name"></span></div>
-            <a href="#">Settings</a>
-            <a href="index.html">Logout</a>
-        </div>
-    </div>
-    </div>
-    </header>
+
 
     <main class="main-content">
-        <div id="tv-ticker-tape" style="margin-bottom: 2rem;"></div>
+        <div id="binance-ticker-tape" style="margin-bottom: 2rem;"></div>
 
         <div class="container market-insights-layout">
             <div class="market-main-content">
                 <h1 class="page-title">📊 Global Market Insights</h1>
 
-                <div class="tv-market-overview-container"
+                <div class="binance-market-overview-container"
                     style="margin-bottom: 3rem; background: rgba(10, 14, 39, 0.6); border-radius: 20px; padding: 1.5rem; border: 1px solid rgba(0, 212, 255, 0.2); position: relative;">
-                    <h2 style="color: #00d4ff; margin-bottom: 1.5rem; text-align: center;">📈 Live Market Health</h2>
-                    <button class="fullscreen-btn" onclick="toggleFullScreen('tv-market-overview')">⛶</button>
-                    <div id="tv-market-overview" style="height: 700px;"></div>
+                    <h2 style="color: #00d4ff; margin-bottom: 1.5rem; text-align: center;">📈 Binance Live Market Health
+                    </h2>
+                    <button class="fullscreen-btn" onclick="toggleFullScreen('binance-market-overview')">⛶</button>
+                    <div id="binance-market-overview" style="height: 700px;"></div>
                 </div>
 
                 <h2 style="color: #00d4ff; margin-bottom: 2rem;">🔥 Assets & Fast Trading</h2>
@@ -86,19 +78,19 @@
                     <!-- Coins will be loaded by JS -->
                 </div>
 
-                <!-- TradingView Crypto Screener -->
-                <div class="tv-screener-container"
+                <!-- Binance Market Screener -->
+                <div class="binance-screener-container"
                     style="margin-top: 4rem; background: rgba(10, 14, 39, 0.6); border-radius: 20px; padding: 1.5rem; border: 1px solid rgba(0, 212, 255, 0.2);">
-                    <h2 style="color: #00d4ff; margin-bottom: 1.5rem;">🔍 Market Screener</h2>
-                    <div id="tv-crypto-screener" style="height: 800px;"></div>
+                    <h2 style="color: #00d4ff; margin-bottom: 1.5rem;">🔍 Binance Market Screener</h2>
+                    <div id="binance-market-screener" style="height: 800px;"></div>
                 </div>
             </div>
 
             <aside class="market-sidebar">
-                <div class="tv-news-container"
+                <div class="binance-news-container"
                     style="background: rgba(10, 14, 39, 0.6); border-radius: 20px; padding: 1.5rem; border: 1px solid rgba(0, 212, 255, 0.2); height: 100%;">
-                    <h2 style="color: #00d4ff; margin-bottom: 1.5rem;">🌍 Global News</h2>
-                    <div id="tv-financial-news" style="height: 1200px;"></div>
+                    <h2 style="color: #00d4ff; margin-bottom: 1.5rem;">🌍 Global Crypto News</h2>
+                    <div id="binance-financial-news" style="height: 1200px;"></div>
                 </div>
             </aside>
         </div>
@@ -142,9 +134,14 @@
                     </div>
                 </div>
 
+                <!-- TradingView Style OHLC Legend -->
+                <div id="chart-ohlc-legend"
+                    style="position: absolute; top: 80px; left: 20px; z-index: 10; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; pointer-events: none; background: rgba(19, 23, 34, 0.7); padding: 5px 10px; border-radius: 4px;">
+                </div>
+
                 <!-- Main Chart Container (ApexCharts) - Default View -->
                 <div id="market-indicator-chart-container"
-                    style="display: block; width: 100%; flex: 2; min-height: 500px; background: rgba(5, 8, 22, 0.8); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 8px; margin-top: 1rem;">
+                    style="display: block; width: 100%; flex: 2; min-height: 500px; background: #131722; border: 1px solid #2a2e39; border-radius: 4px; margin-top: 1rem;">
                 </div>
 
                 <div id="market-indicator-panel" class="market-indicator-panel"
@@ -199,15 +196,15 @@
     <script defer src="js/notification-system.js"></script>
     <script defer src="js/chart.js"></script>
     <script defer src="js/market.js"></script>
-       <script>
+    <script>
         document.addEventListener("DOMContentLoaded", () => {
-        const nameEl = document.getElementById("name");
-        const username = localStorage.getItem("username"); 
-        const emailEl=localStorage.getItem("email")
-        if (nameEl && username) {
-            nameEl.textContent = username; 
-        }
-    });
+            const nameEl = document.getElementById("name");
+            const username = localStorage.getItem("username");
+            const emailEl = localStorage.getItem("email")
+            if (nameEl && username) {
+                nameEl.textContent = username;
+            }
+        });
     </script>
 </body>
 
