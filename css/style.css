@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #050816;
+    background: #000000;
     color: #ffffff;
     overflow-x: hidden;
 }
@@ -23,9 +23,7 @@ body {
     font-size: 2.2rem;
     font-weight: bold;
     margin-bottom: 40px;
-    background: linear-gradient(90deg, #00d4ff, #7c3aed);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #8742bd;
 }
 
 .faq-container {
@@ -72,8 +70,8 @@ body {
 }
 
 .faq-item.active {
-    border-color: #00d4ff;
-    box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+    border-color: #8742bd;
+    box-shadow: 0 0 15px rgba(135, 66, 189, 0.2);
 }
 
 /* Answer */
@@ -109,7 +107,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #66B2FF;
+    background: #8742bd;
     border-radius: 5px;
 }
 
@@ -119,12 +117,12 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: radial-gradient(ellipse at top, #0a0e27 0%, #050816 100%);
+    background: #0a0e27;
 }
 
 .auth-box {
     background: rgba(10, 14, 39, 0.8);
-    border: 1px solid #66B2FF;
+    border: 1px solid #8742bd;
     border-radius: 20px;
     padding: 3rem;
     max-width: 450px;
@@ -135,10 +133,7 @@ body {
 .logo {
     font-size: 2rem;
     font-weight: 900;
-    background: linear-gradient(135deg, #66B2FF, #050816);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #8742bd;
     text-align: center;
     margin-bottom: 1rem;
     cursor: pointer;
@@ -149,9 +144,9 @@ body {
     top: 1rem;
     right: 1rem;
     z-index: 100;
-    background: rgba(102, 178, 255, 0.2);
-    border: 1px solid #66B2FF;
-    color: #66B2FF;
+    background: rgba(135, 66, 189, 0.2);
+    border: 1px solid #8742bd;
+    color: #8742bd;
     padding: 0.5rem 1rem;
     border-radius: 8px;
     cursor: pointer;
@@ -164,13 +159,13 @@ body {
 }
 
 .fullscreen-btn:hover {
-    background: #66B2FF;
-    color: #050816;
+    background: #8742bd;
+    color: #000000;
 }
 
 #auth-title {
     text-align: center;
-    color: #66B2FF;
+    color: #8742bd;
     margin-bottom: 2rem;
 }
 
@@ -181,7 +176,7 @@ body {
 .form-group label {
     display: block;
     margin-bottom: 0.5rem;
-    color: #66B2FF;
+    color: #8742bd;
 }
 
 .form-group input,
@@ -191,8 +186,8 @@ input[type="password"],
 input[type="number"] {
     width: 100%;
     padding: 1rem;
-    background: rgba(102, 178, 255, 0.05);
-    border: 1px solid rgba(102, 178, 255, 0.3);
+    background: rgba(135, 66, 189, 0.05);
+    border: 1px solid rgba(135, 66, 189, 0.3);
     border-radius: 8px;
     color: #ffffff;
     font-size: 1rem;
@@ -202,8 +197,8 @@ input[type="number"] {
 .form-group input:focus,
 input:focus {
     outline: none;
-    border-color: #66B2FF;
-    box-shadow: 0 0 15px rgba(102, 178, 255, 0.3);
+    border-color: #8742bd;
+    box-shadow: 0 0 15px rgba(135, 66, 189, 0.3);
 }
 
 .btn-primary {
@@ -211,7 +206,7 @@ input:focus {
     padding: 1rem;
     border: none;
     border-radius: 8px;
-    background: linear-gradient(135deg, #66B2FF, #050816);
+    background: #8742bd;
     color: white;
     font-size: 1rem;
     font-weight: 600;
@@ -221,7 +216,7 @@ input:focus {
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(102, 178, 255, 0.4);
+    box-shadow: 0 10px 25px rgba(135, 66, 189, 0.4);
 }
 
 .btn-large {
@@ -232,11 +227,11 @@ input:focus {
 .toggle-auth {
     text-align: center;
     margin-top: 1.5rem;
-    color: rgba(224, 242, 254, 0.7);
+    color: rgba(135, 66, 189, 0.7);
 }
 
 .toggle-auth a {
-    color: #66B2FF;
+    color: #8742bd;
     text-decoration: none;
     font-weight: 600;
     margin-left: 0.5rem;
@@ -250,7 +245,7 @@ input:focus {
     padding: 1.5rem 5%;
     background: rgba(5, 8, 22, 0.98);
     backdrop-filter: blur(10px);
-    border-bottom: 2px solid rgba(102, 178, 255, 0.4);
+    border-bottom: 2px solid rgba(135, 66, 189, 0.4);
     z-index: 1000;
     display: flex;
     justify-content: center;
@@ -264,7 +259,7 @@ input:focus {
     margin: 0;
     position: absolute;
     left: 5%;
-    color: #66B2FF;
+    color: #8742bd;
     -webkit-text-fill-color: initial;
     background: none;
 }
@@ -276,17 +271,17 @@ input:focus {
     align-items: center;
     gap: 1rem;
     padding: 0.7rem 1.2rem;
-    background: rgba(102, 178, 255, 0.1);
-    border: 1px solid rgba(102, 178, 255, 0.4);
+    background: rgba(135, 66, 189, 0.1);
+    border: 1px solid rgba(135, 66, 189, 0.4);
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s;
 }
 
 .header-profile:hover {
-    background: rgba(102, 178, 255, 0.2);
-    border-color: rgba(102, 178, 255, 0.6);
-    box-shadow: 0 0 15px rgba(102, 178, 255, 0.3);
+    background: rgba(135, 66, 189, 0.2);
+    border-color: rgba(135, 66, 189, 0.6);
+    box-shadow: 0 0 15px rgba(135, 66, 189, 0.3);
 }
 
 /* Modal Base Structure (Shared by Wallet and Trade) */
@@ -314,8 +309,8 @@ input:focus {
 }
 
 .modal-content {
-    background: linear-gradient(135deg, rgba(10, 14, 39, 0.95), rgba(255, 255, 255, 0.1));
-    border: 1px solid rgba(102, 178, 255, 0.3);
+    background: rgba(10, 14, 39, 0.95);
+    border: 1px solid rgba(135, 66, 189, 0.3);
     border-radius: 20px;
     padding: 2.5rem;
     position: relative;
@@ -353,9 +348,18 @@ input:focus {
     font-size: 0.95rem;
 }
 
+.dropdown-toggle {
+    color: #ffffff;
+}
+
+.dropdown-menu a:visited,
+.dropdown-menu a:active {
+    color: #ffffff;
+}
+
 .nav a:hover {
-    color: #66B2FF;
-    text-shadow: 0 0 10px rgba(102, 178, 255, 0.5);
+    color: #8742bd;
+    text-shadow: 0 0 10px rgba(135, 66, 189, 0.5);
 }
 
 /* Dropdown */
@@ -375,7 +379,7 @@ input:focus {
     margin-top: 10px;
     /* Visual gap */
     background: rgba(5, 8, 22, 0.98);
-    border: 1.5px solid rgba(102, 178, 255, 0.5);
+    border: 1.5px solid rgba(135, 66, 189, 0.5);
     border-radius: 12px;
     min-width: 220px;
     overflow: visible;
@@ -412,14 +416,14 @@ input:focus {
     padding: 1rem;
     color: #ffffff;
     text-decoration: none;
-    border-bottom: 1px solid rgba(102, 178, 255, 0.1);
+    border-bottom: 1px solid rgba(135, 66, 189, 0.1);
     transition: all 0.3s;
     font-weight: 500;
 }
 
 .dropdown-menu a:hover {
-    background: rgba(102, 178, 255, 0.15);
-    color: #66B2FF;
+    background: rgba(135, 66, 189, 0.15);
+    color: #8742bd;
 }
 
 .profile-btn {
@@ -427,8 +431,8 @@ input:focus {
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    background: rgba(102, 178, 255, 0.1);
-    border: 1px solid #66B2FF;
+    background: rgba(135, 66, 189, 0.1);
+    border: 1px solid #8742bd;
     border-radius: 25px;
     color: #ffffff;
     font-size: 1rem;
@@ -437,7 +441,7 @@ input:focus {
 }
 
 .profile-btn:hover {
-    background: rgba(102, 178, 255, 0.2);
+    background: rgba(135, 66, 189, 0.2);
 }
 
 /* Main Content */
@@ -483,14 +487,12 @@ input:focus {
     font-size: 4rem;
     line-height: 1.2;
     margin-bottom: 2rem;
-    background: linear-gradient(135deg, #66B2FF, #f59e0b);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #8742bd;
 }
 
 .hero-text {
     font-size: 1.3rem;
-    color: rgba(224, 242, 254, 0.8);
+    color: rgba(135, 66, 189, 0.8);
     margin-bottom: 3rem;
 }
 
@@ -512,13 +514,13 @@ input:focus {
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #66B2FF, #050816);
+    background: #8742bd;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 2rem;
     font-weight: 900;
-    box-shadow: 0 10px 30px rgba(102, 178, 255, 0.4);
+    box-shadow: 0 10px 30px rgba(135, 66, 189, 0.4);
     animation: float 3s ease-in-out infinite;
 }
 
@@ -575,7 +577,7 @@ input:focus {
 
 .feature-card {
     background: rgba(10, 14, 39, 0.6);
-    border: 1px solid rgba(102, 178, 255, 0.2);
+    border: 1px solid rgba(135, 66, 189, 0.2);
     border-radius: 20px;
     padding: 3rem;
     transition: all 0.3s;
@@ -583,8 +585,8 @@ input:focus {
 
 .feature-card:hover {
     transform: translateY(-10px);
-    border-color: #66B2FF;
-    box-shadow: 0 20px 40px rgba(102, 178, 255, 0.3);
+    border-color: #8742bd;
+    box-shadow: 0 20px 40px rgba(135, 66, 189, 0.3);
 }
 
 .feature-icon {
@@ -594,12 +596,12 @@ input:focus {
 
 .feature-card h3 {
     font-size: 1.5rem;
-    color: #66B2FF;
+    color: #8742bd;
     margin-bottom: 1rem;
 }
 
 .feature-card p {
-    color: rgba(224, 242, 254, 0.8);
+    color: rgba(135, 66, 189, 0.8);
     line-height: 1.6;
 }
 
@@ -613,7 +615,7 @@ input:focus {
 
 .footer-card {
     background: rgba(10, 14, 39, 0.6);
-    border: 1px solid rgba(102, 178, 255, 0.2);
+    border: 1px solid rgba(135, 66, 189, 0.2);
     border-radius: 15px;
     padding: 2rem;
     text-decoration: none;
@@ -623,13 +625,13 @@ input:focus {
 }
 
 .footer-card:hover {
-    border-color: #66B2FF;
+    border-color: #8742bd;
     transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(102, 178, 255, 0.2);
+    box-shadow: 0 10px 30px rgba(135, 66, 189, 0.2);
 }
 
 .footer-card h3 {
-    color: #66B2FF;
+    color: #8742bd;
     margin-bottom: 0.5rem;
 }
 
@@ -638,9 +640,7 @@ input:focus {
     font-size: 3rem;
     text-align: center;
     margin-bottom: 3rem;
-    background: linear-gradient(135deg, #66B2FF, #050816);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #8742bd;
 }
 
 /* Trade Grid */
@@ -652,7 +652,7 @@ input:focus {
 
 .trade-card {
     background: rgba(10, 14, 39, 0.6);
-    border: 1px solid rgba(102, 178, 255, 0.2);
+    border: 1px solid rgba(135, 66, 189, 0.2);
     border-radius: 15px;
     padding: 2rem;
     text-align: center;
@@ -661,7 +661,7 @@ input:focus {
 
 .trade-card:hover {
     transform: translateY(-5px);
-    border-color: #66B2FF;
+    border-color: #8742bd;
 }
 
 .trade-icon {
@@ -686,7 +686,7 @@ input:focus {
 /* Wallet */
 .wallet-balance {
     background: rgba(10, 14, 39, 0.6);
-    border: 1px solid rgba(102, 178, 255, 0.2);
+    border: 1px solid rgba(135, 66, 189, 0.2);
     border-radius: 15px;
     padding: 2rem;
     text-align: center;
@@ -696,12 +696,12 @@ input:focus {
 .balance-amount {
     font-size: 3rem;
     font-weight: bold;
-    color: #66B2FF;
+    color: #8742bd;
 }
 
 .section-title {
     font-size: 2rem;
-    color: #66B2FF;
+    color: #8742bd;
     margin-bottom: 2rem;
 }
 
@@ -713,7 +713,7 @@ input:focus {
 
 .wallet-coin {
     background: rgba(10, 14, 39, 0.6);
-    border: 1px solid rgba(102, 178, 255, 0.2);
+    border: 1px solid rgba(135, 66, 189, 0.2);
     border-radius: 15px;
     padding: 1.5rem;
     display: flex;
@@ -727,7 +727,7 @@ input:focus {
 
 .empty-message {
     text-align: center;
-    color: rgba(224, 242, 254, 0.5);
+    color: rgba(135, 66, 189, 0.5);
     padding: 3rem;
 }
 
@@ -740,7 +740,7 @@ input:focus {
 
 .market-card {
     background: rgba(10, 14, 39, 0.6);
-    border: 1px solid rgba(102, 178, 255, 0.2);
+    border: 1px solid rgba(135, 66, 189, 0.2);
     border-radius: 15px;
     padding: 1.5rem;
     display: flex;
@@ -751,7 +751,7 @@ input:focus {
 }
 
 .market-card:hover {
-    border-color: #66B2FF;
+    border-color: #8742bd;
     transform: translateX(5px);
 }
 
@@ -775,7 +775,7 @@ input:focus {
 /* Coin Detail */
 .coin-detail {
     background: rgba(10, 14, 39, 0.6);
-    border: 1px solid rgba(102, 178, 255, 0.2);
+    border: 1px solid rgba(135, 66, 189, 0.2);
     border-radius: 20px;
     padding: 2rem;
 }
@@ -783,8 +783,8 @@ input:focus {
 .back-btn {
     padding: 0.75rem 1.5rem;
     background: transparent;
-    color: #66B2FF;
-    border: 2px solid #66B2FF;
+    color: #8742bd;
+    border: 2px solid #8742bd;
     border-radius: 8px;
     cursor: pointer;
     margin-bottom: 2rem;
@@ -793,8 +793,8 @@ input:focus {
 }
 
 .back-btn:hover {
-    background: #66B2FF;
-    color: #050816;
+    background: #8742bd;
+    color: #000000;
 }
 
 .coin-header {
@@ -814,18 +814,18 @@ input:focus {
 
 .coin-price h1 {
     font-size: 3rem;
-    color: #66B2FF;
+    color: #8742bd;
 }
 
 .chart-container {
     margin-bottom: 2rem;
-    background: rgba(102, 178, 255, 0.05);
+    background: rgba(135, 66, 189, 0.05);
     padding: 1rem;
     border-radius: 15px;
 }
 
 .buy-section {
-    background: rgba(102, 178, 255, 0.05);
+    background: rgba(135, 66, 189, 0.05);
     padding: 2rem;
     border-radius: 15px;
 }
@@ -837,13 +837,13 @@ input:focus {
 .buy-controls label {
     display: block;
     margin-bottom: 0.5rem;
-    color: #66B2FF;
+    color: #8742bd;
 }
 
 .total-cost {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #66B2FF;
+    color: #8742bd;
     margin-bottom: 1rem;
 }
 
@@ -854,7 +854,7 @@ input:focus {
 /* Content Box */
 .content-box {
     background: rgba(10, 14, 39, 0.6);
-    border: 1px solid rgba(102, 178, 255, 0.2);
+    border: 1px solid rgba(135, 66, 189, 0.2);
     border-radius: 20px;
     padding: 3rem;
     line-height: 1.8;
@@ -871,7 +871,7 @@ input:focus {
 .product-card,
 .service-card {
     background: rgba(10, 14, 39, 0.6);
-    border: 1px solid rgba(102, 178, 255, 0.2);
+    border: 1px solid rgba(135, 66, 189, 0.2);
     border-radius: 15px;
     padding: 2rem;
     transition: all 0.3s;
@@ -880,7 +880,7 @@ input:focus {
 .product-card:hover,
 .service-card:hover {
     transform: translateY(-5px);
-    border-color: #66B2FF;
+    border-color: #8742bd;
 }
 
 .service-card {
@@ -894,13 +894,13 @@ input:focus {
 
 .product-card h3,
 .service-card h3 {
-    color: #66B2FF;
+    color: #8742bd;
     margin-bottom: 1rem;
 }
 
 .product-card p,
 .service-card p {
-    color: rgba(224, 242, 254, 0.8);
+    color: rgba(135, 66, 189, 0.8);
     line-height: 1.6;
 }
 
@@ -926,8 +926,8 @@ input:focus {
 
 /* Wallet Info Box in Buy Section */
 .wallet-info-box {
-    background: rgba(102, 178, 255, 0.1);
-    border: 1px solid #66B2FF;
+    background: rgba(135, 66, 189, 0.1);
+    border: 1px solid #8742bd;
     border-radius: 10px;
     padding: 1rem;
     margin-bottom: 1.5rem;
@@ -935,7 +935,7 @@ input:focus {
 }
 
 .wallet-info-box strong {
-    color: #66B2FF;
+    color: #8742bd;
     font-size: 1.3rem;
 }
 
@@ -964,7 +964,7 @@ input:focus {
 
 .support-card {
     background: rgba(10, 14, 39, 0.6);
-    border: 1px solid rgba(102, 178, 255, 0.2);
+    border: 1px solid rgba(135, 66, 189, 0.2);
     border-radius: 20px;
     padding: 2.5rem;
     text-align: center;
@@ -973,8 +973,8 @@ input:focus {
 
 .support-card:hover {
     transform: translateY(-10px);
-    border-color: #66B2FF;
-    box-shadow: 0 20px 40px rgba(102, 178, 255, 0.3);
+    border-color: #8742bd;
+    box-shadow: 0 20px 40px rgba(135, 66, 189, 0.3);
 }
 
 .support-icon {
@@ -983,13 +983,13 @@ input:focus {
 }
 
 .support-card h3 {
-    color: #66B2FF;
+    color: #8742bd;
     font-size: 1.5rem;
     margin-bottom: 1rem;
 }
 
 .support-card p {
-    color: rgba(224, 242, 254, 0.8);
+    color: rgba(135, 66, 189, 0.8);
     margin-bottom: 1.5rem;
     line-height: 1.6;
 }
@@ -997,8 +997,8 @@ input:focus {
 .btn-outline {
     padding: 0.75rem 1.5rem;
     background: transparent;
-    color: #66B2FF;
-    border: 2px solid #66B2FF;
+    color: #8742bd;
+    border: 2px solid #8742bd;
     border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
@@ -1007,20 +1007,20 @@ input:focus {
 }
 
 .btn-outline:hover {
-    background: #66B2FF;
-    color: #050816;
+    background: #8742bd;
+    color: #000000;
 }
 
 /* Contact Information */
 .contact-info {
     background: rgba(10, 14, 39, 0.6);
-    border: 1px solid rgba(102, 178, 255, 0.2);
+    border: 1px solid rgba(135, 66, 189, 0.2);
     border-radius: 20px;
     padding: 3rem;
 }
 
 .contact-info h2 {
-    color: #66B2FF;
+    color: #8742bd;
     text-align: center;
     margin-bottom: 2rem;
     font-size: 2rem;
@@ -1037,9 +1037,9 @@ input:focus {
     align-items: flex-start;
     gap: 1rem;
     padding: 1.5rem;
-    background: rgba(102, 178, 255, 0.05);
+    background: rgba(135, 66, 189, 0.05);
     border-radius: 15px;
-    border: 1px solid rgba(102, 178, 255, 0.1);
+    border: 1px solid rgba(135, 66, 189, 0.1);
 }
 
 .contact-icon {
@@ -1047,13 +1047,13 @@ input:focus {
 }
 
 .contact-item strong {
-    color: #66B2FF;
+    color: #8742bd;
     display: block;
     margin-bottom: 0.5rem;
 }
 
 .contact-item p {
-    color: rgba(224, 242, 254, 0.8);
+    color: rgba(135, 66, 189, 0.8);
     margin: 0;
 }
 
@@ -1083,17 +1083,17 @@ input:focus {
 }
 
 .bot-message {
-    background: rgba(102, 178, 255, 0.1);
-    border-left: 3px solid #66B2FF;
+    background: rgba(135, 66, 189, 0.1);
+    border-left: 3px solid #8742bd;
 }
 
 .user-message {
     background: rgba(255, 255, 255, 0.1);
-    border-left: 3px solid #050816;
+    border-left: 3px solid #000000;
 }
 
 .chat-message strong {
-    color: #66B2FF;
+    color: #8742bd;
     display: block;
     margin-bottom: 0.5rem;
 }
@@ -1121,8 +1121,8 @@ input:focus {
 textarea {
     width: 100%;
     padding: 1rem;
-    background: rgba(102, 178, 255, 0.05);
-    border: 1px solid rgba(102, 178, 255, 0.3);
+    background: rgba(135, 66, 189, 0.05);
+    border: 1px solid rgba(135, 66, 189, 0.3);
     border-radius: 8px;
     color: #ffffff;
     font-size: 1rem;
@@ -1133,8 +1133,8 @@ textarea {
 
 textarea:focus {
     outline: none;
-    border-color: #66B2FF;
-    box-shadow: 0 0 15px rgba(102, 178, 255, 0.3);
+    border-color: #8742bd;
+    box-shadow: 0 0 15px rgba(135, 66, 189, 0.3);
 }
 
 /* Scrollbar for chat */
@@ -1148,7 +1148,7 @@ textarea:focus {
 }
 
 .chat-container::-webkit-scrollbar-thumb {
-    background: #66B2FF;
+    background: #8742bd;
     border-radius: 10px;
 }
 
@@ -1160,14 +1160,14 @@ textarea:focus {
 .payment-method-selector label {
     display: block;
     margin-bottom: 0.5rem;
-    color: #66B2FF;
+    color: #8742bd;
 }
 
 .payment-select {
     width: 100%;
     padding: 1rem;
-    background: rgba(102, 178, 255, 0.05);
-    border: 1px solid rgba(102, 178, 255, 0.3);
+    background: rgba(135, 66, 189, 0.05);
+    border: 1px solid rgba(135, 66, 189, 0.3);
     border-radius: 8px;
     color: #ffffff;
     font-size: 1rem;
@@ -1177,8 +1177,8 @@ textarea:focus {
 
 .payment-select:focus {
     outline: none;
-    border-color: #66B2FF;
-    box-shadow: 0 0 15px rgba(102, 178, 255, 0.3);
+    border-color: #8742bd;
+    box-shadow: 0 0 15px rgba(135, 66, 189, 0.3);
 }
 
 .payment-select option {
@@ -1196,8 +1196,8 @@ textarea:focus {
     align-items: center;
     gap: 1.5rem;
     padding: 1.5rem;
-    background: rgba(102, 178, 255, 0.05);
-    border: 2px solid rgba(102, 178, 255, 0.2);
+    background: rgba(135, 66, 189, 0.05);
+    border: 2px solid rgba(135, 66, 189, 0.2);
     border-radius: 12px;
     margin-bottom: 1rem;
     cursor: pointer;
@@ -1205,8 +1205,8 @@ textarea:focus {
 }
 
 .payment-option:hover {
-    border-color: #66B2FF;
-    background: rgba(102, 178, 255, 0.1);
+    border-color: #8742bd;
+    background: rgba(135, 66, 189, 0.1);
     transform: translateX(5px);
 }
 
@@ -1215,14 +1215,14 @@ textarea:focus {
 }
 
 .payment-option strong {
-    color: #66B2FF;
+    color: #8742bd;
     font-size: 1.2rem;
     display: block;
     margin-bottom: 0.3rem;
 }
 
 .payment-option p {
-    color: rgba(224, 242, 254, 0.7);
+    color: rgba(135, 66, 189, 0.7);
     margin: 0;
 }
 
@@ -1230,18 +1230,18 @@ textarea:focus {
 .payment-amount-display {
     text-align: center;
     padding: 2rem;
-    background: rgba(102, 178, 255, 0.05);
+    background: rgba(135, 66, 189, 0.05);
     border-radius: 15px;
     margin-bottom: 2rem;
 }
 
 .payment-amount-display p {
-    color: rgba(224, 242, 254, 0.7);
+    color: rgba(135, 66, 189, 0.7);
     margin-bottom: 0.5rem;
 }
 
 .payment-amount-display h1 {
-    color: #66B2FF;
+    color: #8742bd;
     font-size: 3rem;
     margin: 0;
 }
@@ -1257,16 +1257,16 @@ textarea:focus {
 .upi-option {
     text-align: center;
     padding: 1.5rem;
-    background: rgba(102, 178, 255, 0.05);
-    border: 2px solid rgba(102, 178, 255, 0.2);
+    background: rgba(135, 66, 189, 0.05);
+    border: 2px solid rgba(135, 66, 189, 0.2);
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.3s;
 }
 
 .upi-option:hover {
-    border-color: #66B2FF;
-    background: rgba(102, 178, 255, 0.1);
+    border-color: #8742bd;
+    background: rgba(135, 66, 189, 0.1);
     transform: translateY(-5px);
 }
 
@@ -1331,7 +1331,7 @@ textarea:focus {
 
 .market-coin-card {
     background: rgba(10, 14, 39, 0.8);
-    border: 1px solid rgba(102, 178, 255, 0.2);
+    border: 1px solid rgba(135, 66, 189, 0.2);
     border-radius: 20px;
     padding: 1.5rem;
     cursor: pointer;
@@ -1347,15 +1347,15 @@ textarea:focus {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(102, 178, 255, 0.05), rgba(255, 255, 255, 0.05));
+    background: rgba(135, 66, 189, 0.05);
     opacity: 0;
     transition: opacity 0.3s;
 }
 
 .market-coin-card:hover {
-    border-color: #66B2FF;
+    border-color: #8742bd;
     transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(102, 178, 255, 0.3);
+    box-shadow: 0 10px 30px rgba(135, 66, 189, 0.3);
 }
 
 .market-coin-card:hover::before {
@@ -1383,7 +1383,7 @@ textarea:focus {
 
 .market-coin-symbol {
     margin: 0.2rem 0 0 0;
-    color: rgba(224, 242, 254, 0.6);
+    color: rgba(135, 66, 189, 0.6);
     font-size: 0.9rem;
 }
 
@@ -1421,7 +1421,7 @@ textarea:focus {
 .market-buy-btn {
     width: 100%;
     padding: 0.8rem;
-    background: linear-gradient(135deg, #66B2FF, #050816);
+    background: #8742bd;
     border: none;
     border-radius: 10px;
     color: white;
@@ -1435,7 +1435,7 @@ textarea:focus {
 
 .market-buy-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(102, 178, 255, 0.5);
+    box-shadow: 0 5px 20px rgba(135, 66, 189, 0.5);
 }
 
 /* Coin Detail Modal */
@@ -1452,7 +1452,7 @@ textarea:focus {
     align-items: flex-start;
     margin-bottom: 2rem;
     padding-bottom: 1.5rem;
-    border-bottom: 1px solid rgba(102, 178, 255, 0.2);
+    border-bottom: 1px solid rgba(135, 66, 189, 0.2);
 }
 
 .coin-detail-icon {
@@ -1479,7 +1479,7 @@ textarea:focus {
 }
 
 .coin-modal-content::-webkit-scrollbar-thumb {
-    background: #66B2FF;
+    background: #8742bd;
     border-radius: 10px;
 }
 
@@ -1497,14 +1497,14 @@ textarea:focus {
 
 .wallet-section {
     background: rgba(10, 14, 39, 0.6);
-    border: 1px solid rgba(102, 178, 255, 0.2);
+    border: 1px solid rgba(135, 66, 189, 0.2);
     border-radius: 20px;
     padding: 2rem;
 }
 
 .wallet-coin {
-    background: rgba(102, 178, 255, 0.05);
-    border: 1px solid rgba(102, 178, 255, 0.2);
+    background: rgba(135, 66, 189, 0.05);
+    border: 1px solid rgba(135, 66, 189, 0.2);
     border-radius: 15px;
     padding: 1.5rem;
     display: flex;
@@ -1535,7 +1535,7 @@ textarea:focus {
 
 .market-coin-card {
     background: rgba(10, 14, 39, 0.8);
-    border: 1px solid rgba(102, 178, 255, 0.2);
+    border: 1px solid rgba(135, 66, 189, 0.2);
     border-radius: 20px;
     padding: 1.5rem;
     cursor: pointer;
@@ -1551,15 +1551,15 @@ textarea:focus {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(102, 178, 255, 0.05), rgba(255, 255, 255, 0.05));
+    background: rgba(135, 66, 189, 0.05);
     opacity: 0;
     transition: opacity 0.3s;
 }
 
 .market-coin-card:hover {
-    border-color: #66B2FF;
+    border-color: #8742bd;
     transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(102, 178, 255, 0.3);
+    box-shadow: 0 10px 30px rgba(135, 66, 189, 0.3);
 }
 
 .market-coin-card:hover::before {
@@ -1587,7 +1587,7 @@ textarea:focus {
 
 .market-coin-symbol {
     margin: 0.2rem 0 0 0;
-    color: rgba(224, 242, 254, 0.6);
+    color: rgba(135, 66, 189, 0.6);
     font-size: 0.9rem;
 }
 
@@ -1625,7 +1625,7 @@ textarea:focus {
 .market-buy-btn {
     width: 100%;
     padding: 0.8rem;
-    background: linear-gradient(135deg, #66B2FF, #050816);
+    background: #8742bd;
     border: none;
     border-radius: 10px;
     color: white;
@@ -1639,7 +1639,7 @@ textarea:focus {
 
 .market-buy-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(102, 178, 255, 0.5);
+    box-shadow: 0 5px 20px rgba(135, 66, 189, 0.5);
 }
 
 /* Coin Detail Modal */
@@ -1656,7 +1656,7 @@ textarea:focus {
     align-items: flex-start;
     margin-bottom: 2rem;
     padding-bottom: 1.5rem;
-    border-bottom: 1px solid rgba(102, 178, 255, 0.2);
+    border-bottom: 1px solid rgba(135, 66, 189, 0.2);
 }
 
 .coin-detail-icon {
@@ -1683,7 +1683,7 @@ textarea:focus {
 }
 
 .coin-modal-content::-webkit-scrollbar-thumb {
-    background: #66B2FF;
+    background: #8742bd;
     border-radius: 10px;
 }
 
@@ -1701,14 +1701,14 @@ textarea:focus {
 
 .wallet-section {
     background: rgba(10, 14, 39, 0.6);
-    border: 1px solid rgba(102, 178, 255, 0.2);
+    border: 1px solid rgba(135, 66, 189, 0.2);
     border-radius: 20px;
     padding: 2rem;
 }
 
 .wallet-coin {
-    background: rgba(102, 178, 255, 0.05);
-    border: 1px solid rgba(102, 178, 255, 0.2);
+    background: rgba(135, 66, 189, 0.05);
+    border: 1px solid rgba(135, 66, 189, 0.2);
     border-radius: 15px;
     padding: 1.5rem;
     display: flex;
@@ -1718,16 +1718,16 @@ textarea:focus {
 }
 
 .wallet-coin:hover {
-    border-color: #66B2FF;
-    background: rgba(102, 178, 255, 0.1);
+    border-color: #8742bd;
+    background: rgba(135, 66, 189, 0.1);
     transform: translateX(5px);
 }
 
 /* PREMIUM WALLET STYLES (Animated Accordion) */
 
 .wallet-modal-content {
-    background: linear-gradient(160deg, #0a0e27 0%, #1a1f40 100%);
-    border: 1px solid rgba(102, 178, 255, 0.1);
+    background: #0a0e27;
+    border: 1px solid rgba(135, 66, 189, 0.1);
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
     max-width: 500px;
     max-height: 90vh;
@@ -1739,7 +1739,7 @@ textarea:focus {
 }
 
 .wallet-modal-content h2 {
-    color: #66B2FF;
+    color: #8742bd;
     margin: 0 0 1rem 0;
     text-align: center;
     font-size: 1.5rem;
@@ -1769,9 +1769,9 @@ textarea:focus {
 }
 
 .back-button {
-    background: rgba(102, 178, 255, 0.1);
-    border: 1px solid rgba(102, 178, 255, 0.3);
-    color: #66B2FF;
+    background: rgba(135, 66, 189, 0.1);
+    border: 1px solid rgba(135, 66, 189, 0.3);
+    color: #8742bd;
     padding: 0.5rem 1rem;
     border-radius: 6px;
     cursor: pointer;
@@ -1781,8 +1781,8 @@ textarea:focus {
 }
 
 .back-button:hover {
-    background: rgba(102, 178, 255, 0.25);
-    border-color: #66B2FF;
+    background: rgba(135, 66, 189, 0.25);
+    border-color: #8742bd;
 }
 
 .modal-close {
@@ -1805,7 +1805,7 @@ textarea:focus {
 .big-balance {
     font-size: 2.5rem;
     color: #fff;
-    text-shadow: 0 0 20px rgba(102, 178, 255, 0.5);
+    text-shadow: 0 0 20px rgba(135, 66, 189, 0.5);
     margin: 0 0 2rem 0;
     text-align: center;
 }
@@ -1819,8 +1819,8 @@ textarea:focus {
 
 .payment-option {
     padding: 1rem;
-    background: rgba(102, 178, 255, 0.1);
-    border: 1px solid rgba(102, 178, 255, 0.3);
+    background: rgba(135, 66, 189, 0.1);
+    border: 1px solid rgba(135, 66, 189, 0.3);
     border-radius: 8px;
     color: #fff;
     cursor: pointer;
@@ -1831,10 +1831,10 @@ textarea:focus {
 }
 
 .payment-option:hover {
-    background: rgba(102, 178, 255, 0.25);
-    border-color: #66B2FF;
+    background: rgba(135, 66, 189, 0.25);
+    border-color: #8742bd;
     transform: translateX(5px);
-    box-shadow: 0 5px 15px rgba(102, 178, 255, 0.2);
+    box-shadow: 0 5px 15px rgba(135, 66, 189, 0.2);
 }
 
 .payment-option:active {
@@ -1894,7 +1894,7 @@ textarea:focus {
     width: 100%;
     padding: 0.75rem;
     background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(102, 178, 255, 0.3);
+    border: 1px solid rgba(135, 66, 189, 0.3);
     border-radius: 6px;
     color: #fff;
     font-size: 1rem;
@@ -1906,8 +1906,8 @@ textarea:focus {
 
 .form-group input:focus {
     outline: none;
-    border-color: #66B2FF;
-    background: rgba(102, 178, 255, 0.1);
+    border-color: #8742bd;
+    background: rgba(135, 66, 189, 0.1);
 }
 
 .form-row {
@@ -1929,16 +1929,16 @@ textarea:focus {
     align-items: center;
     justify-content: center;
     padding: 1.5rem 1rem;
-    background: rgba(102, 178, 255, 0.1);
-    border: 1px solid rgba(102, 178, 255, 0.3);
+    background: rgba(135, 66, 189, 0.1);
+    border: 1px solid rgba(135, 66, 189, 0.3);
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.3s;
 }
 
 .upi-app:hover {
-    background: rgba(102, 178, 255, 0.25);
-    border-color: #66B2FF;
+    background: rgba(135, 66, 189, 0.25);
+    border-color: #8742bd;
     transform: translateY(-5px);
 }
 
@@ -1972,12 +1972,12 @@ textarea:focus {
 
 .amount-display {
     font-size: 1.2rem;
-    color: #66B2FF;
+    color: #8742bd;
     font-weight: 600;
     text-align: center;
     margin: 1rem 0 1.5rem 0;
     padding: 1rem;
-    background: rgba(102, 178, 255, 0.1);
+    background: rgba(135, 66, 189, 0.1);
     border-radius: 8px;
 }
 
@@ -1994,18 +1994,18 @@ textarea:focus {
     align-items: center;
     justify-content: center;
     padding: 1.5rem;
-    background: linear-gradient(135deg, rgba(102, 178, 255, 0.15) 0%, rgba(255, 255, 255, 0.1) 100%);
-    border: 1.5px solid rgba(102, 178, 255, 0.3);
+    background: rgba(135, 66, 189, 0.15);
+    border: 1.5px solid rgba(135, 66, 189, 0.3);
     border-radius: 14px;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .provider-card:hover {
-    background: linear-gradient(135deg, rgba(102, 178, 255, 0.25) 0%, rgba(255, 255, 255, 0.2) 100%);
-    border-color: #66B2FF;
+    background: rgba(135, 66, 189, 0.25);
+    border-color: #8742bd;
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(102, 178, 255, 0.2);
+    box-shadow: 0 8px 20px rgba(135, 66, 189, 0.2);
 }
 
 .provider-card:active {
@@ -2062,7 +2062,7 @@ textarea:focus {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
-    color: #050816;
+    color: #000000;
     font-size: 1rem;
     cursor: pointer;
     display: flex;
@@ -2072,8 +2072,8 @@ textarea:focus {
 }
 
 .action-btn:hover {
-    background: rgba(102, 178, 255, 0.05);
-    border-color: rgba(102, 178, 255, 0.3);
+    background: rgba(135, 66, 189, 0.05);
+    border-color: rgba(135, 66, 189, 0.3);
     transform: translateY(-2px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
@@ -2099,14 +2099,14 @@ textarea:focus {
 }
 
 .arrow-icon {
-    color: rgba(102, 178, 255, 0.6);
+    color: rgba(135, 66, 189, 0.6);
     transition: transform 0.4s ease;
 }
 
 /* Active State for Accordion */
 .action-section.active .action-btn {
-    background: rgba(102, 178, 255, 0.1);
-    border-color: #66B2FF;
+    background: rgba(135, 66, 189, 0.1);
+    border-color: #8742bd;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
 }
@@ -2122,7 +2122,7 @@ textarea:focus {
     transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     background: rgba(0, 0, 0, 0.2);
     border-radius: 0 0 16px 16px;
-    border: 1px solid rgba(102, 178, 255, 0.1);
+    border: 1px solid rgba(135, 66, 189, 0.1);
     border-top: none;
     width: 90%;
     /* Match button width */
@@ -2163,13 +2163,13 @@ textarea:focus {
 }
 
 .input-group-fancy:focus-within {
-    border-color: #66B2FF;
-    box-shadow: 0 0 10px rgba(102, 178, 255, 0.2);
+    border-color: #8742bd;
+    box-shadow: 0 0 10px rgba(135, 66, 189, 0.2);
 }
 
 .currency-symbol {
     font-size: 1.5rem;
-    color: #66B2FF;
+    color: #8742bd;
     margin-right: 0.5rem;
 }
 
@@ -2203,9 +2203,9 @@ textarea:focus {
 }
 
 .grid-option:hover {
-    background: rgba(102, 178, 255, 0.15);
+    background: rgba(135, 66, 189, 0.15);
     transform: scale(1.05);
-    border-color: rgba(102, 178, 255, 0.3);
+    border-color: rgba(135, 66, 189, 0.3);
 }
 
 .grid-option span {
@@ -2277,9 +2277,9 @@ textarea:focus {
 }
 
 .back-btn-round:hover {
-    background: #66B2FF;
+    background: #8742bd;
     color: #000;
-    border-color: #66B2FF;
+    border-color: #8742bd;
 }
 
 .details-body {
@@ -2355,9 +2355,9 @@ textarea:focus {
 }
 
 .nav-tab.active {
-    background: #66B2FF;
-    color: #050816;
-    box-shadow: 0 4px 15px rgba(102, 178, 255, 0.3);
+    background: #8742bd;
+    color: #000000;
+    box-shadow: 0 4px 15px rgba(135, 66, 189, 0.3);
 }
 
 .wallet-view {
@@ -2382,8 +2382,8 @@ textarea:focus {
 }
 
 .balance-card {
-    background: linear-gradient(135deg, rgba(102, 178, 255, 0.2), rgba(255, 255, 255, 0.2));
-    border: 1px solid rgba(102, 178, 255, 0.3);
+    background: rgba(135, 66, 189, 0.2);
+    border: 1px solid rgba(135, 66, 189, 0.3);
     border-radius: 15px;
     padding: 2rem;
     text-align: center;
@@ -2392,7 +2392,7 @@ textarea:focus {
 
 .balance-card h1 {
     font-size: 2.5rem;
-    color: #66B2FF;
+    color: #8742bd;
     margin-top: 0.5rem;
 }
 
@@ -2400,14 +2400,14 @@ textarea:focus {
     display: flex;
     align-items: center;
     background: rgba(0, 0, 0, 0.3);
-    border: 1px solid #66B2FF;
+    border: 1px solid #8742bd;
     border-radius: 12px;
     padding: 0.5rem 1rem;
     font-size: 1.5rem;
 }
 
 .amount-wrapper span {
-    color: #66B2FF;
+    color: #8742bd;
     margin-right: 0.5rem;
 }
 
@@ -2437,8 +2437,8 @@ textarea:focus {
 }
 
 .grid-option:hover {
-    border-color: #66B2FF;
-    background: rgba(102, 178, 255, 0.1);
+    border-color: #8742bd;
+    background: rgba(135, 66, 189, 0.1);
     transform: translateY(-5px);
 }
 
@@ -2461,7 +2461,7 @@ textarea:focus {
 }
 
 .back-link:hover {
-    color: #66B2FF;
+    color: #8742bd;
 }
 
 /* P2P STYLES */
@@ -2480,8 +2480,8 @@ textarea:focus {
 }
 
 .p2p-card:hover {
-    background: rgba(102, 178, 255, 0.05);
-    border-color: #66B2FF;
+    background: rgba(135, 66, 189, 0.05);
+    border-color: #8742bd;
 }
 
 .p2p-header {
@@ -2521,7 +2521,7 @@ textarea:focus {
 
 .p2p-rate strong {
     display: block;
-    color: #66B2FF;
+    color: #8742bd;
     font-size: 1.1rem;
 }
 
@@ -2559,10 +2559,10 @@ textarea:focus {
 .trade-peer-info {
     display: flex;
     align-items: center;
-    background: rgba(102, 178, 255, 0.1);
+    background: rgba(135, 66, 189, 0.1);
     padding: 1rem;
     border-radius: 12px;
-    border: 1px solid rgba(102, 178, 255, 0.2);
+    border: 1px solid rgba(135, 66, 189, 0.2);
     color: #fff;
 }
 
@@ -2590,16 +2590,16 @@ textarea:focus {
 }
 
 .method-grid .grid-option:hover {
-    background: rgba(102, 178, 255, 0.15);
-    border-color: #66B2FF;
+    background: rgba(135, 66, 189, 0.15);
+    border-color: #8742bd;
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(102, 178, 255, 0.3);
+    box-shadow: 0 10px 20px rgba(135, 66, 189, 0.3);
 }
 
 .method-grid .grid-option .opt-icon {
     font-size: 2rem;
     margin-bottom: 0.3rem;
-    filter: drop-shadow(0 0 10px rgba(102, 178, 255, 0.5));
+    filter: drop-shadow(0 0 10px rgba(135, 66, 189, 0.5));
 }
 
 .method-grid .grid-option span:not(.opt-icon) {
@@ -2615,7 +2615,7 @@ html.light-mode {
     --bg-tertiary: #FAFBFC;
     --text-primary: #2C3E50;
     --text-secondary: #555555;
-    --border-color: rgba(102, 178, 255, 0.2);
+    --border-color: rgba(135, 66, 189, 0.2);
 }
 
 html.light-mode body {
@@ -2628,7 +2628,7 @@ html.light-mode ::-webkit-scrollbar-track {
 }
 
 html.light-mode .auth-container {
-    background: radial-gradient(ellipse at top, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    background: var(--bg-secondary);
 }
 
 html.light-mode .auth-box {
@@ -2640,7 +2640,7 @@ html.light-mode .modal {
 }
 
 html.light-mode .modal-content {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(250, 251, 252, 0.98));
+    background: rgba(255, 255, 255, 0.98);
     border: 1px solid var(--border-color);
 }
 
@@ -2656,7 +2656,7 @@ html.light-mode input[type="password"],
 html.light-mode input[type="number"],
 html.light-mode textarea,
 html.light-mode .payment-select {
-    background: rgba(102, 178, 255, 0.05);
+    background: rgba(135, 66, 189, 0.05);
     border: 1px solid var(--border-color);
     color: var(--text-primary);
 }
@@ -2691,7 +2691,7 @@ html.light-mode .upi-app,
 html.light-mode .payment-method-selector,
 html.light-mode .wallet-info-box,
 html.light-mode .contact-item {
-    background: rgba(102, 178, 255, 0.08);
+    background: rgba(135, 66, 189, 0.08);
     border-color: var(--border-color);
 }
 
@@ -2718,13 +2718,13 @@ html.light-mode .dropdown-item {
 }
 
 html.light-mode .dropdown-menu a:hover {
-    background: rgba(102, 178, 255, 0.1);
+    background: rgba(135, 66, 189, 0.1);
 }
 
 html.light-mode .toggle-auth a,
 html.light-mode .form-group label,
 html.light-mode #auth-title {
-    color: #66B2FF;
+    color: #8742bd;
 }
 
 html.light-mode .back-link {
@@ -2732,7 +2732,7 @@ html.light-mode .back-link {
 }
 
 html.light-mode .back-link:hover {
-    color: #66B2FF;
+    color: #8742bd;
 }
 
 html.light-mode .card,
@@ -2748,11 +2748,11 @@ html.light-mode a {
 }
 
 html.light-mode a:hover {
-    color: #66B2FF;
+    color: #8742bd;
 }
 
 html.light-mode .wallet-modal-content {
-    background: linear-gradient(160deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    background: var(--bg-primary);
     border: 1px solid var(--border-color);
 }
 
@@ -2778,25 +2778,25 @@ html.light-mode .big-balance {
 
 html.light-mode .amount-display {
     color: #2C3E50;
-    background: rgba(102, 178, 255, 0.1);
+    background: rgba(135, 66, 189, 0.1);
 }
 
 html.light-mode .amount-wrapper {
-    background: rgba(102, 178, 255, 0.05);
-    border-color: #66B2FF;
+    background: rgba(135, 66, 189, 0.05);
+    border-color: #8742bd;
 }
 
 html.light-mode .amount-wrapper span {
-    color: #66B2FF;
+    color: #8742bd;
 }
 
 html.light-mode .provider-card {
-    background: linear-gradient(135deg, rgba(102, 178, 255, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%);
+    background: rgba(135, 66, 189, 0.1);
     border-color: var(--border-color);
 }
 
 html.light-mode .provider-card:hover {
-    background: linear-gradient(135deg, rgba(102, 178, 255, 0.2) 0%, rgba(102, 178, 255, 0.15) 100%);
+    background: rgba(135, 66, 189, 0.2);
 }
 
 html.light-mode small {
@@ -2806,7 +2806,7 @@ html.light-mode small {
 /* ========== CRYPTOVERSE BOT INDICATOR STYLES ========== */
 
 .indicator-toggle-market {
-    background: linear-gradient(135deg, #ff6b00 0%, #ff8c00 100%);
+    background: #ff6b00;
     color: white !important;
     border: 2px solid #ffa500;
     padding: 10px 18px;
@@ -2819,14 +2819,14 @@ html.light-mode small {
 }
 
 .indicator-toggle-market:hover {
-    background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%);
+    background: #ff8c00;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(255, 140, 0, 0.6);
 }
 
 .indicator-toggle-market.active {
-    background: linear-gradient(135deg, #00ff00 0%, #00cc00 100%);
-    border-color: #00ff88;
+    background: #8742bd;
+    border-color: rgba(135, 66, 189, 0.35);
     box-shadow: 0 4px 12px rgba(0, 255, 0, 0.5);
 }
 
@@ -2835,9 +2835,9 @@ html.light-mode small {
 }
 
 .indicator-control-btn {
-    background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+    background: #8742bd;
     color: white !important;
-    border: 1px solid #00ff88;
+    border: 1px solid rgba(135, 66, 189, 0.35);
     padding: 8px 12px;
     border-radius: 4px;
     cursor: pointer;
@@ -2849,7 +2849,7 @@ html.light-mode small {
 
 .indicator-control-btn:hover {
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 212, 255, 0.4);
+    box-shadow: 0 2px 8px rgba(135, 66, 189, 0.4);
 }
 
 @keyframes slideDown {

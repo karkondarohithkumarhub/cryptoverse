@@ -14,19 +14,28 @@
             document.documentElement.classList.remove('light-mode');
         }
         localStorage.setItem('theme', theme);
+
+        // Keep any theme toggle checkbox in sync. Checked = dark mode (on).
+        const toggle = document.getElementById('themeToggle');
+        if (toggle) {
+            toggle.checked = (theme === 'dark');
+        }
     }
 
-    // Toggle theme function
+    // Toggle theme function — called from checkbox change handlers
     window.toggleTheme = function() {
+        const toggle = document.getElementById('themeToggle');
+        // If toggle exists, use its checked state: checked = dark
+        if (toggle) {
+            const newTheme = toggle.checked ? 'dark' : 'light';
+            applyTheme(newTheme);
+            return;
+        }
+
+        // Fallback: flip stored theme
         const currentTheme = localStorage.getItem('theme') || 'dark';
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
         applyTheme(newTheme);
-        
-        // Update toggle if it exists
-        const toggle = document.getElementById('themeToggle');
-        if (toggle) {
-            toggle.checked = newTheme === 'light';
-        }
     };
 
     // Initialize on DOM ready
